@@ -15,6 +15,8 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'homepage.apps.HomepageConfig',
+    'auto_store.apps.AutoStoreConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
