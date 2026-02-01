@@ -1,0 +1,30 @@
+{% load static %}
+<a href="{% url 'auto_store:offer' auto.slug|default:auto.id %}" class="text-decoration-none text-reset">
+    <div class="card card-dark h-100">
+        <div id="carouselAuto{{ auto.id }}" class="carousel slide card-carousel" data-bs-ride="carousel" data-bs-touch="true">
+            <div class="carousel-inner">
+                {% for photo in auto.photos %}
+                <div class="carousel-item{% if forloop.first %} active{% endif %}">
+                    <img src="{{ photo.url|default:photo }}" class="d-block w-100" alt="{{ auto.stamp }} {{ auto.model }}">
+                </div>
+                {% empty %}
+                <div class="carousel-item active">
+                    <img src="{% static 'images/placeholder-car.jpg' %}" class="d-block w-100" alt="{{ auto.stamp }} {{ auto.model }}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22200%22%3E%3Crect fill=%22%23334155%22 width=%22400%22 height=%22200%22/%3E%3Ctext fill=%22%2394a3b8%22 x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2224%22%3EФото%3C/text%3E%3C/svg%3E'">
+                </div>
+                {% endfor %}
+            </div>
+            {% if auto.photos|length > 1 %}
+            <div class="carousel-indicators">
+                {% for photo in auto.photos %}
+                <button type="button" data-bs-target="#carouselAuto{{ auto.id }}" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></button>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ auto.stamp|default:auto.brand }} {{ auto.model }}</h5>
+            <p class="card-text text-secondary small mb-2">{{ auto.year|default:auto.year_release }} | {{ auto.mileage|default:auto.probeg|floatformat:0 }} км</p>
+            <p class="card-text fw-bold text-end mb-0">{{ auto.price|default:auto.cost|floatformat:0 }} ₽</p>
+        </div>
+    </div>
+</a>

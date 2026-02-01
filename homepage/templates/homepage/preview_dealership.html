@@ -1,0 +1,7 @@
+{% load static %}
+<div class="carousel-item{% if forloop.first %} active{% endif %}">
+    <img src="{% if image.url %}{{ image.url }}{% else %}{{ image }}{% endif %}" class="d-block w-100" alt="Фото салона СОЧНОАВТО">
+    <div class="carousel-caption d-none d-md-block">
+        {% if caption %}<p>{{ caption }}</p>{% endif %}
+    </div>
+</div>

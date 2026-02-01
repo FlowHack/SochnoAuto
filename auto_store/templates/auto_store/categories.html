@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Категории{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="section-title mb-4">Категории</h2>
+        <div class="d-flex flex-wrap gap-3 mb-5">
+            {% for category in categories %}
+            <div>
+                {% include "auto_store/card_category.html" with category=category %}
+            </div>
+            {% empty %}
+            <p class="text-secondary">Категории скоро появятся</p>
+            {% endfor %}
+        </div>
+
+        {% if selected_category %}
+        <div class="row g-4 mb-4">
+            {% for auto in autos %}
+            <div class="col-md-6 col-lg-4">
+                {% include "auto_store/card_auto.html" with auto=auto %}
+            </div>
+            {% empty %}
+            <div class="col-12 text-center text-secondary py-5">Автомобили в данной категории скоро появятся</div>
+            {% endfor %}
+        </div>
+
+        {% if page_obj and page_obj.has_other_pages %}
+        <nav aria-label="Пагинация" class="d-flex justify-content-center">
+            <ul class="pagination pagination-dark">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?category={{ selected_category.id|default:selected_category.slug }}&page={{ page_obj.previous_page_number }}">Назад</a>
+                </li>
+                {% endif %}
+                {% for num in page_obj.paginator.page_range %}
+                <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                    <a class="page-link" href="?category={{ selected_category.id|default:selected_category.slug }}&page={{ num }}">{{ num }}</a>
+                </li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?category={{ selected_category.id|default:selected_category.slug }}&page={{ page_obj.next_page_number }}">Вперёд</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

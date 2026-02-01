@@ -1,0 +1,42 @@
+<header class="sochno-header">
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'homepage:index' %}">
+                <div class="sochno-logo">
+                    <span class="sochno-logo-icon">🚗</span>
+                    <span>СОЧНОАВТО</span>
+                </div>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" 
+                    aria-controls="navbarMain" aria-expanded="false" aria-label="Меню">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav mx-auto align-items-center gap-2">
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom" href="{% url 'auto_store:categories' %}">Категории</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom" href="{% url 'homepage:contacts' %}">Контакты</a>
+                    </li>
+                    <li class="nav-item">
+                        <div class="search-wrapper">
+                            <input type="text" 
+                                   id="searchInput" 
+                                   class="form-control search-input" 
+                                   placeholder="Поиск автомобилей..."
+                                   autocomplete="off"
+                                   data-search-url="{% block search_api_url %}/api/search/{% endblock %}">
+                            <div id="searchResults" class="search-results d-none" data-offer-base-url="/offer/"></div>
+                        </div>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center mt-3 mt-lg-0">
+                    <a href="{% url 'homepage:contacts' %}#contact" class="btn btn-contact">Связаться с нами</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
