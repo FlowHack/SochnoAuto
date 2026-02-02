@@ -55,6 +55,10 @@ class Car(models.Model):
         default=False
     )
 
+    class Meta:
+        verbose_name = 'Автомобиль'
+        verbose_name_plural = 'Автомобили'
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if not self.slug:

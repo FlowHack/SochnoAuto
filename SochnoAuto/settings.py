@@ -15,6 +15,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'django_cleanup.apps.CleanupSelectedConfig',
     'homepage.apps.HomepageConfig',
     'auto_store.apps.AutoStoreConfig',
     'django.contrib.admin',
@@ -103,3 +104,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+
+# Media files
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

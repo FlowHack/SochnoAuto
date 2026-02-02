@@ -18,6 +18,8 @@ class CarComfortParameter(models.Model):
     class Meta:
         ordering = ['key']
         unique_together = ('car', 'key')
+        verbose_name = 'Параметр комфорта'
+        verbose_name_plural = 'Параметры комфорта'
 
     def __str__(self):
         return f"{self.key} для {self.car.brand} {self.car.car_model}"
