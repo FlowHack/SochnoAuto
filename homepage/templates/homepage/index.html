@@ -26,40 +26,26 @@
 </div>
 
 <!-- Специальные предложения -->
-<section class="py-5">
+<section class="py-5 position-relative">
     <div class="container">
         <h2 class="section-title">Специальные предложения</h2>
-        <div id="carouselOffers" class="carousel slide offers-carousel" data-bs-touch="true">
-            <div class="carousel-inner">
-                {% for chunk in special_offers_chunks %}
-                <div class="carousel-item{% if forloop.first %} active{% endif %}">
-                    <div class="row g-4">
-                        {% for offer in chunk %}
-                        <div class="col-md-6 col-lg-4">
-                            {% include "homepage/card_special_offer.html" with offer=offer %}
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% empty %}
-                <div class="carousel-item active">
-                    <div class="row g-4">
-                        <div class="col-12 text-center text-secondary py-5">Предложения скоро появятся</div>
-                    </div>
-                </div>
-                {% endfor %}
+        {% for chunk in special_offers_chunks %}
+        {% if chunk %}
+        <div class="row g-4" style="margin-bottom: 30px">
+            {% for offer in chunk %}
+            <div class="col-md-6 col-lg-4">
+                {% include "homepage/card_special_offer.html" with offer=offer %}
             </div>
-            {% if special_offers_chunks|length > 1 %}
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselOffers" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Предыдущий</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselOffers" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Следующий</span>
-            </button>
-            {% endif %}
+            {% endfor %}
         </div>
+        {% endif %}
+        {% empty %}
+        <div class="row g-4">
+            <div class="col-12 text-center text-secondary py-5">
+                <h4>Предложения скоро появятся</h4>
+            </div>
+        </div>
+        {% endfor %}
     </div>
 </section>
 

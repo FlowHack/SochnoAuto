@@ -84,10 +84,8 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
-// Carousel touch/swipe support (Bootstrap 5 has built-in)
-// Additional carousel initialization if needed
-document.querySelectorAll('.carousel').forEach(carousel => {
-  if (typeof bootstrap !== 'undefined' && bootstrap.Carousel) {
-    new bootstrap.Carousel(carousel, { touch: true });
-  }
+// Carousel: свайпы на телефоне (touch: true при инициализации)
+document.querySelectorAll('.carousel').forEach(function (el) {
+  if (typeof bootstrap === 'undefined' || !bootstrap.Carousel) return;
+  bootstrap.Carousel.getOrCreateInstance(el, { touch: true });
 });

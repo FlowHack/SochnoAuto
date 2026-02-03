@@ -1,9 +1,10 @@
+{% load static%}
 <header class="sochno-header">
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{% url 'homepage:index' %}">
                 <div class="sochno-logo">
-                    <span class="sochno-logo-icon">🚗</span>
+                    <img class="sochno-logo-icon" src="{% static 'favicon.png' %}">
                     <span>СОЧНОАВТО</span>
                 </div>
             </a>
@@ -33,7 +34,7 @@
                         </div>
                     </li>
                 </ul>
-                <div class="d-flex align-items-center mt-3 mt-lg-0">
+                <div class="d-flex align-items-center mt-3 mt-lg-0 navbar-contact-wrap">
                     <a href="{% url 'homepage:contacts' %}#contact" class="btn btn-contact">Связаться с нами</a>
                 </div>
             </div>

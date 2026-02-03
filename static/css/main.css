@@ -55,10 +55,10 @@ main {
 }
 
 .sochno-logo-icon {
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   background: linear-gradient(135deg, var(--accent), var(--accent-gold));
-  border-radius: 8px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -203,7 +203,16 @@ main {
   color: white;
 }
 
-/* Carousel */
+/* Carousel - touch/swipe friendly */
+.carousel {
+  touch-action: pan-y;
+}
+
+.carousel-inner {
+  touch-action: pan-y;
+}
+
+/* Carousel dealership (hero) - cover для баннера */
 .carousel-dealership .carousel-item {
   height: 70vh;
   min-height: 400px;
@@ -219,7 +228,6 @@ main {
 .carousel-control-next {
   width: 60px;
   opacity: 0.7;
-  background: rgba(0, 0, 0, 0.4);
   border-radius: 8px;
   margin: 0 1rem;
 }
@@ -227,7 +235,6 @@ main {
 .carousel-control-prev:hover,
 .carousel-control-next:hover {
   opacity: 1;
-  background: rgba(0, 0, 0, 0.6);
 }
 
 /* Cards */
@@ -246,14 +253,60 @@ main {
 }
 
 .card-carousel {
-  height: 200px;
+  height: 280px;
+  min-height: 260px;
   overflow: hidden;
+  position: relative;
+  background: var(--bg-secondary);
+}
+
+.card-carousel .carousel-inner {
+  z-index: 0;
+}
+
+.card-carousel .carousel-item {
+  height: 100%;
+  min-height: 260px;
 }
 
 .card-carousel img {
   object-fit: cover;
+  object-position: center;
   width: 100%;
   height: 100%;
+}
+
+/* Область клика на всю высоту: обёртка на весь блок, две кнопки по 50% ширины */
+.card-carousel-controls-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+}
+
+.card-carousel-controls-wrap .carousel-control-prev.card-carousel-control,
+.card-carousel-controls-wrap .carousel-control-next.card-carousel-control {
+  position: static;
+  flex: 1;
+  width: auto;
+  max-width: none;
+  height: auto;
+  min-height: 0;
+  margin: 0;
+  border-radius: 0;
+  border: none;
+  background: transparent;
+  opacity: 0;
+}
+
+.card-carousel-controls-wrap .carousel-control-prev.card-carousel-control:hover,
+.card-carousel-controls-wrap .carousel-control-next.card-carousel-control:hover,
+.card-carousel-controls-wrap .carousel-control-prev.card-carousel-control:focus,
+.card-carousel-controls-wrap .carousel-control-next.card-carousel-control:focus,
+.card-carousel-controls-wrap .carousel-control-prev.card-carousel-control:active {
+  background: transparent;
+  opacity: 0;
+  border: none;
 }
 
 .card-carousel .carousel-indicators {
@@ -416,6 +469,44 @@ main {
   .navbar-collapse {
     padding-top: 1rem;
   }
+  .navbar-contact-wrap {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+/* Bootstrap dark overrides - visible text */
+.text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.text-muted {
+  color: var(--text-muted) !important;
+}
+
+/* Card text visibility */
+.card-dark .card-title,
+.card-dark .card-body,
+.card-dark .card-text {
+  color: var(--text-primary);
+}
+
+.card-dark .card-text.text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.sochno-footer,
+.sochno-footer .text-secondary,
+.sochno-footer .text-muted {
+  color: var(--text-secondary);
+}
+
+.sochno-footer .text-muted {
+  color: var(--text-muted);
+}
+
+.sochno-footer p {
+  color: var(--text-secondary);
 }
 
 /* Bootstrap dark overrides */
@@ -425,4 +516,83 @@ main {
 
 .text-primary {
   color: var(--accent) !important;
+}
+
+.offers-carousel-prev,
+.offers-carousel-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 60px;
+    height: 60px;
+    background: rgba(26, 35, 50, 0.9);
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    opacity: 0.8;
+    transition: all 0.3s;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.offers-carousel-prev:hover,
+.offers-carousel-next:hover {
+    opacity: 1;
+    background: rgba(59, 130, 246, 0.9);
+    border-color: var(--accent);
+}
+
+.offers-carousel-prev {
+    left: 20px;
+}
+
+.offers-carousel-next {
+    right: 20px;
+}
+
+/* На мобильных устройствах делаем кнопки меньше и ближе к контенту */
+@media (max-width: 991px) {
+    .offers-carousel-prev,
+    .offers-carousel-next {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .offers-carousel-prev {
+        left: 10px;
+    }
+    
+    .offers-carousel-next {
+        right: 10px;
+    }
+}
+
+/* Увеличиваем область клика */
+.offers-carousel-prev::before,
+.offers-carousel-next::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    bottom: -20px;
+    left: -20px;
+    right: -20px;
+}
+
+/* ВАЖНО: Исправляет конфликт свайпов на мобильных */
+.card-carousel {
+    touch-action: pan-y pinch-zoom; /* Разрешает верт. скролл, но блокирует гориз. свайп страницы внутри карточки */
+}
+
+/* ВАЖНО: Гарантирует, что слайдер предложений не схлопнется в 0px */
+.offers-carousel .carousel-item {
+    min-height: 450px; /* Высота карточки + отступы */
+    transition: transform 0.6s ease-in-out; /* Плавность */
+}
+
+/* Дополнительная страховка для самих карточек */
+.card-special-offer {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }

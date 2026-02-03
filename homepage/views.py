@@ -1,13 +1,28 @@
 from django.shortcuts import render
+from django.db.models import Prefetch
+from auto_store.models import Car, CarImage
 
 
 def index(request):
     """Главная страница."""
-    # special_offers_chunks: список чанков по 3 предложения [[o1,o2,o3], [o4,...]]
-    # Можно передать special_offers и разбить: chunks = [offers[i:i+3] for i in range(0, len(offers), 3)]
+    special_offers_qs = Car.objects.filter(
+        is_special_offer=True
+    ).order_by('-id').prefetch_related(
+        Prefetch(
+            'car_images',
+            CarImage.objects.order_by('order_image'),
+            to_attr='ordered_images'
+        )
+    )
+
+    special_offers = list(special_offers_qs)
+    chunks = [
+        special_offers[i:i + 3] for i in range(0, len(special_offers), 3)
+    ]
+    print(chunks)
     context = {
         'dealership_images': [],  # Список URL или {'url': ..., 'caption': ...}
-        'special_offers_chunks': [],
+        'special_offers_chunks': chunks,
         'feedbacks': [],
         'feedbacks_count': 0,
         'avg_rating': 5,

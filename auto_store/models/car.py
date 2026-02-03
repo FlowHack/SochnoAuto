@@ -37,6 +37,10 @@ class Car(models.Model):
         choices=FuelTypes.choices,
         default=FuelTypes.GASOLINE
     )
+    price = models.PositiveIntegerField(
+        'Стоимость автомобиля в рублях',
+        default=0
+    )
     category = models.ForeignKey(
         CarCategory,
         related_name='category',
@@ -67,6 +71,9 @@ class Car(models.Model):
                 f'-{self.id}'
             )
             super().save(*args, **kwargs)
+
+    def get_year_release(self):
+        return self.year_release.year
 
     def __str__(self):
         return (
