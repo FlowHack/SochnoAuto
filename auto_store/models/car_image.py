@@ -17,7 +17,14 @@ class CarImage(models.Model):
         max_length=200,
         blank=True
     )
+    order_image = models.PositiveIntegerField(
+        'Порядок картинки',
+        default=0,
+        blank=False,
+        null=False
+    )
 
     class Meta:
+        ordering = ['order_image']
         verbose_name = 'Фотография автомобиля'
         verbose_name_plural = 'Фотографии автомобиля'

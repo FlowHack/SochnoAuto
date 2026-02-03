@@ -1,4 +1,4 @@
 {% load static %}
-<a href="{% url 'auto_store:categories' %}?category={{ category.id|default:category.slug }}" class="category-card text-decoration-none">
-    <span class="fw-semibold">{{ category.name|default:category.title }}</span>
+<a href="{% url 'auto_store:categories' %}?category={{ category.slug }}" class="category-card text-decoration-none">
+    <span class="fw-semibold">{{ category.name }}</span>
 </a>

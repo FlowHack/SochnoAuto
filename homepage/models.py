@@ -14,6 +14,10 @@ class Feedback(models.Model):
         'Ответ компании',
         blank=True
     )
+    date_create = models.DateTimeField(
+        'Дата добавления отзыва',
+        auto_now_add=True
+    )
 
     def __str__(self):
         feedback = self.feedback
@@ -24,6 +28,12 @@ class Feedback(models.Model):
 @cleanup.select
 class HomepageImage(models.Model):
     image = models.ImageField(upload_to='uploads/homepage_image/')
+    order_image = models.PositiveIntegerField(
+        'Порядок картинки',
+        default=0,
+        blank=False,
+        null=False
+    )
     caption = models.CharField(
         'Описание картинки',
         max_length=200,
@@ -31,5 +41,12 @@ class HomepageImage(models.Model):
     )
 
     class Meta:
+        ordering = ['order_image']
         verbose_name = 'Картинка стартовой страницы'
         verbose_name_plural = 'Картинки для стратовой страницы'
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if not self.order_image:
+            self.order_image = self.objects.count()
+            super().save(*args, **kwargs)

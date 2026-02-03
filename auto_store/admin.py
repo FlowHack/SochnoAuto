@@ -1,11 +1,12 @@
 from django.contrib import admin
-
+from adminsortable2.admin import SortableStackedInline
 from .forms import CarModelAdminForm
 from .models import (Car, CarCategory, CarComfortParameter, CarImage,
                      CarParameter)
+from adminsortable2.admin import SortableAdminBase
 
 
-class CarImageInline(admin.StackedInline):
+class CarImageInline(SortableStackedInline):
     model = CarImage
     extra = 2
 
@@ -21,7 +22,7 @@ class CarComfortParameterInline(admin.StackedInline):
 
 
 @admin.register(Car)
-class CarModelAdmin(admin.ModelAdmin):
+class CarModelAdmin(SortableAdminBase, admin.ModelAdmin):
     form = CarModelAdminForm
     inlines = [CarImageInline, CarParameterInline, CarComfortParameterInline]
     list_display = (
