@@ -1,9 +1,9 @@
+from adminsortable2.admin import SortableAdminBase, SortableStackedInline
 from django.contrib import admin
-from adminsortable2.admin import SortableStackedInline
+
 from .forms import CarModelAdminForm
 from .models import (Car, CarCategory, CarComfortParameter, CarImage,
                      CarParameter)
-from adminsortable2.admin import SortableAdminBase
 
 
 class CarImageInline(SortableStackedInline):

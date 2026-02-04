@@ -1,0 +1,11 @@
+{% extends "admin/change_list.html" %}
+{% load i18n %}
+
+{% block object-tools-items %}
+    {{ block.super }}
+    <li>
+        <a href="parse_avito/" class="addlink" style="background: #417690; padding-left: 15px;">
+            🔄 Спарсить отзывы
+        </a>
+    </li>
+{% endblock %}

@@ -1,5 +1,6 @@
-from django.shortcuts import render
 from django.db.models import Prefetch
+from django.shortcuts import render
+
 from auto_store.models import Car, CarImage
 
 
@@ -19,7 +20,7 @@ def index(request):
     chunks = [
         special_offers[i:i + 3] for i in range(0, len(special_offers), 3)
     ]
-    print(chunks)
+
     context = {
         'dealership_images': [],  # Список URL или {'url': ..., 'caption': ...}
         'special_offers_chunks': chunks,

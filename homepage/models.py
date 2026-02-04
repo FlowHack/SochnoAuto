@@ -1,3 +1,4 @@
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django_cleanup import cleanup
 
@@ -8,20 +9,35 @@ class Feedback(models.Model):
         max_length=200,
     )
     feedback = models.TextField(
-        'Отзыв пользователя'
+        'Отзыв пользователя',
+        null=True,
     )
     answer = models.TextField(
         'Ответ компании',
-        blank=True
+        null=True,
+    )
+    score = models.PositiveSmallIntegerField(
+        'Оценка',
+        validators=[MinValueValidator(0), MaxValueValidator(5)],
+        null=True,
+    )
+    item_object = models.CharField(
+        'Объект оценки',
+        null=True,
+        max_length=250,
     )
     date_create = models.DateTimeField(
-        'Дата добавления отзыва',
-        auto_now_add=True
+        'Дата добавления отзыва'
     )
+
+    class Meta:
+        ordering = ['date_create']
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
 
     def __str__(self):
         feedback = self.feedback
-        feedback = f'{feedback[0:15]}...' if feedback.len() > 15 else feedback
+        feedback = f'{feedback[0:15]}...' if len(feedback) > 15 else feedback
         return f'{self.name_user}: {feedback}'
 
 
