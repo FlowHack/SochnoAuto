@@ -13,7 +13,7 @@ def index(request):
     dealership_images = HomepageImage.objects.all()
 
     special_offers_qs = Car.objects.filter(
-        is_special_offer=True
+        is_special_offer=True, sold=False
     ).order_by('-id').prefetch_related(
         Prefetch(
             'car_images',
@@ -40,7 +40,7 @@ def index(request):
         page_feedbacks = paginator.page(paginator.num_pages)
 
     context = {
-        'dealership_images': dealership_images,  # Список URL или {'url': ..., 'caption': ...}
+        'dealership_images': dealership_images,
         'special_offers_chunks': chunks,
         'page_feedbacks': page_feedbacks,
         'feedbacks_count': feedbacks_stats['count_feedbacks'],

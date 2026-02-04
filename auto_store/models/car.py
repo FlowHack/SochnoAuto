@@ -41,6 +41,10 @@ class Car(models.Model):
         'Стоимость автомобиля в рублях',
         default=0
     )
+    sold = models.BooleanField(
+        'Машина продана',
+        default=False
+    )
     category = models.ForeignKey(
         CarCategory,
         related_name='category',

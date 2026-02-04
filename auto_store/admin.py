@@ -25,9 +25,14 @@ class CarComfortParameterInline(admin.StackedInline):
 class CarModelAdmin(SortableAdminBase, admin.ModelAdmin):
     form = CarModelAdminForm
     inlines = [CarImageInline, CarParameterInline, CarComfortParameterInline]
+    fields = (
+        'sold', 'is_special_offer', 'brand', 'car_model',
+        'year_release', 'mileage', 'fuel_type', 'price',
+        'category',
+    )
     list_display = (
         'brand', 'car_model', 'year_release', 'mileage',
-        'fuel_type', 'category', 'is_special_offer',
+        'fuel_type', 'category', 'is_special_offer', 'sold'
     )
     exclude = ('slug', 'pub_date',)
     empty_value_display = '-пусто-'
