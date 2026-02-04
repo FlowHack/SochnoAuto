@@ -488,7 +488,7 @@ main {
 .card-dark .card-title,
 .card-dark .card-body,
 .card-dark .card-text {
-  color: var(--text-primary);
+  color: var(--text-primary) !important;
 }
 
 .card-dark .card-text.text-secondary {

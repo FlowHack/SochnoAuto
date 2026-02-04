@@ -18,13 +18,15 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupSelectedConfig',
     'homepage.apps.HomepageConfig',
     'auto_store.apps.AutoStoreConfig',
+    'api.apps.ApiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'adminsortable2'
+    'adminsortable2',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -110,3 +112,9 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny'
+    ]
+}

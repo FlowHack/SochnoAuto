@@ -2,21 +2,27 @@
 <div class="card feedback-card h-100">
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-start mb-2">
-            <h6 class="card-title mb-0">{{ feedback.name|default:feedback.user_name }}</h6>
+            <h6 class="card-title mb-0" style="color: #f1f5f9">{{ feedback.name_user }}</h6>
             <div class="stars-rating">
                 {% for i in "12345" %}
-                <span>{% if forloop.counter <= feedback.rating|default:5 %}★{% else %}☆{% endif %}</span>
+                <span>{% if forloop.counter <= feedback.score|default:5 %}★{% else %}☆{% endif %}</span>
                 {% endfor %}
             </div>
         </div>
-        <p class="card-text text-secondary small">{{ feedback.text|default:feedback.review }}</p>
-        {% if feedback.response %}
+        <p class="card-text text-secondary small">
+            {% if feedback.feedback is not None %}
+            {{ feedback.feedback }}
+            {% else %}
+            Отзыв без текста
+            {% endif %}
+        </p>
+        {% if feedback.answer %}
         <div class="company-response">
             <div class="d-flex align-items-center gap-2 mb-2">
-                <span class="sochno-logo-icon" style="width: 32px; height: 32px; font-size: 0.9rem;">🚗</span>
-                <strong>СОЧНО АВТО</strong>
+                <img class="sochno-logo-icon" style="width: 32px; height: 32px; font-size: 0.9rem;" src="{% static 'favicon.png' %}">
+                <strong style="color: #f1f5f9">СОЧНО АВТО</strong>
             </div>
-            <p class="mb-0 small">{{ feedback.response }}</p>
+            <p class="mb-0 small text-secondary">{{ feedback.answer }}</p>
         </div>
         {% endif %}
     </div>
