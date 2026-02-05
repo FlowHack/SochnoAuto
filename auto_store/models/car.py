@@ -62,6 +62,11 @@ class Car(models.Model):
         'Специальное предложение',
         default=False
     )
+    date_is_special_offer = models.DateTimeField(
+        'Дата когда автомобиль стал специальным предложением',
+        blank=True,
+        null=True
+    )
 
     class Meta:
         verbose_name = 'Автомобиль'

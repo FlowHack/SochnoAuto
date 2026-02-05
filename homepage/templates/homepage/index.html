@@ -29,23 +29,37 @@
 <section class="py-5 position-relative">
     <div class="container">
         <h2 class="section-title">Специальные предложения</h2>
-        {% for chunk in special_offers_chunks %}
-        {% if chunk %}
-        <div class="row g-4" style="margin-bottom: 30px">
-            {% for offer in chunk %}
+        {% if page_special_offers.has_other_pages %}
+        <div id="mainBlockSpecialOffers" class="row g-4" style="margin-bottom: 30px">
+            {% for offer in page_special_offers.object_list %}
             <div class="col-md-6 col-lg-4">
                 {% include "homepage/card_special_offer.html" with offer=offer %}
             </div>
             {% endfor %}
         </div>
-        {% endif %}
-        {% empty %}
+        {% else %}
         <div class="row g-4">
             <div class="col-12 text-center text-secondary py-5">
                 <h4>Предложения скоро появятся</h4>
             </div>
         </div>
-        {% endfor %}
+        {% endif %}
+            <button class="carousel-control-prev" onClick="replaceSpecialOffers(this)"
+            data-page="{% if page_special_offers.has_previous %}{{ page_special_offers.previous_page_number }}{% endif %}" data-url-offer="{% url 'auto_store:offer' 'auto-offer-slug' %}"
+            data-url-static="{% static 'images/homepage' %}"
+            {% if not page_special_offers.has_previous %}style="visibility:hidden"{% endif %}
+            id="btnSpecialOffersPrevious">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Предыдущий</span>
+            </button>
+            <button class="carousel-control-next" onClick="replaceSpecialOffers(this)"
+            data-page="{% if page_special_offers.has_next %}{{ page_special_offers.next_page_number }}{% endif %}" data-url-offer="{% url 'auto_store:offer' 'auto-offer-slug' %}"
+            data-url-static="{% static 'images/homepage' %}"
+            {% if not page_special_offers.has_next %}style="visibility:hidden"{% endif %}
+            id="btnSpecialOffersNext">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Следующий</span>
+            </button>
     </div>
 </section>
 
@@ -88,4 +102,5 @@
 
 {% block extra_js %}
 <script src="{% static 'js/get_feedbacks.js' %}"></script>
+<script src="{% static 'js/get_special_offers.js' %}"></script>
 {% endblock extra_js %}

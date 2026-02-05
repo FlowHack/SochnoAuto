@@ -6,7 +6,7 @@ const ulPaginationFeedback = document.getElementById("ulPaginationFeedback");
 async function replaceFeedbacks(element) {
     const page = Number(element.getAttribute('data-page'));
     const favicon = element.getAttribute('data-icon');
-    console.log(page, favicon);
+
     const result = await fetch(`${url_get_feedbacks}?page_feedbacks=${page}`, {
         method: 'GET',
         headers: {
@@ -73,30 +73,30 @@ async function replaceFeedbacks(element) {
         };
         divCardBody.appendChild(pFeedback)
 
-        if (feedback.answer != null) {
+        if (feedback.answer != null && feedback.answer != "") {
             let divCompanyAnswer = document.createElement("div");
             divCompanyAnswer.className = "company-response";
-            divCardBody.appendChild(divCompanyAnswer)
+            divCardBody.appendChild(divCompanyAnswer);
 
             let divLogoCompanyAnswer = document.createElement("div");
             divLogoCompanyAnswer.className = "d-flex align-items-center gap-2 mb-2";
-            divCompanyAnswer.appendChild(divLogoCompanyAnswer)
+            divCompanyAnswer.appendChild(divLogoCompanyAnswer);
 
             let imgLogoCompanyAnswer = document.createElement("img");
             imgLogoCompanyAnswer.className = "sochno-logo-icon";
             imgLogoCompanyAnswer.style = "width: 32px; height: 32px; font-size: 0.9rem"
             imgLogoCompanyAnswer.src = favicon
-            divLogoCompanyAnswer.appendChild(imgLogoCompanyAnswer)
+            divLogoCompanyAnswer.appendChild(imgLogoCompanyAnswer);
 
             let strongNameCompanyAnswer = document.createElement("strong");
             strongNameCompanyAnswer.style = "color: #f1f5f9";
             strongNameCompanyAnswer.innerHTML = "СОЧНО АВТО";
-            divLogoCompanyAnswer.appendChild(strongNameCompanyAnswer)
+            divLogoCompanyAnswer.appendChild(strongNameCompanyAnswer);
 
             let pAnswerCompany = document.createElement("p");
             pAnswerCompany.className = "mb-0 small text-secondary";
             pAnswerCompany.innerHTML = feedback.answer
-            divCompanyAnswer.appendChild(pAnswerCompany)
+            divCompanyAnswer.appendChild(pAnswerCompany);
         };
 
         feedbacks_block.appendChild(divCardForFeedback)
