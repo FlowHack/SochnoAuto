@@ -6,7 +6,7 @@ from .car import Car
 class CarParameter(models.Model):
     car = models.ForeignKey(
         Car,
-        related_name='another_parameter',
+        related_name='parameters',
         on_delete=models.CASCADE
     )
     key = models.CharField(

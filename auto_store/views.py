@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
-from .models import CarCategory
+from .models import Car, CarCategory
 from .settings import NUMBER_ITEM_PAGINATOR_CARS
 
 
@@ -51,21 +51,10 @@ def categories(request):
 
 def offer(request, slug=None):
     """Страница предложения (автомобиля)."""
-    # Получите объект из БД по slug или pk
-    offer_obj = None  # get_object_or_404(Offer, slug=slug) или pk=pk
+    offer_obj = get_object_or_404(Car, slug=slug)
+
     context = {
-        'offer': offer_obj or {
-            'id': pk or slug,
-            'slug': slug or pk,
-            'stamp': 'Марка',
-            'model': 'Модель',
-            'year': 2024,
-            'mileage': 50000,
-            'price': 1500000,
-            'photos': [],
-            'description': '',
-            'specs': [],
-        },
+        'offer': offer_obj
     }
     return render(request, 'auto_store/offer.html', context)
 

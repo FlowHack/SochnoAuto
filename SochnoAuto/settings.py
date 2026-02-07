@@ -26,7 +26,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'adminsortable2',
-    'rest_framework'
+    'rest_framework',
+    'django_ckeditor_5'
 ]
 
 MIDDLEWARE = [
@@ -117,4 +118,18 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny'
     ]
+}
+
+CKEDITOR_5_CONFIGS = {
+    'default': {
+        'toolbar': {
+            'items': [
+                'heading', '|', 'bold', 'italic', 'underline', 'link',
+                '|', 'fontSize', 'fontFamily', 'fontColor', 'alignment', '|',
+                'bulletedList', 'numberedList', 'blockQuote', 'insertTable',
+            ],
+        },
+        'language': 'ru',
+
+    },
 }

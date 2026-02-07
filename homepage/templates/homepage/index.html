@@ -29,7 +29,7 @@
 <section class="py-5 position-relative" id="special-offers-section">
     <div class="container">
         <h2 class="section-title">Специальные предложения</h2>
-        {% if page_special_offers.has_other_pages %}
+        {% if page_special_offers.object_list %}
         <div id="mainBlockSpecialOffers" class="row g-4" style="margin-bottom: 30px">
             {% for offer in page_special_offers.object_list %}
             <div class="col-md-6 col-lg-4">

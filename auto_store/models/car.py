@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from django_ckeditor_5.fields import CKEditor5Field
 
 from .car_category import CarCategory
 
@@ -64,6 +65,12 @@ class Car(models.Model):
     )
     date_is_special_offer = models.DateTimeField(
         'Дата когда автомобиль стал специальным предложением',
+        blank=True,
+        null=True
+    )
+    description = CKEditor5Field(
+        'Описание автомобиля',
+        config_name='default',
         blank=True,
         null=True
     )

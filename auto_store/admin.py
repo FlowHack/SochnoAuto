@@ -29,13 +29,13 @@ class CarModelAdmin(SortableAdminBase, admin.ModelAdmin):
     inlines = [CarImageInline, CarParameterInline, CarComfortParameterInline]
     fields = (
         'sold', 'brand', 'car_model', 'year_release', 'mileage', 'fuel_type',
-        'price', 'category',
+        'price', 'category', 'description',
     )
     list_display = (
         'brand', 'car_model', 'year_release', 'mileage',
         'fuel_type', 'category', 'sold', 'is_special_offer', 'slug',
     )
-    exclude = ('slug', 'pub_date', 'is_special_offer', 'date_is_special_offer')
+    exclude = ('slug', 'pub_date', 'is_special_offer', 'date_is_special_offer',)
     empty_value_display = '-пусто-'
 
     def add_special_offer(self, request, queryset):
