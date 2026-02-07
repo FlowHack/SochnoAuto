@@ -351,6 +351,12 @@ main {
   color: var(--text-primary);
 }
 
+.category-card-active {
+  border-color: var(--accent);
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
 /* Feedback cards */
 .feedback-card {
   background: var(--bg-card);
@@ -595,4 +601,66 @@ main {
     height: 100%;
     display: flex;
     flex-direction: column;
+}
+
+/* Стили для навигации специальных предложений */
+.special-offers-navigation {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    z-index: 5;
+}
+
+.special-offers-navigation .carousel-control-prev,
+.special-offers-navigation .carousel-control-next {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+}
+
+/* На мобильных устройствах */
+@media (max-width: 767.98px) {
+    .special-offers-navigation {
+        position: static;
+        transform: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .special-offers-navigation .carousel-control-prev,
+    .special-offers-navigation .carousel-control-next {
+        position: static;
+        margin: 0 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .special-offers-navigation .carousel-control-prev-icon,
+    .special-offers-navigation .carousel-control-next-icon {
+        width: 1.2rem;
+        height: 1.2rem;
+        filter: invert(0.4);
+    }
+}
+
+/* Адаптация для планшетов */
+@media (max-width: 991.98px) {
+    .special-offers-navigation .carousel-control-prev {
+        left: -1.5rem;
+    }
+    
+    .special-offers-navigation .carousel-control-next {
+        right: -1.5rem;
+    }
+}
+
+.card-title-car:hover {
+  color: var(--accent) !important;
 }

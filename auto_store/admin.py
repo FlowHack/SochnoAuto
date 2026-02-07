@@ -1,4 +1,5 @@
-from adminsortable2.admin import SortableAdminBase, SortableStackedInline
+from adminsortable2.admin import (SortableAdminBase, SortableAdminMixin,
+                                  SortableStackedInline)
 from django.contrib import admin
 from django.utils import timezone
 
@@ -32,7 +33,7 @@ class CarModelAdmin(SortableAdminBase, admin.ModelAdmin):
     )
     list_display = (
         'brand', 'car_model', 'year_release', 'mileage',
-        'fuel_type', 'category', 'sold', 'is_special_offer'
+        'fuel_type', 'category', 'sold', 'is_special_offer', 'slug',
     )
     exclude = ('slug', 'pub_date', 'is_special_offer', 'date_is_special_offer')
     empty_value_display = '-пусто-'
@@ -76,7 +77,7 @@ class CarModelAdmin(SortableAdminBase, admin.ModelAdmin):
 
 
 @admin.register(CarCategory)
-class CarCategoryModelAdmin(admin.ModelAdmin):
-    list_display = ('name', 'image',)
-    exclude = ('slug',)
+class CarCategoryModelAdmin(SortableAdminMixin, admin.ModelAdmin):
+    list_display = ('name', 'order_category', 'slug',)
+    exclude = ('slug', 'order_category')
     empty_value_display = '-пусто-'

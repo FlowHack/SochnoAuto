@@ -19,14 +19,16 @@
             {% endif %}
         </div>
         {% if offer.ordered_images and offer.ordered_images|length > 1 %}
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselOffer{{ offer.slug }}" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Предыдущий</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselOffer{{ offer.slug }}" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Следующий</span>
-        </button>
+        <div class="card-carousel-controls-wrap">
+            <button class="carousel-control-prev card-carousel-control" type="button" data-bs-target="#carouselOffer{{ offer.slug }}" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Предыдущее фото</span>
+            </button>
+            <button class="carousel-control-next card-carousel-control" type="button" data-bs-target="#carouselOffer{{ offer.slug }}" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Следующее фото</span>
+            </button>
+        </div>
         
         <div class="carousel-indicators">
             {% for image in offer.ordered_images %}
@@ -38,7 +40,7 @@
 
     <div class="card-body">
         <h5 class="card-title">
-            <a href="{% url 'auto_store:offer' offer.slug %}" class="text-decoration-none text-reset stretched-link-custom">
+            <a href="{% url 'auto_store:offer' offer.slug %}" class="card-title-car text-decoration-none text-reset stretched-link-custom">
                 {{ offer.brand }} {{ offer.car_model }}
             </a>
         </h5>

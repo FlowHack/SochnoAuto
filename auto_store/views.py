@@ -1,21 +1,55 @@
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import BooleanField, Case, Value, When
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
+from .models import CarCategory
+from .settings import NUMBER_ITEM_PAGINATOR_CARS
+
 
 def categories(request):
     """Страница категорий с фильтром по выбранной категории."""
+    selected_category = request.GET.get('category')
+    page = request.GET.get('page')
+
+    categories = CarCategory.objects.annotate(
+        selected_category=Case(
+            When(slug=selected_category, then=Value(True)),
+            default=Value(False),
+            output_field=BooleanField()
+        )
+    )
+
+    select_category = categories.filter(
+        selected_category=True
+    ).first()
+    page_cars = None
+    if select_category:
+        cars = select_category.cars_in_category.all().prefetch_related(
+            'car_images'
+        )
+        paginator = Paginator(cars, NUMBER_ITEM_PAGINATOR_CARS)
+        try:
+            page_cars = paginator.get_page(
+                page
+            )
+        except PageNotAnInteger:
+            page_cars = paginator.page(1)
+        except EmptyPage:
+            page_cars = paginator.page(
+                paginator.num_pages
+            )
+
     context = {
-        'categories': [],  # Список категорий из БД
-        'selected_category': None,
-        'autos': [],
-        'page_obj': None,
+        'categories': categories,
+        'page_cars': page_cars
     }
     return render(request, 'auto_store/categories.html', context)
 
 
-def offer(request, slug=None, pk=None):
+def offer(request, slug=None):
     """Страница предложения (автомобиля)."""
     # Получите объект из БД по slug или pk
     offer_obj = None  # get_object_or_404(Offer, slug=slug) или pk=pk

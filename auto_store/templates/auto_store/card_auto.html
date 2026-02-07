@@ -1,40 +1,43 @@
 {% load static %}
-<a href="{% url 'auto_store:offer' auto.slug|default:auto.id %}" class="text-decoration-none text-reset">
-    <div class="card card-dark h-100">
-        <div id="carouselAuto{{ auto.id }}" class="carousel slide card-carousel" data-bs-ride="carousel" data-bs-touch="true">
-            <div class="carousel-inner">
-                {% for photo in auto.photos %}
-                <div class="carousel-item{% if forloop.first %} active{% endif %}">
-                    <img src="{{ photo.url|default:photo }}" class="d-block w-100" alt="{{ auto.stamp }} {{ auto.model }}">
-                </div>
-                {% empty %}
-                <div class="carousel-item active">
-                    <img src="{% static 'images/placeholder-car.jpg' %}" class="d-block w-100" alt="{{ auto.stamp }} {{ auto.model }}" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22400%22 height=%22200%22%3E%3Crect fill=%22%23334155%22 width=%22400%22 height=%22200%22/%3E%3Ctext fill=%22%2394a3b8%22 x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2224%22%3EФото%3C/text%3E%3C/svg%3E'">
-                </div>
-                {% endfor %}
+<div class="card card-dark h-100">
+    <div id="carouselAuto{{ auto.slug }}" class="carousel slide card-carousel" data-bs-ride="carousel" data-bs-touch="true">
+        <div class="carousel-inner">
+            {% for photo in photos %}
+            <div class="carousel-item{% if forloop.first %} active{% endif %}">
+                <img src="{{ photo.image.url }}" class="d-block w-100"
+                alt="{% if photo.caption %}{{ photo.caption }}{% else %}{{ auto.brand }} {{ auto.car_model }}{% endif %}">
             </div>
-            {% if auto.photos|length > 1 %}
-            <div class="card-carousel-controls-wrap">
-                <button class="carousel-control-prev card-carousel-control" type="button" data-bs-target="#carouselAuto{{ auto.id }}" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Предыдущее фото</span>
-                </button>
-                <button class="carousel-control-next card-carousel-control" type="button" data-bs-target="#carouselAuto{{ auto.id }}" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Следующее фото</span>
-                </button>
+            {% empty %}
+            <div class="carousel-item active">
+                <img src="{% static 'images/placeholder-car.jpg' %}" class="d-block w-100" alt="{{ auto.brand }} {{ auto.car_model }}">
             </div>
-            <div class="carousel-indicators">
-                {% for photo in auto.photos %}
-                <button type="button" data-bs-target="#carouselAuto{{ auto.id }}" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></button>
-                {% endfor %}
-            </div>
-            {% endif %}
+            {% endfor %}
         </div>
-        <div class="card-body">
-            <h5 class="card-title">{{ auto.stamp|default:auto.brand }} {{ auto.model }}</h5>
-            <p class="card-text text-secondary small mb-2">{{ auto.year|default:auto.year_release }} | {{ auto.mileage|default:auto.probeg|floatformat:0 }} км</p>
-            <p class="card-text fw-bold text-end mb-0">{{ auto.price|default:auto.cost|floatformat:0 }} ₽</p>
+        {% if photos|length > 1 %}
+        <div class="card-carousel-controls-wrap">
+            <button class="carousel-control-prev card-carousel-control" type="button" data-bs-target="#carouselAuto{{ auto.slug }}" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Предыдущее фото</span>
+            </button>
+            <button class="carousel-control-next card-carousel-control" type="button" data-bs-target="#carouselAuto{{ auto.slug }}" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Следующее фото</span>
+            </button>
         </div>
+        <div class="carousel-indicators">
+            {% for photo in photos %}
+            <button type="button" data-bs-target="#carouselAuto{{ auto.slug }}" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></button>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
-</a>
+    <div class="card-body">
+        <h5 class="card-title">
+            <a href="{% url 'auto_store:offer' auto.slug %}" class="card-title-car text-decoration-none text-reset stretched-link-custom">
+                {{ auto.brand }} {{ auto.car_model }}
+            </a>
+        </h5>
+        <p class="card-text text-secondary small mb-2">{{ auto.year_release|date:"Y" }} | {{ auto.mileage|floatformat:0 }} км</p>
+        <p class="card-text fw-bold text-end mb-0">{{ auto.price|floatformat:0 }} ₽</p>
+    </div>
+</div>

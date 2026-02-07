@@ -132,4 +132,13 @@ async function replaceFeedbacks(element) {
         ulPaginationFeedback.appendChild(liPageItemNextFeedback)
     };
 
+    setTimeout(() => {
+        const feedbacksSection = document.getElementById('feedbacks-section');
+        if (feedbacksSection) {
+            feedbacksSection.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    }, 50);
 }

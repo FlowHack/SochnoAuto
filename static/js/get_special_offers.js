@@ -10,7 +10,6 @@ async function replaceSpecialOffers(element) {
     const urlStatic = element.getAttribute('data-url-static');
 
     urlOffer = urlOffer.split("/auto-offer-slug")[0];
-    console.log(page);
 
     const result = await fetch(`${urlGetSpecialOffers}?special_offers_page=${page}`, {
         method: 'GET',
@@ -60,7 +59,6 @@ async function replaceSpecialOffers(element) {
 
                 let link = document.createElement("a");
                 link.href = `${urlOffer}/${offer.slug}/`; // URL предложения
-                console.log(`${urlOffer}/${offer.slug}/`);
                 link.className = "d-block h-100";
                 divItem.appendChild(link);
 
@@ -84,7 +82,7 @@ async function replaceSpecialOffers(element) {
             divItem.appendChild(link);
 
             let img = document.createElement("img");
-            img.src = `${urlStatic}placeholder-car.jpg`;
+            img.src = urlStatic;
             img.className = "d-block w-100 h-100";
             img.style = "object-fit: cover;";
             img.alt = "Нет фото";
@@ -191,5 +189,15 @@ async function replaceSpecialOffers(element) {
     } else {
         btnPaginationSpecialOffersNext.style = "visibility:hidden"
     };
+
+    setTimeout(() => {
+        const specialOffersSection = document.getElementById('special-offers-section');
+        if (specialOffersSection) {
+            specialOffersSection.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    }, 100);
 };
 

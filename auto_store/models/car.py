@@ -47,7 +47,7 @@ class Car(models.Model):
     )
     category = models.ForeignKey(
         CarCategory,
-        related_name='category',
+        related_name='cars_in_category',
         on_delete=models.CASCADE,
         verbose_name='Категория',
     )
@@ -76,8 +76,10 @@ class Car(models.Model):
         super().save(*args, **kwargs)
         if not self.slug:
             self.slug = (
-                f'{slugify(self.brand)}-{slugify(self.car_model)}'
-                f'-{self.id}'
+                slugify(
+                    f'{self.brand}-{self.car_model}-{self.id}',
+                    allow_unicode=True
+                )
             )
             super().save(*args, **kwargs)
 

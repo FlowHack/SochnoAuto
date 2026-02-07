@@ -26,7 +26,7 @@
 </div>
 
 <!-- Специальные предложения -->
-<section class="py-5 position-relative">
+<section class="py-5 position-relative" id="special-offers-section">
     <div class="container">
         <h2 class="section-title">Специальные предложения</h2>
         {% if page_special_offers.has_other_pages %}
@@ -44,27 +44,32 @@
             </div>
         </div>
         {% endif %}
+        <div class="special-offers-navigation">
             <button class="carousel-control-prev" onClick="replaceSpecialOffers(this)"
-            data-page="{% if page_special_offers.has_previous %}{{ page_special_offers.previous_page_number }}{% endif %}" data-url-offer="{% url 'auto_store:offer' 'auto-offer-slug' %}"
-            data-url-static="{% static 'images/homepage' %}"
-            {% if not page_special_offers.has_previous %}style="visibility:hidden"{% endif %}
-            id="btnSpecialOffersPrevious">
+                    data-page="{% if page_special_offers.has_previous %}{{ page_special_offers.previous_page_number }}{% endif %}" 
+                    data-url-offer="{% url 'auto_store:offer' 'auto-offer-slug' %}"
+                    data-url-static="{% static 'images/placeholder-car.jpg' %}"
+                    {% if not page_special_offers.has_previous %}style="visibility:hidden"{% endif %}
+                    id="btnSpecialOffersPrevious">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Предыдущий</span>
             </button>
+            
             <button class="carousel-control-next" onClick="replaceSpecialOffers(this)"
-            data-page="{% if page_special_offers.has_next %}{{ page_special_offers.next_page_number }}{% endif %}" data-url-offer="{% url 'auto_store:offer' 'auto-offer-slug' %}"
-            data-url-static="{% static 'images/homepage' %}"
-            {% if not page_special_offers.has_next %}style="visibility:hidden"{% endif %}
-            id="btnSpecialOffersNext">
+                    data-page="{% if page_special_offers.has_next %}{{ page_special_offers.next_page_number }}{% endif %}" 
+                    data-url-offer="{% url 'auto_store:offer' 'auto-offer-slug' %}"
+                    data-url-static="{% static 'images/placeholder-car.jpg' %}"
+                    {% if not page_special_offers.has_next %}style="visibility:hidden"{% endif %}
+                    id="btnSpecialOffersNext">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Следующий</span>
             </button>
+        </div>
     </div>
 </section>
 
 <!-- Отзывы -->
-<section class="py-5 bg-secondary bg-opacity-25">
+<section class="py-5 bg-secondary bg-opacity-25" id="feedbacks-section">
     <div class="container">
         <h2 class="section-title">Отзывы о нас ({{ feedbacks_count|default:0 }}) <span class="stars-rating">{% for i in "12345" %}{% if forloop.counter <= avg_rating|default:5 %}★{% else %}☆{% endif %}{% endfor %}</span></h2>
         <div id="feedbacksBlock" class="row g-4">

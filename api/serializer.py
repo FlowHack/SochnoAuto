@@ -18,5 +18,5 @@ class CarWithImagesSerializer(serializers.ModelSerializer):
         model = Car
         fields = [
             'brand', 'car_model', 'year_release', 'price', 'slug',
-            'ordered_images'
+            'ordered_images', 'mileage'
         ]
