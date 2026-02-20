@@ -1,0 +1,50 @@
+{% load static %}
+<div class="card card-dark h-100">
+    <div id="carouselOffer{{ offer.slug }}" class="carousel slide card-carousel" data-bs-interval="false" data-bs-touch="true">
+        <div class="carousel-inner">
+            {% if offer.ordered_images %}
+                {% for image in offer.ordered_images %}
+                <div class="carousel-item{% if forloop.first %} active{% endif %}">
+                    <a href="{% url 'auto_store:offer' offer.slug %}" class="d-block h-100">
+                        <img src="{{ image.image.url }}" class="d-block w-100 h-100" style="object-fit: cover;" alt="{{ offer.brand }} {{ offer.car_model }}" loading="lazy">
+                    </a>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="carousel-item active">
+                    <a href="{% url 'auto_store:offer' offer.slug %}" class="d-block h-100">
+                        <img src="{% static 'images/placeholder-car.jpg' %}" class="d-block w-100 h-100" style="object-fit: cover;" alt="Нет фото">
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+        {% if offer.ordered_images and offer.ordered_images|length > 1 %}
+        <div class="card-carousel-controls-wrap">
+            <button class="carousel-control-prev card-carousel-control" type="button" data-bs-target="#carouselOffer{{ offer.slug }}" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Предыдущее фото</span>
+            </button>
+            <button class="carousel-control-next card-carousel-control" type="button" data-bs-target="#carouselOffer{{ offer.slug }}" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Следующее фото</span>
+            </button>
+        </div>
+        
+        <div class="carousel-indicators">
+            {% for image in offer.ordered_images %}
+            <button type="button" data-bs-target="#carouselOffer{{ offer.slug }}" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></button>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="card-body">
+        <h5 class="card-title">
+            <a href="{% url 'auto_store:offer' offer.slug %}" class="card-title-car text-decoration-none text-reset stretched-link-custom">
+                {{ offer.brand }} {{ offer.car_model }}
+            </a>
+        </h5>
+        <p class="card-text text-secondary small mb-2">{{ offer.year_release|date:"Y" }}</p>
+        <p class="card-text fw-bold text-end mb-0">{{ offer.price|floatformat:0 }} ₽</p>
+    </div>
+</div>

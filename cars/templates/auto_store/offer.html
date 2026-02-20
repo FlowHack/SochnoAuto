@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ offer.brand }} {{ offer.model }}{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div id="carouselOfferMain" class="carousel slide offer-carousel-large" data-bs-ride="carousel" data-bs-touch="true">
+                    {% with photos=offer.car_images.all %}
+                    <div class="carousel-inner">
+                        {% for photo in photos %}
+                        <div class="carousel-item{% if forloop.first %} active{% endif %}">
+                            <img src="{{ photo.image.url }}" class="d-block w-100" style="border-radius: 20px;"
+                            alt="{% if photo.caption %}{{ photo.caption }}{% else %}{{ offer.brand }} {{ offer.model }}{% endif %}">
+                        </div>
+                        {% empty %}
+                        <div class="carousel-item active">
+                            <img style="border-radius: 20px;" src="{% static 'images/placeholder-car.jpg' %}" class="d-block w-100" alt="{{ offer.brand }} {{ offer.model }}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% if photos|length > 1 %}
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselOfferMain" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Предыдущий</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselOfferMain" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Следующий</span>
+                    </button>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="d-flex flex-column gap-3">
+                    <a href="{% url 'homepage:contacts' %}#contact" class="btn btn-contact btn-lg w-100">Связаться с нами</a>
+                    <button type="button" class="btn btn-outline-light btn-lg w-100" data-bs-toggle="modal" data-bs-target="#orderModal">Заказать автотеку</button>
+                </div>
+                <div class="mt-4 p-3 rounded" style="background: var(--bg-card); border: 1px solid var(--border-color);">
+                    <p class="mb-2"><strong>Год выпуска:</strong> {{ offer.year_release|date:"Y" }}</p>
+                    <p class="mb-2"><strong>Пробег:</strong> {{ offer.mileage|floatformat:0 }} км</p>
+                    <p class="mb-2"><strong>Тип топлва:</strong> {{ offer.get_fuel_type_display }}</p>
+                    <p class="mb-0 fs-4 fw-bold text-primary">{{ offer.price|floatformat:0 }} ₽</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-5">
+            <ul class="nav nav-tabs nav-tabs-dark justify-content-center" role="tablist" style="margin-top: 70px">
+                <li class="nav-item">
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabDescription" type="button">Описание</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabSpecs" type="button">Техническая информация</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tabComfort" type="button">Комфорт</button>
+                </li>
+            </ul>
+            <div class="tab-content mt-3">
+                <div class="tab-pane fade show active" id="tabDescription">
+                    <div class="p-3 rounded" style="background: var(--bg-card); border: 1px solid var(--border-color);">
+                        {% if offer.description %}
+                        <div class="offer-description">{{ offer.description|safe }}</div>
+                        {% else %}
+                        <p class="text-secondary mb-0">Описание отсутствует</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="tabSpecs">
+                    <div class="p-3 rounded" style="background: var(--bg-card); border: 1px solid var(--border-color);">
+                        <table class="table table-dark table-borderless mb-0">
+                            {% for spec in offer.parameters.all %}
+                            <tr>
+                                <td class="text-secondary py-2">{{ spec.key }}</td>
+                                <td class="text-end py-2">{{ spec.value }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td class="text-secondary">Характеристики отсутствуют</td></tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="tabComfort">
+                    <div class="p-3 rounded" style="background: var(--bg-card); border: 1px solid var(--border-color);">
+                        <table class="table table-dark table-borderless mb-0">
+                            {% for spec in offer.comfort_parameters.all %}
+                            <tr>
+                                <td class="text-secondary py-2">{{ spec.key }}</td>
+                                <td class="text-end py-2">{{ spec.value }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td class="text-secondary">Опции отсутствуют</td></tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal заказа автотеки -->
+<div class="modal fade modal-dark" id="orderModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title">Заказать автотеку</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <form id="orderForm" method="post" action="{% url 'auto_store:order_request_slug' offer.slug %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="orderName" class="form-label">Ваше имя</label>
+                        <input type="text" class="form-control" id="orderName" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="orderEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="orderEmail" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="orderTelephonNumber" class="form-label">Номер телефона</label>
+                        <input type="tel" class="form-control" id="orderTelephonNumber" name="telephonNumber" required>
+                    </div>
+                </div>
+                <div class="modal-footer border-secondary">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-contact">Запросить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('orderForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var form = this;
+    var submitBtn = form.querySelector('button[type="submit"]');
+    var originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Отправка...';
+
+    var formData = new FormData(form);
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+        if (data.success) {
+            bootstrap.Modal.getInstance(document.getElementById('orderModal')).hide();
+            form.reset();
+            var alert = document.createElement('div');
+            alert.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3';
+            alert.style.zIndex = '9999';
+            alert.innerHTML = 'Запрос отправлен! Мы свяжемся с вами в ближайшее время.<button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
+            document.body.appendChild(alert);
+            setTimeout(function() { alert.remove(); }, 5000);
+        } else {
+            alert(data.error || 'Ошибка отправки');
+        }
+    })
+    .catch(function() {
+        alert('Ошибка отправки. Попробуйте позже.');
+    })
+    .finally(function() {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+    });
+});
+</script>
+{% endblock %}
