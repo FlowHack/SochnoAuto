@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'adminsortable2',
     'django_cleanup.apps.CleanupConfig',
     'homepage.apps.HomepageConfig',
     'cars.apps.CarsConfig',
