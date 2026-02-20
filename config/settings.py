@@ -23,7 +23,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'homepage.apps.HomepageConfig'
+    'homepage.apps.HomepageConfig',
+    'cars.apps.CarsConfig',
 ]
 
 MIDDLEWARE = [
@@ -44,6 +45,7 @@ TEMPLATES = [
         'DIRS': [
             BASE_DIR / 'templates',
             BASE_DIR / 'homepage/templates',
+            BASE_DIR / 'cars/templates'
         ],
         'APP_DIRS': True,
         'OPTIONS': {
