@@ -5,6 +5,10 @@ from django.db import models
 class Feedback(models.Model):
     """Модель отзыва с Авито"""
 
+    feedback_avito_id = models.PositiveIntegerField(
+        'ID отзыва в Авито БД',
+        unique=True
+    )
     name_user = models.CharField(
         'Имя пользователя',
         max_length=200,
@@ -27,7 +31,7 @@ class Feedback(models.Model):
         null=True,
         max_length=250,
     )
-    date_create = models.DateTimeField(
+    date_create = models.DateField(
         'Дата добавления отзыва'
     )
     avatar = models.URLField(
