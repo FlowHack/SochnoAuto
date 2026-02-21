@@ -1,12 +1,14 @@
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django_cleanup import cleanup
-from django.core.validators import FileExtensionValidator
 
 from .car import Car
 
 
 @cleanup.select
 class CarImage(models.Model):
+    """Модель изображения для автомобиля"""
+
     car = models.ForeignKey(
         Car,
         related_name='car_images',

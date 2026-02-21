@@ -1,6 +1,6 @@
 from .car import Car
-from .category import CarCategory
 from .car_image import CarImage
+from .category import CarCategory
 
 __all__ = [
     'Car',
