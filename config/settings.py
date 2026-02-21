@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'adminsortable2',
+    'django_ckeditor_5',
     'django_cleanup.apps.CleanupConfig',
     'homepage.apps.HomepageConfig',
     'cars.apps.CarsConfig',
@@ -124,6 +125,20 @@ AVITO_USER_ID = os.environ.get('AVITO_USER_ID')
 
 LOGS_DIR = BASE_DIR / 'logs'
 os.makedirs(LOGS_DIR, exist_ok=True)
+
+CKEDITOR_5_CONFIGS = {
+    'default': {
+        'toolbar': {
+            'items': [
+                'heading', '|', 'bold', 'italic', 'underline', 'link',
+                '|', 'fontSize', 'fontFamily', 'fontColor', 'alignment', '|',
+                'bulletedList', 'numberedList', 'blockQuote', 'insertTable',
+            ],
+        },
+        'language': 'ru',
+
+    },
+}
 
 LOGGING = {
     'version': 1,
