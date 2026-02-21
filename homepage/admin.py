@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.urls import path
 
 from .models import Feedback, HomepageImage
-from .services.avito_parser import AvitoFeedbackParser
+from .services import AvitoFeedbackParser
 
 
 @admin.register(HomepageImage)

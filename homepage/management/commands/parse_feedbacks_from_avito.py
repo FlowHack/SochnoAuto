@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 
-from homepage.services.avito_parser import AvitoFeedbackParser
+from homepage.services import AvitoFeedbackParser
 
 
 class Command(BaseCommand):
