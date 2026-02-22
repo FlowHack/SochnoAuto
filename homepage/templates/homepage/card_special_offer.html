@@ -44,7 +44,10 @@
                 {{ offer.brand }} {{ offer.model }}
             </a>
         </h5>
-        <p class="card-text text-secondary small mb-2">{{ offer.year_release|date:"Y" }}</p>
+        <p class="card-text text-secondary small mb-2">
+            {% if offer.engine_capacity %}{{ offer.engine_capacity }} {% endif %}{{ offer.type_transmission|upper }}
+        </p>
+        <p class="card-text text-secondary small mb-2">{{ offer.year_release }} | {{ offer.mileage }}</p>
         <p class="card-text fw-bold text-end mb-0">{{ offer.price|floatformat:0 }} ₽</p>
     </div>
 </div>
