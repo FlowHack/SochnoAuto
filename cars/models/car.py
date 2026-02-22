@@ -22,6 +22,70 @@ class Car(models.Model):
         HYDROGEN = 'hydrogen', 'Водород'
         LPG = 'lpg', 'СНГ (пропан-бутан)'
 
+    class WheelPosition(models.TextChoices):
+        """Варианты расположения руля"""
+
+        LEFT = 'left', 'Левый'
+        RIGHT = 'right', 'Правый'
+        CENTER = 'center', 'Центр'
+
+    class TypeTransmission(models.TextChoices):
+        """Тип коробки передач"""
+
+        AT = 'at', 'Автомат'
+        AMT = 'amt', 'Робот',
+        MT = 'mt', 'Механика',
+        CVT = 'cvt', 'Вариатор'
+
+    class CarBody(models.TextChoices):
+        """Тип кузова автомобиля"""
+
+        # Основные типы кузовов
+        SEDAN = 'sedan', 'Седан'
+        HATCHBACK = 'hatchback', 'Хэтчбек'
+        UNIVERSAL = 'universal', 'Универсал'
+        COUPE = 'coupe', 'Купе'
+        CABRIOLET = 'cabriolet', 'Кабриолет'
+        ROADSTER = 'roadster', 'Родстер'
+
+        # Внедорожники и кроссоверы
+        SUV = 'suv', 'Внедорожник'
+        CROSSOVER = 'crossover', 'Кроссовер'
+        OFF_ROAD = 'off_road', 'Внедорожник (полноразмерный)'
+
+        # Минивэны и микроавтобусы
+        MINIVAN = 'minivan', 'Минивэн'
+        VAN = 'van', 'Микроавтобус'
+        MINIBUS = 'minibus', 'Микроавтобус (до 9 мест)'
+
+        # Пикапы и коммерческие
+        PICKUP = 'pickup', 'Пикап'
+        TRUCK = 'truck', 'Грузовик'
+        VAN_COMMERCIAL = 'van_commercial', 'Фургон'
+
+        # Спортивные и специальные
+        SPORT = 'sport', 'Спорткар'
+        GT = 'gt', 'Гран Туризмо'
+        TARGA = 'targa', 'Тарга'
+
+        # Электрические и современные
+        ELECTRIC = 'electric', 'Электромобиль'
+        CROSS_COUPE = 'cross_coupe', 'Кросс-купе'
+        LIFTBACK = 'liftback', 'Лифтбек'
+        FASTBACK = 'fastback', 'Фастбек'
+
+        # Ретро и классика
+        CLASSIC = 'classic', 'Классический'
+        RETRO = 'retro', 'Ретро'
+
+        # Другие
+        LIMOUSINE = 'limousine', 'Лимузин'
+        CONVERTIBLE = 'convertible', 'Кабриолет (мягкий верх)'
+        WAGON = 'wagon', 'Универсал (американский)'
+        COMPACT = 'compact', 'Компактный'
+        SUBCOMPACT = 'subcompact', 'Субкомпактный'
+        MICROCAR = 'microcar', 'Микрокар'
+
     brand = models.CharField(
         'Бренд',
         max_length=50,
@@ -67,6 +131,35 @@ class Car(models.Model):
         max_length=30,
         blank=True,
         help_text='Укажите цвет кузова автомобиля'
+    )
+    wheel_position = models.CharField(
+        'Положение руля',
+        max_length=15,
+        help_text='Выберите положение руля',
+        choices=WheelPosition.choices,
+        default=WheelPosition.LEFT
+    )
+    engine_capacity = models.FloatField(
+        'Объем двигателя',
+        help_text='Укажите объем двигателя',
+        null=True, blank=True,
+        validators=[
+            MinValueValidator(0.0)
+        ]
+    )
+    type_transmission = models.TextField(
+        'Коробка передач',
+        max_length=20,
+        help_text='Выберите тип коробки передач',
+        choices=TypeTransmission.choices,
+        default=TypeTransmission.MT
+    )
+    car_body = models.TextField(
+        'Тип кузова автомобиля',
+        max_length=40,
+        help_text='Выберите тип кузова автомобиля',
+        choices=CarBody.choices,
+        default=CarBody.SEDAN
     )
     price = models.PositiveIntegerField(
         'Стоимость автомобиля в рублях',
@@ -114,6 +207,9 @@ class Car(models.Model):
         verbose_name_plural = 'Автомобили'
 
     def save(self, *args, **kwargs):
+        if self.sold and self.is_special_offer:
+            self.is_special_offer = False
+
         if self.is_special_offer and not self.date_is_special_offer:
             self.date_is_special_offer = timezone.now()
         elif not self.is_special_offer:
