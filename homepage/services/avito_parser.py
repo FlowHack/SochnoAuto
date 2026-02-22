@@ -5,6 +5,10 @@ import dateparser
 import requests
 from django.conf import settings
 from requests.exceptions import RequestException
+from django.core.files import File
+from urllib.parse import urlparse
+import os
+from io import BytesIO
 
 from homepage.models import Feedback
 
@@ -33,7 +37,7 @@ class AvitoFeedbackParser:
     def parse_and_save(self) -> tuple[int, int]:
         """Главный метод запуска парсинга
 
-        Возвращает tuple (всего отзывов, отзывов добавлено)
+        Return: Всего отзывов обработано, отзывов из них добавлено
         """
 
         offset = 0
@@ -88,13 +92,22 @@ class AvitoFeedbackParser:
         if not feedback_avito_id:
             return
 
+        avatar_value = value.get('avatar', None)
+        if avatar_value is not None:
+            avatar_url = (
+                avatar_value.get('36x36') or avatar_value.get('64x64') or
+                avatar_value.get('48x48') or avatar_value.get('50x50') or
+                avatar_value.get('60x40') or avatar_value.get('96x64')
+            )
+        avatar = self._download_avatar(avatar_url)
+
         defaults = {
             'name_user': value.get('title', 'Аноним'),
             'feedback': value.get('textSections', [{}])[0].get('text'),
             'score': value.get('score'),
             'item_object': value.get('itemTitle'),
             'answer': value.get('answer', {}).get('text'),
-            'avatar': value.get('avatar', {}).get('64x64')
+            'avatar': avatar if avatar else None
         }
 
         rated = dateparser.parse(
@@ -110,3 +123,36 @@ class AvitoFeedbackParser:
         self.count_total += 1
         if create:
             self.count_new += 1
+
+    def _download_avatar(self, avatar_url: str) -> File | None:
+        """Метод загружает аватар и возвращает Django File object для
+        прикрепления его к модели
+
+        Args:
+            avatar_url: Ссылка на автар, который необходимо скачать
+
+        Return: Объект картинки дял прикрепления к модели
+        """
+
+        if not avatar_url:
+            return None
+
+        try:
+            response = requests.get(avatar_url, timeout=10)
+            response.raise_for_status()
+
+            image_content = BytesIO(response.content)
+
+            parsed_url = urlparse(avatar_url)
+            filename = os.path.basename(parsed_url.path)
+            if not filename or '.' not in filename:
+                filename = 'avatar.jpg'
+
+            file_obj = File(image_content, name=filename)
+            return file_obj
+        except RequestException as e:
+            logger.warning(
+                f'Ошибка при скачивании аватара "{avatar_url}": {e}'
+            )
+
+        return None

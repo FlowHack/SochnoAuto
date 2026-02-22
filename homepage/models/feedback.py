@@ -1,7 +1,9 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django_cleanup import cleanup
 
 
+@cleanup.select
 class Feedback(models.Model):
     """Модель отзыва с Авито"""
 
@@ -34,10 +36,12 @@ class Feedback(models.Model):
     date_create = models.DateField(
         'Дата добавления отзыва'
     )
-    avatar = models.URLField(
-        'Ссылка на аватар',
-        max_length=200,
-        null=True
+    avatar = models.ImageField(
+        'Аватар',
+        upload_to='feedback_avatars/%Y/%m/%d/',
+        max_length=500,
+        null=True,
+        blank=True
     )
 
     class Meta:
@@ -51,3 +55,10 @@ class Feedback(models.Model):
             if len(self.feedback) > 15 else self.feedback
         )
         return f'{self.name_user}: {feedback}'
+
+    def has_avatar(self):
+        """Возвращает есть ли аватар у отзыва"""
+
+        if self.avatar and hasattr(self.avatar, 'url'):
+            return True
+        return False

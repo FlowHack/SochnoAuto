@@ -2,12 +2,21 @@
 <div class="card feedback-card h-100">
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-start mb-2">
-            <h6 class="card-title mb-0" style="color: #f1f5f9">{{ feedback.name_user }}</h6>
-            <div class="stars-rating">
-                {% for i in "12345" %}
-                <span>{% if forloop.counter <= feedback.score|default:5 %}★{% else %}☆{% endif %}</span>
-                {% endfor %}
+            <div class="d-flex align-items-center gap-2 mb-2">
+                {% if feedback.has_avatar %}
+                <img class="sochno-logo-icon" style="width: 32px; height: 32px; font-size: 0.9rem;" src="{{ MEDIA_URL }}{{ feedback.avatar.url }}">
+                {% else %}
+                <div class="sochno-logo-icon">
+                    <span>👤</span>
+                </div>
+                {% endif %}
+                <strong style="color: #f1f5f9">{{ feedback.name_user }}</strong>
             </div>
+        </div>
+        <div class="stars-rating" style="padding-bottom: 5px;">
+            {% for i in "12345" %}
+            <span>{% if forloop.counter <= feedback.score|default:5 %}★{% else %}☆{% endif %}</span>
+            {% endfor %}
         </div>
         <p class="card-text text-secondary small">
             {% if feedback.feedback is not None %}
