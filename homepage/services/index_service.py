@@ -12,7 +12,7 @@ from homepage.models import Feedback, HomepageImage
 class IndexService(PaginationMixin):
     """Сервис для главной страницы"""
 
-    NUMBER_ITEM_PAGINATOR_FEEDBACKS = 6
+    NUMBER_ITEM_PAGINATOR_FEEDBACKS = 3
     NUMBER_ITEM_PAGINATOR_SPECIAL_OFFERS = 3
 
     def get_index_context(self, request: HttpRequest) -> dict[str, Any]:
