@@ -5,7 +5,7 @@ from django.db.models import Avg, Count, Prefetch, QuerySet
 from django.http import HttpRequest
 
 from cars.models import Car, CarImage
-from core.services import PaginationMixin, PageData
+from core.services import PageData, PaginationMixin
 from homepage.models import Feedback, HomepageImage
 
 

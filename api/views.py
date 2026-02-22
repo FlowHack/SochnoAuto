@@ -1,7 +1,8 @@
-from rest_framework.views import APIView
-from homepage.services import IndexService
 from django.template.loader import render_to_string
 from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from homepage.services import IndexService
 
 
 class SpecialOffersAPIView(APIView, IndexService):

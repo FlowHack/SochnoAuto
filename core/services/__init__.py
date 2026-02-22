@@ -1,4 +1,4 @@
-from .pagination import PaginationMixin, PageData
+from .pagination import PageData, PaginationMixin
 
 __all__ = [
     'PaginationMixin',

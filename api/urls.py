@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import SpecialOffersAPIView, FeedbacksAPIView
+
+from .views import FeedbacksAPIView, SpecialOffersAPIView
 
 app_name = 'api'
 

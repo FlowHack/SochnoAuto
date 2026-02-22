@@ -1,5 +1,6 @@
-from .car import Car
 from django.db import models
+
+from .car import Car
 
 
 class CarParameter(models.Model):

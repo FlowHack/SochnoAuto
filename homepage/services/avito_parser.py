@@ -1,14 +1,14 @@
 import logging
+import os
 from datetime import date
+from io import BytesIO
+from urllib.parse import urlparse
 
 import dateparser
 import requests
 from django.conf import settings
-from requests.exceptions import RequestException
 from django.core.files import File
-from urllib.parse import urlparse
-import os
-from io import BytesIO
+from requests.exceptions import RequestException
 
 from homepage.models import Feedback
 

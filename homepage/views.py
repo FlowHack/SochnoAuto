@@ -1,6 +1,7 @@
-from django.views import View
-from .services import IndexService
 from django.shortcuts import render
+from django.views import View
+
+from .services import IndexService
 
 
 class IndexView(View, IndexService):
