@@ -8,7 +8,7 @@
 <div id="carouselDealership" class="carousel slide carousel-dealership" data-bs-ride="carousel" data-bs-touch="true">
     <div class="carousel-inner">
         {% for image in dealership_images %}
-        {% include "homepage/preview_dealership.html" with image=image %}
+        {% include "homepage/includes/preview_dealership.html" with image=image %}
         {% empty %}
         <div class="carousel-item active">
             <img src="{% static 'images/placeholder-dealership.jpg' %}" class="d-block w-100" alt="СОЧНОАВТО" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%221200%22 height=%22600%22%3E%3Crect fill=%22%231a2332%22 width=%221200%22 height=%22600%22/%3E%3Ctext fill=%22%2394a3b8%22 x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2248%22%3EСОЧНОАВТО%3C/text%3E%3C/svg%3E'">
@@ -31,11 +31,7 @@
         <h2 class="section-title">Специальные предложения</h2>
         {% if page_special_offers.object_list %}
         <div id="mainBlockSpecialOffers" class="row g-4" style="margin-bottom: 30px">
-            {% for offer in page_special_offers.object_list %}
-            <div class="col-md-6 col-lg-4">
-                {% include "homepage/card_special_offer.html" with offer=offer %}
-            </div>
-            {% endfor %}
+            {% include "homepage/partials/cards_special_offers.html" with page_special_offers=page_special_offers %}
         </div>
         {% else %}
         <div class="row g-4">
@@ -44,26 +40,8 @@
             </div>
         </div>
         {% endif %}
-        <div class="special-offers-navigation">
-            <button class="carousel-control-prev" onClick="replaceSpecialOffers(this)"
-                    data-page="{% if page_special_offers.has_previous %}{{ page_special_offers.previous_page_number }}{% endif %}" 
-                    data-url-offer="{% url 'cars:offer' 'auto-offer-slug' %}"
-                    data-url-static="{% static 'images/placeholder-car.jpg' %}"
-                    {% if not page_special_offers.has_previous %}style="visibility:hidden"{% endif %}
-                    id="btnSpecialOffersPrevious">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Предыдущий</span>
-            </button>
-            
-            <button class="carousel-control-next" onClick="replaceSpecialOffers(this)"
-                    data-page="{% if page_special_offers.has_next %}{{ page_special_offers.next_page_number }}{% endif %}" 
-                    data-url-offer="{% url 'cars:offer' 'auto-offer-slug' %}"
-                    data-url-static="{% static 'images/placeholder-car.jpg' %}"
-                    {% if not page_special_offers.has_next %}style="visibility:hidden"{% endif %}
-                    id="btnSpecialOffersNext">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Следующий</span>
-            </button>
+        <div class="special-offers-navigation" id="divPaginationSpecialOffers">
+            {% include "homepage/partials/pagination_special_offers.html" with page_feedbacks=page_feedbacks %}
         </div>
     </div>
 </section>
@@ -73,31 +51,12 @@
     <div class="container">
         <h2 class="section-title">Отзывы о нас ({{ feedbacks_stats.feedbacks_count|default:0 }}) <span class="stars-rating">{% for i in "12345" %}{% if forloop.counter <= feedbacks_stats.avg_rating|default:5 %}★{% else %}☆{% endif %}{% endfor %}</span></h2>
         <div id="feedbacksBlock" class="row g-4">
-            {% for feedback in page_feedbacks.object_list %}
-            <div class="col-md-6 col-lg-4">
-                {% include "homepage/card_feedback.html" with feedback=feedback %}
-            </div>
-            {% empty %}
-            <div class="col-12 text-center text-secondary py-4">Отзывы скоро появятся</div>
-            {% endfor %}
+            {% include "homepage/partials/cards_feedbacks.html" with page_feedbacks=page_feedbacks %}
         </div>
         {% if page_feedbacks and page_feedbacks.has_other_pages %}
         <nav aria-label="Пагинация" class="d-flex justify-content-center" style="margin-top: 1rem;">
             <ul id="ulPaginationFeedback" class="pagination pagination-dark">
-                {% if page_feedbacks.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" data-page="{{ pagepage_feedbacks_obj.previous_page_number }}"
-                    data-icon="{% static 'favicon.png' %}"
-                    onClick="replaceFeedbacks(this)">Назад</a>
-                </li>
-                {% endif %}
-                {% if page_feedbacks.has_next %}
-                <li class="page-item">
-                    <a class="page-link" data-page="{{ page_feedbacks.next_page_number }}"
-                    data-icon="{% static 'favicon.png' %}"
-                    onClick="replaceFeedbacks(this)">Далее</a>
-                </li>
-                {% endif %}
+                {% include "homepage/partials/pagination_feedbacks.html" with page_feedbacks=page_feedbacks %}
             </ul>
         </nav>
         {% endif %}
@@ -106,6 +65,6 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/get_feedbacks.js' %}"></script>
-<script src="{% static 'js/get_special_offers.js' %}"></script>
+<script src="{% static 'js/paginationFeedbacks.js' %}"></script>
+<script src="{% static 'js/paginationSpecialOffers.js' %}"></script>
 {% endblock extra_js %}

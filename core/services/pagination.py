@@ -8,9 +8,12 @@ T = TypeVar('T')
 
 
 class PageData(TypedDict):
-    objects: Sequence[T]
-    has_next: bool
-    has_previous: bool
+    class HasPagesData(TypedDict):
+        has_next: bool
+        has_previous: bool
+
+    page: Page[T]
+    has_pages: HasPagesData
 
 
 class PaginationMixin:
@@ -41,7 +44,7 @@ class PaginationMixin:
         per_page: int,
         is_object: bool = True
     ) -> Page[T] | PageData:
-        """Создает пагинацию по данным.
+        """Создает пагинацию по данным
 
         Args:
             queryset: Принимает Django QuerySet, список,
@@ -77,7 +80,9 @@ class PaginationMixin:
         Return: Словарь со значениями есть ли страница до и после и object_list
         """
         return {
-            'objects': list(page.object_list),
-            'has_next': page.has_next(),
-            'has_previous': page.has_previous()
+            'page': page,
+            'has_pages': {
+                'has_next': page.has_next(),
+                'has_previous': page.has_previous()
+            }
         }

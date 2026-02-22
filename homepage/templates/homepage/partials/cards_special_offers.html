@@ -1,0 +1,5 @@
+{% for offer in page_special_offers.object_list %}
+    <div class="col-md-6 col-lg-4">
+        {% include "homepage/includes/card_special_offer.html" with offer=offer %}
+    </div>
+{% endfor %}

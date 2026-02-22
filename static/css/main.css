@@ -664,3 +664,7 @@ main {
 .card-title-car:hover {
   color: var(--accent) !important;
 }
+
+.cursor-pointer {
+  cursor: pointer !important
+}

@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'homepage.apps.HomepageConfig',
     'cars.apps.CarsConfig',
+    'api.apps.ApiConfig',
 ]
 
 MIDDLEWARE = [
