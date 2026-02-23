@@ -1,11 +1,16 @@
+from typing import TypeVar
+
+from django.core.paginator import Page
+from django.http import HttpRequest
 from django.template.loader import render_to_string
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.http import HttpRequest
-from cars.models import Car
-from django.core.paginator import Page
 
+from cars.models import Car
+from homepage.models import Feedback
 from homepage.services import IndexService
+
+T = TypeVar['T']
 
 
 class PaginatedPartialsAPIView(APIView):
@@ -14,11 +19,18 @@ class PaginatedPartialsAPIView(APIView):
     template_cards = None
     template_pagination = None
 
-    def get_page_data(self, request: HttpRequest):
+    def get_page_data(self, request: HttpRequest) -> Page[T]:
         """Реализуется в дочерних классах, получает пагинированные данные
 
         Args:
-            request: Объект запроса
+            request (HttpRequest): Объект запроса
+
+        Raises:
+            NotImplementedError: Вызывается, если метод не был объявлен
+                в дочернем классе
+
+        Returns:
+            Page[T]: Объект с пагинированными данными
         """
 
         raise NotImplementedError
@@ -60,5 +72,5 @@ class FeedbacksAPIView(PaginatedPartialsAPIView):
     template_cards = 'homepage/partials/cards_feedbacks.html'
     template_pagination = 'homepage/partials/pagination_feedbacks.html'
 
-    def get_page_data(self, request: HttpRequest) -> Page[Car]:
+    def get_page_data(self, request: HttpRequest) -> Page[Feedback]:
         return IndexService().get_page_feedbacks(request)
