@@ -1,55 +1,64 @@
 from django.template.loader import render_to_string
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.http import HttpRequest
+from cars.models import Car
+from django.core.paginator import Page
 
 from homepage.services import IndexService
 
 
-class SpecialOffersAPIView(APIView, IndexService):
+class PaginatedPartialsAPIView(APIView):
+    """Абстрактный класс для отрисовки пагинированных данных"""
+
+    template_cards = None
+    template_pagination = None
+
+    def get_page_data(self, request: HttpRequest):
+        """Реализуется в дочерних классах, получает пагинированные данные
+
+        Args:
+            request: Объект запроса
+        """
+
+        raise NotImplementedError
+
+    def get(self, request):
+        page = self.get_page_data(request)
+
+        html_cards = render_to_string(
+            self.template_cards,
+            {'page': page},
+            request=request
+        )
+        html_pagination = render_to_string(
+            self.template_pagination,
+            {'page': page}
+        )
+
+        return Response(
+            {
+                'html_cards': html_cards,
+                'html_pagination': html_pagination
+            }
+        )
+
+
+class SpecialOffersAPIView(PaginatedPartialsAPIView):
     """Класс для обработки запросов по специальным предложениям"""
 
-    def get(self, request):
-        page = self.get_page_special_offers(request)
+    template_cards = 'homepage/partials/cards_special_offers.html'
+    template_pagination = 'homepage/partials/pagination_special_offers.html'
 
-        html_special_offers = render_to_string(
-            'homepage/partials/cards_special_offers.html',
-            {'page_special_offers': page},
-            request=request
-        )
-        html_pagination = render_to_string(
-            'homepage/partials/pagination_special_offers.html',
-            {'page_special_offers': page},
-            request=request
-        )
-
-        return Response(
-            {
-                'html_special_offers': html_special_offers,
-                'html_pagination': html_pagination
-            }
-        )
+    def get_page_data(self, request: HttpRequest) -> Page[Car]:
+        return IndexService().get_page_special_offers(request)
 
 
-class FeedbacksAPIView(APIView, IndexService):
+class FeedbacksAPIView(PaginatedPartialsAPIView):
     """Класс для обработки запросов по отзывам"""
 
-    def get(self, request):
-        page = self.get_page_feedbacks(request)
+    template_cards = 'homepage/partials/cards_feedbacks.html'
+    template_pagination = 'homepage/partials/pagination_feedbacks.html'
 
-        html_feedbacks = render_to_string(
-            'homepage/partials/cards_feedbacks.html',
-            {'page_feedbacks': page},
-            request=request
-        )
-        html_pagination = render_to_string(
-            'homepage/partials/pagination_feedbacks.html',
-            {'page_feedbacks': page},
-            request=request
-        )
-
-        return Response(
-            {
-                'html_feedbacks': html_feedbacks,
-                'html_pagination': html_pagination
-            }
-        )
+    def get_page_data(self, request: HttpRequest) -> Page[Car]:
+        return IndexService().get_page_feedbacks(request)

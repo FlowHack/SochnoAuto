@@ -1,12 +1,12 @@
-{% if page_feedbacks.has_previous %}
+{% if page.has_previous %}
 <li class="page-item cursor-pointer">
-    <a class="page-link" data-page="{{ page_feedbacks.previous_page_number }}"
+    <a class="page-link" data-page="{{ page.previous_page_number }}"
     onClick="replaceFeedbacks(this)">Назад</a>
 </li>
 {% endif %}
-{% if page_feedbacks.has_next %}
+{% if page.has_next %}
 <li class="page-item cursor-pointer">
-    <a class="page-link" data-page="{{ page_feedbacks.next_page_number }}"
+    <a class="page-link" data-page="{{ page.next_page_number }}"
     onClick="replaceFeedbacks(this)">Далее</a>
 </li>
 {% endif %}

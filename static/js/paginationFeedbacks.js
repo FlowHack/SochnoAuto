@@ -16,7 +16,7 @@ async function replaceFeedbacks(element) {
         }
     )
     const resultJSON = await result.json()
-    const htmlFeedbacks = resultJSON.html_feedbacks
+    const htmlFeedbacks = resultJSON.html_cards
     const htmlPagination = resultJSON.html_pagination
 
     divFeedbacks.innerHTML = htmlFeedbacks

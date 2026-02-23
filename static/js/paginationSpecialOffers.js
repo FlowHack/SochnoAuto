@@ -16,8 +16,10 @@ async function replaceSpecialOffers(element) {
         }
     )
     const resultJSON = await result.json()
-    const htmlSpecialOffers = resultJSON.html_special_offers
+    const htmlSpecialOffers = resultJSON.html_cards
     const htmlPagination = resultJSON.html_pagination
+
+    console.log(htmlSpecialOffers)
 
     divSpecialOffers.innerHTML = htmlSpecialOffers
     divPaginationSpecialOffers.innerHTML = htmlPagination
