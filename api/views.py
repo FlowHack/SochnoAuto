@@ -10,7 +10,7 @@ from cars.models import Car
 from homepage.models import Feedback
 from homepage.services import IndexService
 
-T = TypeVar['T']
+T = TypeVar('T')
 
 
 class PaginatedPartialsAPIView(APIView):
