@@ -5,6 +5,6 @@ from .views import CategoryView, OfferView
 app_name = 'cars'
 
 urlpatterns = [
-    path('', CategoryView.as_view(), name='categories'),
+    path('category/', CategoryView.as_view(), name='category'),
     path('offer/<slug:slug>/', OfferView.as_view(), name='offer')
 ]

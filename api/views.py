@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from cars.models import Car
+from cars.services import CategoryService
 from homepage.models import Feedback
 from homepage.services import IndexService
 
@@ -74,3 +75,18 @@ class FeedbacksAPIView(PaginatedPartialsAPIView):
 
     def get_page_data(self, request: HttpRequest) -> Page[Feedback]:
         return IndexService().get_page_feedbacks(request)
+
+
+class CategoryAPIView(PaginatedPartialsAPIView):
+    """Класс для обработки запросов по категориям"""
+
+    template_cards = 'cars/partials/cards_cars.html'
+    template_pagination = 'cars/partials/pagination_cars.html'
+
+    def get_page_data(self, request: HttpRequest) -> Page[Car]:
+        category_slug = request.GET.get('category')
+        page_number = request.GET.get('page')
+
+        return CategoryService().get_page_cars_in_category(
+            category_slug, page_number
+        )

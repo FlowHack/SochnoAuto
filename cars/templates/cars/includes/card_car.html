@@ -33,11 +33,14 @@
     </div>
     <div class="card-body">
         <h5 class="card-title">
-            <a href="{% url 'auto_store:offer' auto.slug %}" class="card-title-car text-decoration-none text-reset stretched-link-custom">
+            <a href="{% url 'cars:offer' auto.slug %}" class="card-title-car text-decoration-none text-reset stretched-link-custom">
                 {{ auto.brand }} {{ auto.car_model }}
             </a>
         </h5>
-        <p class="card-text text-secondary small mb-2">{{ auto.year_release|date:"Y" }} | {{ auto.mileage|floatformat:0 }} км</p>
+        <p class="card-text text-secondary small mb-2">
+            {% if auto.engine_capacity %}{{ auto.engine_capacity }} {% endif %}{{ auto.type_transmission|upper }}
+        </p>
+        <p class="card-text text-secondary small mb-2">{{ auto.year_release }} | {{ auto.mileage|floatformat:0 }} км</p>
         <p class="card-text fw-bold text-end mb-0">{{ auto.price|floatformat:0 }} ₽</p>
     </div>
 </div>

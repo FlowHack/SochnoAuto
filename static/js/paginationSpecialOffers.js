@@ -19,8 +19,6 @@ async function replaceSpecialOffers(element) {
     const htmlSpecialOffers = resultJSON.html_cards
     const htmlPagination = resultJSON.html_pagination
 
-    console.log(htmlSpecialOffers)
-
     divSpecialOffers.innerHTML = htmlSpecialOffers
     divPaginationSpecialOffers.innerHTML = htmlPagination
 

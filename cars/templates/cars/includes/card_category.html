@@ -1,5 +1,5 @@
 {% load static %}
-<a href="{% url 'auto_store:categories' %}?category={{ category.slug }}"
+<a href="{% url 'cars:category' %}?category={{ category.slug }}"
 class="category-card {% if category.selected_category %}category-card-active{% endif %} text-decoration-none"
 style="padding: 8px; padding-left: 15px; padding-right: 15px;">
     <span class="fw-semibold">

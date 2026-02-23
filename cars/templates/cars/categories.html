@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Категории{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="d-flex flex-wrap gap-3 mb-5" style="justify-content: center">
+            {% for category in categories %}
+            <div>
+                {% include "cars/includes/card_category.html" with category=category %}
+            </div>
+            {% empty %}
+            <p class="text-secondary">Категории скоро появятся</p>
+            {% endfor %}
+        </div>
+
+        <div class="row g-4 mb-4" id="cars-block">
+            {% if page_cars is not None %}
+            {% include 'cars/partials/cards_cars.html' with page=page_cars %}
+            {% else %}
+            <div class="col-12 text-center text-secondary py-5">Выберите категорию</div>
+            {% endif %}
+        </div>
+
+        <nav aria-label="Пагинация" class="d-flex justify-content-center" style="margin-top: 1rem;">
+            <ul id="ul-pagination-cars" class="pagination pagination-dark" style="cursor: pointer;">
+                {% include 'cars/partials/pagination_cars.html' with page=page_cars selected_category=selected_category %}
+            </ul>
+        </nav>
+    </div>
+</section>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/paginationCarsInCategory.js' %}"></script>
+{% endblock extra_js %}

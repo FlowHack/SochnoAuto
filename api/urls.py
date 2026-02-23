@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import FeedbacksAPIView, SpecialOffersAPIView
+from .views import CategoryAPIView, FeedbacksAPIView, SpecialOffersAPIView
 
 app_name = 'api'
 
@@ -12,5 +12,9 @@ urlpatterns = [
     path(
         'v1/feedbacks/', FeedbacksAPIView.as_view(),
         name='feedbacks'
+    ),
+    path(
+        'v1/category/', CategoryAPIView.as_view(),
+        name='category'
     )
 ]
