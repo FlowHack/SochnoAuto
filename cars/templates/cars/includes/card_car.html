@@ -1,46 +1,53 @@
 {% load static %}
 <div class="card card-dark h-100">
-    <div id="carouselAuto{{ auto.slug }}" class="carousel slide card-carousel" data-bs-ride="carousel" data-bs-touch="true">
+    <div id="carouselOffer{{ car.slug }}" class="carousel slide card-carousel" data-bs-interval="false" data-bs-touch="true">
         <div class="carousel-inner">
-            {% for photo in photos %}
-            <div class="carousel-item{% if forloop.first %} active{% endif %}">
-                <img src="{{ photo.image.url }}" class="d-block w-100"
-                alt="{% if photo.caption %}{{ photo.caption }}{% else %}{{ auto.brand }} {{ auto.car_model }}{% endif %}">
-            </div>
-            {% empty %}
-            <div class="carousel-item active">
-                <img src="{% static 'images/placeholder-car.jpg' %}" class="d-block w-100" alt="{{ auto.brand }} {{ auto.car_model }}">
-            </div>
-            {% endfor %}
+            {% if photos %}
+                {% for image in photos %}
+                <div class="carousel-item{% if forloop.first %} active{% endif %}">
+                    <a href="{% url 'cars:offer' car.slug %}" class="d-block h-100">
+                        <img src="{{ image.image.url }}" class="d-block w-100 h-100" style="object-fit: cover;" alt="{{ car.brand }} {{ car.model }}" loading="lazy">
+                    </a>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="carousel-item active">
+                    <a href="{% url 'cars:offer' car.slug %}" class="d-block h-100">
+                        <img src="{% static 'images/placeholder-car.jpg' %}" class="d-block w-100 h-100" style="object-fit: cover;" alt="Нет фото">
+                    </a>
+                </div>
+            {% endif %}
         </div>
-        {% if photos|length > 1 %}
+        {% if photos and photos|length > 1 %}
         <div class="card-carousel-controls-wrap">
-            <button class="carousel-control-prev card-carousel-control" type="button" data-bs-target="#carouselAuto{{ auto.slug }}" data-bs-slide="prev">
+            <button class="carousel-control-prev card-carousel-control" type="button" data-bs-target="#carouselOffer{{ car.slug }}" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Предыдущее фото</span>
             </button>
-            <button class="carousel-control-next card-carousel-control" type="button" data-bs-target="#carouselAuto{{ auto.slug }}" data-bs-slide="next">
+            <button class="carousel-control-next card-carousel-control" type="button" data-bs-target="#carouselOffer{{ car.slug }}" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Следующее фото</span>
             </button>
         </div>
+        
         <div class="carousel-indicators">
-            {% for photo in photos %}
-            <button type="button" data-bs-target="#carouselAuto{{ auto.slug }}" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></button>
+            {% for image in photos %}
+            <button type="button" data-bs-target="#carouselOffer{{ car.slug }}" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></button>
             {% endfor %}
         </div>
         {% endif %}
     </div>
+
     <div class="card-body">
         <h5 class="card-title">
-            <a href="{% url 'cars:offer' auto.slug %}" class="card-title-car text-decoration-none text-reset stretched-link-custom">
-                {{ auto.brand }} {{ auto.car_model }}
+            <a href="{% url 'cars:offer' car.slug %}" class="card-title-car text-decoration-none text-reset stretched-link-custom">
+                {{ car.brand }} {{ car.model }}
             </a>
         </h5>
         <p class="card-text text-secondary small mb-2">
-            {% if auto.engine_capacity %}{{ auto.engine_capacity }} {% endif %}{{ auto.type_transmission|upper }}
+            {% if car.engine_capacity %}{{ car.engine_capacity }} {% endif %}{{ car.type_transmission|upper }}
         </p>
-        <p class="card-text text-secondary small mb-2">{{ auto.year_release }} | {{ auto.mileage|floatformat:0 }} км</p>
-        <p class="card-text fw-bold text-end mb-0">{{ auto.price|floatformat:0 }} ₽</p>
+        <p class="card-text text-secondary small mb-2">{{ car.year_release }} | {{ car.mileage }}</p>
+        <p class="card-text fw-bold text-end mb-0">{{ car.price|floatformat:0 }} ₽</p>
     </div>
 </div>

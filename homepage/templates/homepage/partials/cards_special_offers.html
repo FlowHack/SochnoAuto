@@ -1,5 +1,5 @@
 {% for offer in page.object_list %}
     <div class="col-md-6 col-lg-4">
-        {% include "homepage/includes/card_special_offer.html" with offer=offer %}
+        {% include "cars/includes/card_car.html" with car=offer photos=offer.car_images.all %}
     </div>
 {% endfor %}

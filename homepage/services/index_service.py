@@ -1,10 +1,10 @@
 from typing import Any, overload
 
 from django.core.paginator import Page
-from django.db.models import Avg, Count, Prefetch, QuerySet
+from django.db.models import Avg, Count, QuerySet
 from django.http import HttpRequest
 
-from cars.models import Car, CarImage
+from cars.models import Car
 from core.services import PageData, PaginationMixin
 from homepage.models import Feedback, HomepageImage
 
@@ -74,13 +74,7 @@ class IndexService(PaginationMixin):
 
         return Car.objects.filter(
             is_special_offer=True, sold=False
-        ).order_by('date_is_special_offer').prefetch_related(
-            Prefetch(
-                'car_images',
-                CarImage.objects.order_by('order_image'),
-                to_attr='ordered_images'
-            )
-        )
+        ).order_by('date_is_special_offer').prefetch_related('car_images')
 
     @overload
     def get_page_feedbacks(

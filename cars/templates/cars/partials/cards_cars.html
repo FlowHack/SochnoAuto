@@ -1,6 +1,6 @@
-{% for auto in page.object_list %}
+{% for car in page.object_list %}
 <div class="col-md-6 col-lg-4">
-    {% include "cars/includes/card_car.html" with auto=auto photos=auto.car_images.all %}
+    {% include "cars/includes/card_car.html" with car=car photos=car.car_images.all %}
 </div>
 {% empty %}
 <div class="col-12 text-center text-secondary py-5">Автомобили в данной категории скоро появятся</div>
