@@ -27,7 +27,7 @@ class Car(models.Model):
 
         LEFT = 'left', 'Левый'
         RIGHT = 'right', 'Правый'
-        CENTER = 'center', 'Центр'
+        CENTER = 'center', 'Центральный'
 
     class TypeTransmission(models.TextChoices):
         """Тип коробки передач"""
@@ -124,7 +124,7 @@ class Car(models.Model):
         'Мощность автомобиля',
         blank=True,
         null=True,
-        help_text='Укажите мощность автомобиля в л.с или кВт/ч'
+        help_text='Укажите мощность автомобиля в л.с'
     )
     color = models.CharField(
         'Цвет кузова',

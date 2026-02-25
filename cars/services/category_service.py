@@ -8,6 +8,8 @@ from core.services import PaginationMixin
 
 
 class CategoryData(TypedDict):
+    """Класс, описывающий возвращаемые данные из CategoryService"""
+
     categories: QuerySet[CarCategory]
     page_cars: Page[Car]
 
