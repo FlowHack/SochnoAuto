@@ -15,6 +15,38 @@
 
     <main class="content-wrapper">
         {% block content %}{% endblock %}
+
+        <div class="modal fade modal-dark" id="contactModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header border-secondary">
+                        <h5 class="modal-title">Связаться с нами</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                    </div>
+                    <form id="contactCarForm" method="post" action="#">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="contactName" class="form-label">Ваше имя</label>
+                                <input type="text" class="form-control" id="contactName" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="contactEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="contactEmail" name="email" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="contactTelephonNumber" class="form-label">Номер телефона</label>
+                                <input type="tel" class="form-control" id="contactTelephonNumber" name="telephonNumber" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-secondary">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                            <button type="submit" class="btn btn-contact">Запросить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </main>
 
     {% include 'main/footer.html' %}
