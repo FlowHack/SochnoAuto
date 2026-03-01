@@ -1,0 +1,22 @@
+{% extends 'base_email.html' %}
+{% load static %}
+
+{% block title %}Подтвержденная заявка {{ lead.get_type_lead_display }}{% endblock title %}
+
+{% block email_body %}
+<p>Здравствуйте!</p>
+
+<p>Следующая заявка #{{ lead.id }} была подтверждена:</p>
+
+<div class="text-center my-4">
+    <p><strong>Имя клиента: </strong>{{ lead.name }}</p>
+    <p><strong>Почта клиента: </strong>{{ lead.email }}</p>
+    <p><strong>Телефон клиента: </strong>{{ lead.telephone_number }}</p>
+    {% if lead.type_lead == 'contact_car' or lead.type_lead == 'autoteka' %}
+    <p><strong>Автомобиль: </strong>{{ lead.car.brand }} {{ lead.car.model }} (slug: {{ lead.car.slug }})</p>
+    {% endif %}
+    <p><strong>Токен: </strong>{{ lead.token }}</p>
+</div>
+
+<p>Обработайте как можно скорее =)</p>
+{% endblock email_body %}

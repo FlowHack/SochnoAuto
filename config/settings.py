@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -29,6 +30,7 @@ INSTALLED_APPS = [
     'homepage.apps.HomepageConfig',
     'cars.apps.CarsConfig',
     'api.apps.ApiConfig',
+    'contacts.apps.ContactsConfig'
 ]
 
 MIDDLEWARE = [
@@ -189,6 +191,16 @@ LOGGING = {
             'level': 'DEBUG',
             'propagate': True,
         },
+        'api': {
+            'handlers': ['console', 'file', 'errors_file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'contacts': {
+            'handlers': ['console', 'file', 'errors_file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
         'django': {
             'handlers': ['console', 'file'],
             'level': 'INFO',
@@ -201,3 +213,18 @@ LOGGING = {
         },
     },
 }
+
+# EMAIL BACKEND
+
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_PORT = os.environ.get('EMAIL_PORT')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS') == 'True'
+EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL') == 'True'
+EMAIL_TIMEOUT = os.environ.get('EMAIL_TIMEOUT')
+EMAIL_FOR = os.environ.get('EMAIL_FOR').split()
+
+# ADDITIONAL SETTINGS
+
+LIFETIME_TOKEN_CONTACTS = timedelta(minutes=10)

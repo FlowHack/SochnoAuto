@@ -1,14 +1,17 @@
 from datetime import date
 
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import (FileExtensionValidator, MaxValueValidator,
+                                    MinValueValidator)
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
 from django_ckeditor_5.fields import CKEditor5Field
+from django_cleanup import cleanup
 
 from .category import CarCategory
 
 
+@cleanup.select
 class Car(models.Model):
     """Класс модели автомобиля"""
 
@@ -200,6 +203,21 @@ class Car(models.Model):
         blank=True,
         null=True,
         help_text='Напишите описание автомобиля'
+    )
+    autoteka = models.FileField(
+        'Файл автотеки',
+        upload_to='autoteka/%Y/%m/%d',
+        null=True, blank=True,
+        help_text='Прикрепите автотеку автомобиля',
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=['pdf'],
+                message=(
+                    'Разрешены только PDF документы'
+                )
+            )
+        ]
+
     )
 
     class Meta:

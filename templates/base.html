@@ -23,7 +23,7 @@
                         <h5 class="modal-title">Связаться с нами</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
                     </div>
-                    <form id="contactCarForm" method="post" action="#">
+                    <form id="contactCarForm" method="post" action="{% url 'contacts:create' %}">
                         {% csrf_token %}
                         <div class="modal-body">
                             <div class="mb-3">
@@ -36,7 +36,8 @@
                             </div>
                             <div class="mb-3">
                                 <label for="contactTelephonNumber" class="form-label">Номер телефона</label>
-                                <input type="tel" class="form-control" id="contactTelephonNumber" name="telephonNumber" required>
+                                <input type="tel" class="form-control" id="contactTelephonNumber" name="telephone_number" required>
+                                <input type="hidden" name="type_request" value="contact_us">
                             </div>
                         </div>
                         <div class="modal-footer border-secondary">
@@ -52,7 +53,8 @@
     {% include 'main/footer.html' %}
 
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/constants.js' %}"></script>
+    <script src="{% static 'js/requestContact.js' %}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>

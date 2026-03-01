@@ -29,7 +29,7 @@ class CarModelAdmin(SortableAdminBase, admin.ModelAdmin):
     fields = (
         'sold', 'brand', 'model', 'year_release', 'mileage', 'fuel_type',
         'price', 'power_hp', 'color', 'wheel_position', 'engine_capacity',
-        'type_transmission', 'car_body', 'category', 'description',
+        'type_transmission', 'car_body', 'category', 'description', 'autoteka'
     )
     list_display = (
         'brand', 'model', 'year_release', 'mileage', 'car_body',

@@ -55,7 +55,5 @@ class CarService:
             Car.objects.prefetch_related('car_images', *prefetches),
             slug=slug
         )
-        from pprint import pprint
-        pprint(vars(car))
 
         return car

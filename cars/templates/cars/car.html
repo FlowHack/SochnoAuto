@@ -137,7 +137,7 @@
                 <h5 class="modal-title">Заказать автотеку</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
             </div>
-            <form id="orderForm" method="post" action="#">
+            <form id="orderForm" method="post" action="{% url 'contacts:create' %}">
                 {% csrf_token %}
                 <div class="modal-body">
                     <div class="mb-3">
@@ -150,11 +150,13 @@
                     </div>
                     <div class="mb-3">
                         <label for="orderCarTelephonNumber" class="form-label">Номер телефона</label>
-                        <input type="tel" class="form-control" id="orderCarTelephonNumber" name="telephonNumber" required>
+                        <input type="tel" class="form-control" id="orderCarTelephonNumber" name="telephone_number" required>
                     </div>
                     <div class="mb-3">
                         <label for="orderCarFullName" class="form-label">Выбранный автомобиль</label>
                         <input value="{{ car.brand }} {{ car.model }} {{ car.year_release }}г." type="text" class="form-control" id="orderCarFullName" name="car-full-name" required readonly>
+                        <input type="hidden" name="type_request" value="autoteka">
+                        <input type="hidden" name="car_slug" value="{{ car.slug }}">
                     </div>
                 </div>
                 <div class="modal-footer border-secondary">
@@ -173,7 +175,7 @@
                 <h5 class="modal-title">Связаться с нами по автомобилю</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Закрыть"></button>
             </div>
-            <form id="contactCarForm" method="post" action="#">
+            <form id="contactCarForm" method="post" action="{% url 'contacts:create' %}">
                 {% csrf_token %}
                 <div class="modal-body">
                     <div class="mb-3">
@@ -186,11 +188,13 @@
                     </div>
                     <div class="mb-3">
                         <label for="contactCarTelephonNumber" class="form-label">Номер телефона</label>
-                        <input type="tel" class="form-control" id="contactCarTelephonNumber" name="telephonNumber" required>
+                        <input type="tel" class="form-control" id="contactCarTelephonNumber" name="telephone_number" required>
                     </div>
                     <div class="mb-3">
                         <label for="contactCarFullName" class="form-label">Выбранный автомобиль</label>
                         <input value="{{ car.brand }} {{ car.model }} {{ car.year_release }}г." type="text" class="form-control" id="contactCarFullName" name="car-full-name" required readonly>
+                        <input type="hidden" name="type_request" value="contact_car">
+                        <input type="hidden" name="car_slug" value="{{ car.slug }}">
                     </div>
                 </div>
                 <div class="modal-footer border-secondary">
@@ -201,50 +205,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-document.getElementById('orderForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    var form = this;
-    var submitBtn = form.querySelector('button[type="submit"]');
-    var originalText = submitBtn.textContent;
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Отправка...';
-
-    var formData = new FormData(form);
-
-    fetch(form.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
-        }
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-        if (data.success) {
-            bootstrap.Modal.getInstance(document.getElementById('orderModal')).hide();
-            form.reset();
-            var alert = document.createElement('div');
-            alert.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3';
-            alert.style.zIndex = '9999';
-            alert.innerHTML = 'Запрос отправлен! Мы свяжемся с вами в ближайшее время.<button type="button" class="btn-close" data-bs-dismiss="alert"></button>';
-            document.body.appendChild(alert);
-            setTimeout(function() { alert.remove(); }, 5000);
-        } else {
-            alert(data.error || 'Ошибка отправки');
-        }
-    })
-    .catch(function() {
-        alert('Ошибка отправки. Попробуйте позже.');
-    })
-    .finally(function() {
-        submitBtn.disabled = false;
-        submitBtn.textContent = originalText;
-    });
-});
-</script>
 {% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'misc/base_misc.html' %}
+
+{% block misc_title %}Ошибка подтверждения{% endblock %}
+
+{% block icon %}
+    <div class="mb-4">
+        <div class="sochno-logo-icon mx-auto" style="width: 80px; height: 80px; font-size: 2.5rem; background: linear-gradient(135deg, #dc3545, #f8d7da); color: white;">
+            <i class="bi bi-x-lg">✕</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block title_color %}color: #dc3545 !important;{% endblock %}
+{% block title_text %}Ошибка{% endblock %}
+
+{% block message %}
+    {% if messages %}
+        {% for message in messages %}
+            <p class="mb-0">{{ message }}</p>
+        {% endfor %}
+    {% else %}
+        <p>Ссылка недействительна, просрочена или уже была использована ранее.</p>
+        <p class="small mt-2">Попробуйте запросить подтверждение повторно или обратитесь в поддержку.</p>
+    {% endif %}
+{% endblock %}
+
+{% block buttons %}
+    <div class="d-grid gap-2">
+        <a href="/" class="btn btn-contact w-100 py-3">
+            На главную страницу
+        </a>
+        <button class="btn btn-link text-muted" onclick="history.back()">
+            ← Вернуться назад
+        </button>
+    </div>
+{% endblock %}
