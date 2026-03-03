@@ -2,7 +2,7 @@
 :root {
   --bg-primary: #0f1419;
   --bg-secondary: #1a2332;
-  --bg-card: #1e2a3a;
+  --bg-card: rgb(30, 42, 58);
   --bg-hover: #253344;
   --accent: #3b82f6;
   --accent-hover: #2563eb;
@@ -37,6 +37,8 @@ main {
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border-color);
   padding: 0.75rem 0;
+  position: relative;
+  z-index: 1060;
 }
 
 .sochno-logo {
@@ -104,11 +106,12 @@ main {
 }
 
 .search-results {
-  position: absolute;
+  position: fixed !important;
   top: 100%;
-  left: 0;
+  transform: translateX(-50%);
+  left: 50%;
   right: 0;
-  background: var(--bg-card);
+  background: rgba(30, 42, 58, 0.95);
   border: 1px solid var(--border-color);
   border-radius: 10px;
   margin-top: 4px;
@@ -116,6 +119,9 @@ main {
   overflow-y: auto;
   z-index: 1050;
   box-shadow: var(--shadow);
+  width: 90vw;
+  max-width: 500px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
 }
 
 .search-result-item {
@@ -667,4 +673,30 @@ main {
 
 .cursor-pointer {
   cursor: pointer !important
+}
+
+.search-cars-navigation {
+  position: static;
+  transform: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.search-cars-navigation .carousel-control-prev,
+.search-cars-navigation .carousel-control-next {
+  position: static;
+  margin: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-cars-navigation .carousel-control-prev-icon,
+.search-cars-navigation .carousel-control-next-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+  filter: invert(0.4);
 }

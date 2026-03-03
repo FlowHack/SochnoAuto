@@ -1,13 +1,14 @@
 from typing import TypeVar
 
 from django.core.paginator import Page
+from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from cars.models import Car
-from cars.services import CategoryService
+from cars.services import CarService, CategoryService
 from homepage.models import Feedback
 from homepage.services import IndexService
 
@@ -19,6 +20,7 @@ class PaginatedPartialsAPIView(APIView):
 
     template_cards = None
     template_pagination = None
+    need_pagination = True
 
     def get_page_data(self, request: HttpRequest) -> Page[T]:
         """Реализуется в дочерних классах, получает пагинированные данные
@@ -44,17 +46,16 @@ class PaginatedPartialsAPIView(APIView):
             {'page': page},
             request=request
         )
-        html_pagination = render_to_string(
-            self.template_pagination,
-            {'page': page}
-        )
+        response = {'html_cards': html_cards}
 
-        return Response(
-            {
-                'html_cards': html_cards,
-                'html_pagination': html_pagination
-            }
-        )
+        if self.need_pagination:
+            html_pagination = render_to_string(
+                self.template_pagination,
+                {'page': page}
+            )
+            response['html_pagination'] = html_pagination
+
+        return Response(response)
 
 
 class SpecialOffersAPIView(PaginatedPartialsAPIView):
@@ -87,6 +88,24 @@ class CategoryAPIView(PaginatedPartialsAPIView):
         category_slug = request.GET.get('category')
         page_number = request.GET.get('page')
 
+        if not category_slug or not page_number:
+            return QuerySet()
+
         return CategoryService().get_page_cars_in_category(
             category_slug, page_number
         )
+
+
+class SearchCarAPIView(PaginatedPartialsAPIView):
+    """Класс для обработки поиска по автомобилям"""
+
+    template_cards = 'partials/search_results.html'
+    need_pagination = False
+
+    def get_page_data(self, request: HttpRequest) -> Page[Car]:
+        search_query = request.GET.get('search')
+        if not search_query:
+            return QuerySet()
+        page_number = request.GET.get('page')
+
+        return CarService().get_search_cars_page(search_query, page_number)

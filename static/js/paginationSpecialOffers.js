@@ -1,4 +1,4 @@
-const urlGetSpecialOffers = `${indexURL}api/v1/special-offers/`;
+const urlGetSpecialOffers = `${indexURL}api/web1/special-offers/`;
 divPaginationSpecialOffers = document.getElementById('divPaginationSpecialOffers')
 divSpecialOffers = document.getElementById('mainBlockSpecialOffers')
 

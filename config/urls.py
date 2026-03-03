@@ -3,7 +3,6 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
-
 handler404 = 'homepage.views.page_not_found'  # noqa
 handler500 = 'homepage.views.server_error'  # noqa
 

@@ -1,0 +1,28 @@
+{% if page %}
+    {% for car in page %}
+        {% include 'includes/search_result.html' with car=car %}
+    {% empty %}
+    <a class="search-result-item">
+        <div class="search-result-title">
+            По вашему запросу ничего не найдено
+        </div>
+    </a>
+    {% endfor %}
+{% endif %}
+<div 
+class="search-cars-navigation {% if not page.has_previous and not page.has_next %}d-none{% endif %}"
+id="divPaginationSearchCars">
+    <button class="carousel-control-prev {% if not page.has_previous %}d-none{% endif %}"
+        onClick="replaceSearchCars(this)"
+        data-page="{% if page.has_previous %}{{ page.previous_page_number }}{% endif %}">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Предыдущий</span>
+    </button>
+
+    <button class="carousel-control-next {% if not page.has_next %}d-none{% endif %}"
+        onClick="replaceSearchCars(this)"
+        data-page="{% if page.has_next %}{{ page.next_page_number }}{% endif %}">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Следующий</span>
+    </button>
+</div>

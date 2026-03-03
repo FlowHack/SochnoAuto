@@ -1,4 +1,4 @@
-const urlGetFeedbacks = `${indexURL}api/v1/feedbacks/`;
+const urlGetFeedbacks = `${indexURL}api/web1/feedbacks/`;
 ulPaginationFeedbacks = document.getElementById('ulPaginationFeedback')
 divFeedbacks = document.getElementById('feedbacksBlock')
 

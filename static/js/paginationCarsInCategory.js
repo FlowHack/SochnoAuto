@@ -1,4 +1,4 @@
-const urlGetCarsInCategory = `${indexURL}api/v1/category/`;
+const urlGetCarsInCategory = `${indexURL}api/web1/category/`;
 ulPaginationCars = document.getElementById('ul-pagination-cars')
 divCars = document.getElementById('cars-block')
 
