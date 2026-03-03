@@ -13,7 +13,7 @@
                     <div class="carousel-inner">
                         {% for photo in photos %}
                         <div class="carousel-item{% if forloop.first %} active{% endif %}">
-                            <img src="{{ photo.image.url }}" class="d-block w-100" style="border-radius: 20px;"
+                            <img src="{{ photo.image.url }}"
                             alt="{% if photo.caption %}{{ photo.caption }}{% else %}{{ car.brand }} {{ car.model }}{% endif %}">
                         </div>
                         {% empty %}
