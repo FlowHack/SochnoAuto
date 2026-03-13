@@ -20,7 +20,7 @@ class CarData(TypedDict):
 class CarService(PaginationMixin):
     """Сервис для работы с автомобилями"""
 
-    NUMBER_ITEM_PAGINATION_SEARCH_CARS = 1
+    NUMBER_ITEM_PAGINATION_SEARCH_CARS = 3
 
     def get_context(self, slug: str) -> CarData:
         """Собирает контекст для страницы автомобиля
@@ -87,7 +87,7 @@ class CarService(PaginationMixin):
             Q(brand__icontains=search) |
             Q(model__icontains=search) |
             Q(year_release__icontains=search)
-        ).order_by('-year_release')
+        ).order_by('-year_release').prefetch_related('car_images')
 
         return self.get_page_object(
             queryset, page_number, self.NUMBER_ITEM_PAGINATION_SEARCH_CARS
