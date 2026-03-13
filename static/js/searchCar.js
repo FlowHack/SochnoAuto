@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       
       debounceTimer = setTimeout(function() {
-        fetch(searchUrl + '?search=' + encodeURIComponent(query))
+        fetch(searchUrl + '?page=1&search=' + encodeURIComponent(query))
           .then(response => response.json())
           .then(data => {
             if (data.html_cards) {
