@@ -1,11 +1,12 @@
 from django.urls import path
 from django.views.generic import TemplateView
 
-from .views import ConfirmEmailView, RequestContactCreateView
+from .views import ConfirmEmailView, RequestContactCreateView, contacts
 
 app_name = 'contacts'
 
 urlpatterns = [
+    path('', contacts, name='contacts'),
     path('create/', RequestContactCreateView.as_view(), name='create'),
     path(
         'confirm/success/',

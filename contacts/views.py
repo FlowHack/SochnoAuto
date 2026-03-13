@@ -2,7 +2,7 @@ import logging
 
 from django.contrib import messages
 from django.http import HttpRequest, JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic import FormView
 
@@ -83,3 +83,8 @@ class ConfirmEmailView(View):
                 'Ссылка недействительна или ее срок истек!'
             )
             return redirect('contacts:confirm_error')
+
+
+def contacts(request):
+    """Страница контактов."""
+    return render(request, 'contacts/contacts.html')

@@ -1,4 +1,5 @@
 <a href="{% url 'cars:car' car.slug %}" class="search-result-item">
+    <!-- TODO: Добавить превью автомобиля -->
     <div class="search-result-title">
         {{ car.brand }} {{ car.model }}{% if car.engine_capacity %} {{ car.engine_capacity }}{% endif %} {{ car.type_transmission|upper }}
     </div>
