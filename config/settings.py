@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'adminsortable2',
     'django_ckeditor_5',
     'django_cleanup.apps.CleanupConfig',
+    'diskette',
     'homepage.apps.HomepageConfig',
     'cars.apps.CarsConfig',
     'api.apps.ApiConfig',
@@ -226,6 +227,39 @@ EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS') == 'True'
 EMAIL_USE_SSL = os.environ.get('EMAIL_USE_SSL') == 'True'
 EMAIL_TIMEOUT = os.environ.get('EMAIL_TIMEOUT')
 EMAIL_FOR = os.environ.get('EMAIL_FOR').split()
+
+# DISKETTE
+DISKETTE_APPS = [
+    ('cars', {
+        'comments': 'cars: Изображения, категории, параметры и автомобили',
+        'natural_foreign': True,
+        'models': [
+            'cars.Car', 'cars.CarCategory',
+            'cars.CarImage', 'cars.CarParameter'
+        ]
+    }),
+    ('homepage', {
+        'comments': 'homepage: Отзывы и изображения',
+        'models': ['homepage.Feedback', 'homepage.HomepageImage']
+    }),
+    ('contacts', {
+        'comments': 'contacts: Заявки',
+        'models': ['contacts.RequestContact']
+    }),
+]
+DISKETTE_ADMIN_ENABLED = False
+DISKETTE_DUMP_PATH = BASE_DIR / 'dumps'
+DISKETTE_DUMP_FILENAME = 'dump.tar.gz'
+DISKETTE_DUMP_PERMISSIONS = 0o755
+DISKETTE_DOWNLOAD_ALLOWED_PROTOCOLS = ('http://', 'https://')
+DISKETTE_LOAD_STORAGES_PATH = MEDIA_ROOT
+DISKETTE_LOAD_MINIMAL_FILESIZE = 6
+DISKETTE_STORAGES = [MEDIA_ROOT]
+DISKETTE_STORAGES_EXCLUDES = [
+    'cache/*',
+    'pil/*',
+    'public/thumbnails/*',
+]
 
 # ADDITIONAL SETTINGS
 
