@@ -1,5 +1,7 @@
 # SochnoAuto
 
+![example workflow](https://github.com/FlowHack/SochnoAuto/actions/workflows/sochno_auto_workflow.yaml/badge.svg)
+
 ![Django](https://img.shields.io/badge/Django-6.0.2-092E20?style=flat&logo=django)
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat&logo=python)
 ![License](https://img.shields.io/badge/License-MIT-green)
