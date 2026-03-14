@@ -12,9 +12,12 @@ djangorestframework==3.16.1
 future==1.0.0
 gunicorn==25.1.0
 idna==3.11
+mccabe==0.7.0
 more-itertools==10.8.0
 packaging==26.0
 pillow==12.1.1
+pycodestyle==2.14.0
+pyflakes==3.4.0
 pynliner==0.8.0
 python-dateutil==2.9.0.post0
 python-dotenv==1.2.1

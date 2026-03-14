@@ -57,12 +57,10 @@ class CarService(PaginationMixin):
                 ).order_by('key'), to_attr=f'{param_key}_parameters'
             ) for param_key, _ in CarParameter.TypeParameter.choices
         ]
-        car = get_object_or_404(
+        return get_object_or_404(
             Car.objects.prefetch_related('car_images', *prefetches),
             slug=slug
         )
-
-        return car
 
     def get_search_cars_page(
         self, search: str, page_number: str

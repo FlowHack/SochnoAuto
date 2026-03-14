@@ -59,30 +59,27 @@ class ConfirmEmailView(View):
             )
             return redirect('contacts:confirm_error')
 
-        if request_contact:
-            email_service = EmailContactService()
-            email_service.send_confirmed_email(request_contact, request)
+        if not request_contact:
+            messages.error(request, 'Заявка не найдена!')
+            return redirect('contacts:contacts')
 
-            if (
-                request_contact.type_request ==
-                RequestContact.TypeRequest.AUTOTEKA and
-                request_contact.car.autoteka
-            ):
-                contact_service.send_autoteka(request_contact, request)
+        email_service = EmailContactService()
+        email_service.send_confirmed_email(request_contact, request)
 
-            messages.success(
-                request,
-                'Ваш email успешно подтвержден! Ваша заявка будет обработана '
-                'в ближайшее время!'
-            )
+        if (
+            request_contact.type_request ==
+            RequestContact.TypeRequest.AUTOTEKA and
+            request_contact.car.autoteka
+        ):
+            contact_service.send_autoteka(request_contact, request)
 
-            return redirect('contacts:confirm_success')
-        else:
-            messages.error(
-                request,
-                'Ссылка недействительна или ее срок истек!'
-            )
-            return redirect('contacts:confirm_error')
+        messages.success(
+            request,
+            'Ваш email успешно подтвержден! Ваша заявка будет обработана '
+            'в ближайшее время!'
+        )
+
+        return redirect('contacts:confirm_success')
 
 
 def contacts(request):

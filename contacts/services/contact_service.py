@@ -84,7 +84,7 @@ class ContactService:
             RequestContact: Объект созданной заявки
         """
 
-        request_contact = RequestContact.objects.create(
+        return RequestContact.objects.create(
             name=form_data['name'],
             email=form_data['email'],
             telephone_number=form_data['telephone_number'],
@@ -92,7 +92,6 @@ class ContactService:
             status=RequestContact.Status.WAIT_EMAIL_CONFIRMATION,
             car=form_data.get('car')
         )
-        return request_contact
 
     @staticmethod
     def confirm_email(token) -> RequestContact | None:
@@ -128,15 +127,11 @@ class ContactService:
         return request_contact
 
     @staticmethod
-    def refresh_token(token: str, request) -> RequestContact | None:
+    def refresh_token(token: str, request) -> None:
         """Обновляет токен
 
         Args:
             token (str): Токен
-
-        Returns:
-            RequestContact | None: Объект заявки, если она существует,
-                иначе None
         """
 
         try:
@@ -145,7 +140,7 @@ class ContactService:
             )
         except RequestContact.DoesNotExist as e:
             logger.error(f'Записи с токеном {token} не существует: {e}')
-            return None
+            return
 
         request_contact.new_token()
 

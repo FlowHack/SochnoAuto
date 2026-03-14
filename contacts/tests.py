@@ -81,8 +81,9 @@ class RequestContactModelTest(TestCase):
     def test_request_is_expired_false(self):
         """Тест не истечения срока заявки."""
 
-        from contacts.models import RequestContact
         from django.utils import timezone
+
+        from contacts.models import RequestContact
         request = RequestContact.objects.create(
             name='Test', email='test@example.com',
             telephone_number='+79000000000',
@@ -95,8 +96,9 @@ class RequestContactModelTest(TestCase):
     def test_request_is_expired_true(self):
         """Тест истечения срока заявки."""
 
-        from contacts.models import RequestContact
         from django.utils import timezone
+
+        from contacts.models import RequestContact
         request = RequestContact.objects.create(
             name='Test', email='test@example.com',
             telephone_number='+79000000000',
@@ -228,9 +230,10 @@ class RequestContactFormTest(TestCase):
     def test_form_duplicate_request_is_invalid(self):
         """Тест дубликата заявки."""
 
+        from django.utils import timezone
+
         from contacts.forms import RequestContactForm
         from contacts.models import RequestContact
-        from django.utils import timezone
 
         existing = RequestContact.objects.create(
             name='Test User',
@@ -283,9 +286,10 @@ class ContactServiceTest(TestCase):
     def setUp(self):
         """Создание тестовых данных для ContactService."""
 
+        from django.utils import timezone
+
         from contacts.models import RequestContact
         from contacts.services import ContactService
-        from django.utils import timezone
 
         image = SimpleUploadedFile(
             'test.jpg', b'file_content', content_type='image/jpeg'
@@ -397,9 +401,10 @@ class ContactServiceTest(TestCase):
     def test_confirm_email_success(self):
         """Тест успешного подтверждения email."""
 
+        from django.utils import timezone
+
         from contacts.models import RequestContact
         from contacts.services import ContactService
-        from django.utils import timezone
 
         self.request_contact.expires_at = timezone.now() + timedelta(hours=1)
         self.request_contact.save()
@@ -424,8 +429,9 @@ class ContactServiceTest(TestCase):
     def test_confirm_email_expired_raises(self):
         """Тест выброса исключения при истекшем токене."""
 
-        from contacts.services import ContactService
         from django.utils import timezone
+
+        from contacts.services import ContactService
 
         self.request_contact.expires_at = timezone.now() - timedelta(hours=1)
         self.request_contact.save()

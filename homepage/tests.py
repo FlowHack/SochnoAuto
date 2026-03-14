@@ -5,8 +5,8 @@ from django.test import RequestFactory, TestCase, override_settings
 from django.urls import reverse
 
 from cars.models import Car, CarCategory
-from core.services import PaginationMixin
 from core.context_processors import current_year
+from core.services import PaginationMixin
 from homepage.models import Feedback, HomepageImage
 from homepage.services.index_service import IndexService
 

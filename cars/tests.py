@@ -1,4 +1,5 @@
 from datetime import date
+
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.paginator import Page
 from django.test import TestCase, override_settings

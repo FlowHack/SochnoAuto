@@ -1,34 +1,38 @@
 # SochnoAuto
 
+![СОЧНО АВТО workflow](https://github.com/FlowHack/SochnoAuto/actions/workflows/sochno_auto_workflow.yaml/badge.svg)
+
 ![Django](https://img.shields.io/badge/Django-6.0.2-092E20?style=flat&logo=django)
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat&logo=python)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Docker](https://img.shields.io/badge/Docker-ready-2496ED?style=flat&logo=docker)
 
-A modern car dealership website built with Django, featuring a car catalog, search functionality, contact forms, and REST API.
+SochnoAuto — современный сайт автосалона на Django с каталогом автомобилей, умным поиском, формами обратной связи и REST API.
 
-## Features
+> Запустите контейнеры или локальное окружение, выполните миграции и создайте суперпользователя — получите готовый автосалон с формами заявок, отчётами Автотека и API.
 
-- **Car Catalog** — Browse vehicles by categories with detailed listings
-- **Smart Search** — Find cars by make, model, price, and other criteria
-- **Contact Forms** — Multiple form types (general inquiry, specific car, Autoteka service)
-- **Email Notifications** — Confirmation emails for contact requests
-- **REST API** — Full API for frontend operations
-- **Admin Panel** — Sortable lists and rich text editor (CKEditor 5)
-- **Responsive Design** — Mobile-friendly with Bootstrap 5
+## Основные возможности
 
-## Tech Stack
+- **Каталог автомобилей** — просмотр машин по категориям с детальными карточками
+- **Умный поиск** — поиск по бренду, модели, году выпуска и другим полям (серверный фильтр + пагинация)
+- **Формы заявок** — несколько типов запросов: общая связь, по конкретному авто и запрос отчёта **Автотека**
+- **Email‑уведомления** — подтверждение email клиента, уведомления менеджерам, отправка отчёта Автотека
+- **REST API** — эндпоинты для категорий, спецпредложений, отзывов и поиска автомобилей
+- **Админ‑панель** — сортируемые списки и rich‑text редактор описаний на базе CKEditor 5
+- **Адаптивный интерфейс** — верстка на Bootstrap 5, корректно работающая на мобильных устройствах
 
-| Category | Technology |
+## Технологический стек
+
+| Категория | Технологии |
 |----------|------------|
 | Backend | Django 6.0.2, Django REST Framework |
-| Database | PostgreSQL (Docker), SQLite (local dev) |
+| База данных | PostgreSQL (Docker), SQLite (локальная разработка) |
 | Frontend | Vanilla JavaScript, Bootstrap 5 |
-| Admin | django-admin-sortable2, CKEditor 5 |
-| Server | Gunicorn, Nginx |
-| Deployment | Docker, Docker Compose |
+| Админка | django-admin-sortable2, CKEditor 5 |
+| Сервер | Gunicorn, Nginx |
+| Деплой | Docker, Docker Compose |
 
-## Project Structure
+## Структура проекта
 
 ```
 SochnoAutoRelease/
@@ -48,9 +52,9 @@ SochnoAutoRelease/
 └── requirements.txt
 ```
 
-## Quick Start
+## Быстрый старт
 
-### Docker Compose (Production)
+### Вариант 1. Docker Compose (приближён к production)
 
 ```bash
 # Start all services
@@ -62,7 +66,7 @@ docker-compose logs -f
 # Application available at http://localhost
 ```
 
-### Local Development
+### Вариант 2. Локальная разработка (без Docker)
 
 ```bash
 # Create virtual environment
@@ -83,129 +87,137 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-Application available at http://127.0.0.1:8000
+Приложение будет доступно по адресу `http://127.0.0.1:8000`.
 
-## Docker Compose Services
+## Тесты
 
-| Service | Image | Description | Port |
-|---------|-------|-------------|------|
-| `web` | flowhack/sochno-auto:latest | Django + Gunicorn | 8000 (internal) |
-| `db` | postgres:12.4 | PostgreSQL | 5432 (internal) |
-| `nginx` | nginx:1.19.3 | Reverse proxy | 80 (external) |
+В проекте есть модульные и интеграционные тесты для моделей, форм, сервисов, представлений и API.
 
-### Managing Containers
+### Запуск тестов локально
 
 ```bash
-# Start services
+cd /mnt/p/Yandex.Disk/Projects/Programing/GitHub/SochnoAutoRelease
+source venv/bin/activate
+python manage.py test --verbosity=2
+```
+
+Покрытие тестами:
+
+- `cars` — модели автомобилей и категорий, валидация, сервисы (`CarService`, `CategoryService`), представления;
+- `contacts` — модель заявок, форма `RequestContactForm`, сервис `ContactService`, отправка писем (через mock);
+- `homepage` — главная страница, `IndexService`, пагинация (`PaginationMixin`), контекстный процессор текущего года;
+- `api` — эндпоинты категорий, поиска, отзывов и специальных предложений.
+
+## Сервисы Docker Compose
+
+| Сервис | Образ | Описание | Порт |
+|--------|-------|----------|------|
+| `web`  | flowhack/sochno-auto:latest | Django + Gunicorn | 8000 (внутренний)  |
+| `db`   | postgres:12.4              | PostgreSQL         | 5432 (внутренний)  |
+| `nginx`| nginx:1.19.3               | Reverse proxy      | 80 (внешний)       |
+
+### Управление контейнерами
+
+```bash
+# Запуск сервисов
 docker-compose up -d
 
-# Stop services
+# Остановка сервисов
 docker-compose down
 
-# Restart a service
+# Перезапуск отдельного сервиса
 docker-compose restart web
 
-# View logs
+# Просмотр логов
 docker-compose logs -f web
 
-# Access container shell
+# Доступ в shell контейнера
 docker-compose exec web bash
 ```
 
-### Database Management
+### Управление базой данных
 
 ```bash
-# Run migrations
+# Применить миграции
 docker-compose exec web python manage.py migrate
 
-# Create migrations
+# Создать миграции
 docker-compose exec web python manage.py makemigrations
 
-# Reset database (WARNING: deletes all data)
+# Полный сброс БД (УДАЛЯЕТ все данные)
 docker-compose down -v
 docker-compose up -d
 docker-compose exec web python manage.py migrate
 ```
 
-### Static & Media Files
+### Статические и медиа‑файлы
 
-Nginx serves static/media from Docker volumes:
-- `static_value` — Static files (CSS, JS)
-- `media_value` — User uploads (car images)
-- `postgres_data` — Database files
+Nginx обслуживает статику и медиа из томов Docker:
+- `static_value` — статические файлы (CSS, JS);
+- `media_value` — загруженные изображения автомобилей;
+- `postgres_data` — файлы базы данных.
 
-## Environment Variables
+## Переменные окружения
 
-### Docker Compose (.env)
+Ниже указаны основные переменные, которые нужно прописать в `.env`.  
+Значения можно подстроить под вашу инфраструктуру.
 
-```bash
-# Django
-DJANGO_SECRET_KEY=your-secret-key
-DJANGO_DEBUG=False
-DJANGO_ALLOWED_HOSTS=localhost your-domain.com
-DJANGO_CSRF_TRUSTED_ORIGINS=https://your-domain.com
+### Docker Compose (`.env` рядом с `docker-compose.yaml`)
 
-# PostgreSQL
-DJANGO_DB_ENGINE=django.db.backends.postgresql
-DJANGO_DB_NAME=postgres
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-POSTGRES_DB=postgres
-DB_HOST=db
-DB_PORT=5432
+| Переменная              | Пример значения             | Описание                                                                 |
+|-------------------------|-----------------------------|--------------------------------------------------------------------------|
+| `DJANGO_SECRET_KEY`     | `your-secret-key`           | Секретный ключ Django (обязателен, хранить в секрете).                  |
+| `DJANGO_DEBUG`          | `False`                     | Режим отладки. Для production всегда `False`.                            |
+| `DJANGO_ALLOWED_HOSTS`  | `localhost your-domain.com` | Список доменов/хостов, с которых доступно приложение.                    |
+| `DJANGO_CSRF_TRUSTED_ORIGINS` | `https://your-domain.com` | Доверенные origin’ы для CSRF (обычно ваш домен с протоколом).     |
+| `DJANGO_DB_ENGINE`      | `django.db.backends.postgresql` | Движок базы данных (в Docker по умолчанию PostgreSQL).           |
+| `DJANGO_DB_NAME`        | `postgres`                  | Имя базы данных Django.                                                  |
+| `POSTGRES_USER`         | `postgres`                  | Пользователь PostgreSQL (создаётся контейнером).                         |
+| `POSTGRES_PASSWORD`     | `postgres`                  | Пароль пользователя PostgreSQL.                                          |
+| `POSTGRES_DB`           | `postgres`                  | Имя базы, создаваемой контейнером PostgreSQL.                            |
+| `DB_HOST`               | `db`                        | Хост БД внутри docker‑сети (имя сервиса в `docker-compose`).             |
+| `DB_PORT`               | `5432`                      | Порт PostgreSQL внутри docker‑сети.                                      |
+| `EMAIL_HOST`            | `smtp.yandex.ru`            | SMTP‑сервер для отправки писем.                                          |
+| `EMAIL_PORT`            | `465`                       | Порт SMTP (обычно 465 для SSL).                                          |
+| `EMAIL_USE_TLS`         | `False`                     | Использовать TLS (обычно `True` при порте 587).                          |
+| `EMAIL_USE_SSL`         | `True`                      | Использовать SSL (обычно `True` при порте 465).                          |
+| `EMAIL_HOST_USER`       | `your-email@yandex.ru`      | Почта, с которой отправляются письма.                                    |
+| `EMAIL_HOST_PASSWORD`   | `your-password`             | Пароль/токен приложения для `EMAIL_HOST_USER`.                           |
+| `EMAIL_FOR`             | `admin@example.com`         | Список получателей служебных писем (через пробел).                       |
+| `AVITO_USER_ID`         | `your-avito-user-id`        | (Опционально) ID пользователя Avito для интеграции.                      |
 
-# Email
-EMAIL_HOST=smtp.yandex.ru
-EMAIL_PORT=465
-EMAIL_USE_TLS=False
-EMAIL_USE_SSL=True
-EMAIL_HOST_USER=your-email@yandex.ru
-EMAIL_HOST_PASSWORD=your-password
-EMAIL_FOR=admin@example.com
+### Локальная разработка (`.env` для запуска без Docker)
 
-# Optional
-AVITO_USER_ID=your-avito-user-id
-```
+| Переменная              | Пример значения            | Описание                                                                 |
+|-------------------------|----------------------------|--------------------------------------------------------------------------|
+| `DJANGO_SECRET_KEY`     | `your-secret-key`          | Секретный ключ Django. Для локалки можно использовать упрощённый.       |
+| `DJANGO_DEBUG`          | `True`                     | Включает режим отладки и подробные ошибки.                               |
+| `DJANGO_ALLOWED_HOSTS`  | `localhost 127.0.0.1`      | Локальные хосты, с которых можно открыть проект.                         |
+| `DJANGO_DB_ENGINE`      | `django.db.backends.sqlite3` | (Опционально) движок БД. По умолчанию SQLite.                          |
+| `DJANGO_DB_NAME`        | `db.sqlite3`               | (Опционально) имя файла SQLite.                                          |
+| `EMAIL_HOST`            | `smtp.yandex.ru`           | (Опционально) SMTP‑сервер для тестовой отправки писем.                   |
+| `EMAIL_PORT`            | `465`                      | Порт SMTP.                                                               |
+| `EMAIL_USE_TLS`         | `False`                    | Использовать TLS (для 587).                                             |
+| `EMAIL_USE_SSL`         | `True`                     | Использовать SSL (для 465).                                             |
+| `EMAIL_HOST_USER`       | `your-email@yandex.ru`     | Почта отправителя. Можно оставить пустой, если не тестируете почту.     |
+| `EMAIL_HOST_PASSWORD`   | `your-password`            | Пароль/токен для отправки почты.                                         |
+| `EMAIL_FOR`             | `admin@example.com`        | Кому отправлять служебные письма.                                        |
+| `AVITO_USER_ID`         | `your-avito-user-id`       | (Опционально) ID пользователя Avito.                                     |
 
-### Local Development (.env)
+## Локальная сборка Docker‑образа
 
-```bash
-# Django
-DJANGO_SECRET_KEY=your-secret-key
-DJANGO_DEBUG=True
-DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1
-
-# SQLite (default - no additional config needed)
-# DJANGO_DB_ENGINE=django.db.backends.sqlite3
-# DJANGO_DB_NAME=db.sqlite3
-
-# Email (optional)
-EMAIL_HOST=smtp.yandex.ru
-EMAIL_PORT=465
-EMAIL_USE_TLS=False
-EMAIL_USE_SSL=True
-EMAIL_HOST_USER=your-email@yandex.ru
-EMAIL_HOST_PASSWORD=your-password
-EMAIL_FOR=admin@example.com
-
-# Optional
-AVITO_USER_ID=your-avito-user-id
-```
-
-
-## Building Docker Image Locally
-
-To build the image locally instead of using the pre-built one:
+Если нужно собрать Docker‑образ самостоятельно вместо использования готового:
 
 ```bash
-# Modify docker-compose.yaml:
-# Change: image: flowhack/sochno-auto:latest
-# To:     build: .
+# В docker-compose.yaml:
+#   image: flowhack/sochno-auto:latest
+# заменить на:
+#   build: .
 
-# Then build and start
+# Затем собрать и запустить
 docker-compose up -d --build
 ```
 
-## License
+## Лицензия
 
-[MIT License](LICENSE)
+Проект распространяется под лицензией [MIT](LICENSE).
