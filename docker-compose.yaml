@@ -10,7 +10,7 @@ services:
     env_file:
       - ./.env
   web:
-    image: flowhack/sochno-auto-release:latest
+    image: flowhack/sochno-auto:latest
     restart: always
     volumes:
       - static_value:/code/static/

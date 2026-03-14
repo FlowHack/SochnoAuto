@@ -89,7 +89,7 @@ Application available at http://127.0.0.1:8000
 
 | Service | Image | Description | Port |
 |---------|-------|-------------|------|
-| `web` | flowhack/sochno-auto-release:latest | Django + Gunicorn | 8000 (internal) |
+| `web` | flowhack/sochno-auto:latest | Django + Gunicorn | 8000 (internal) |
 | `db` | postgres:12.4 | PostgreSQL | 5432 (internal) |
 | `nginx` | nginx:1.19.3 | Reverse proxy | 80 (external) |
 
@@ -199,7 +199,7 @@ To build the image locally instead of using the pre-built one:
 
 ```bash
 # Modify docker-compose.yaml:
-# Change: image: flowhack/sochno-auto-release:latest
+# Change: image: flowhack/sochno-auto:latest
 # To:     build: .
 
 # Then build and start
