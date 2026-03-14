@@ -1,0 +1,13 @@
+<button class="carousel-control-prev" onClick="replaceSpecialOffers(this)"
+        data-page="{% if page.has_previous %}{{ page.previous_page_number }}{% endif %}" 
+        {% if not page.has_previous %}style="visibility:hidden"{% endif %}>
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Предыдущий</span>
+</button>
+
+<button class="carousel-control-next" onClick="replaceSpecialOffers(this)"
+        data-page="{% if page.has_next %}{{ page.next_page_number }}{% endif %}" 
+        {% if not page.has_next %}style="visibility:hidden"{% endif %}>
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Следующий</span>
+</button>

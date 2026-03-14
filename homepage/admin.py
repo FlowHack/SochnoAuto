@@ -3,8 +3,8 @@ from django.contrib import admin, messages
 from django.http import HttpResponseRedirect
 from django.urls import path
 
-from .functions import create_feedbacks
 from .models import Feedback, HomepageImage
+from .services import AvitoFeedbackParser
 
 
 @admin.register(HomepageImage)
@@ -15,7 +15,7 @@ class HomepageImageModelAdmin(SortableAdminMixin, admin.ModelAdmin):
 
 @admin.register(Feedback)
 class FeedbackModelAdmin(admin.ModelAdmin):
-    change_list_template = "admin/homepage/feedback/change_list.html"
+    change_list_template = 'admin/homepage/feedback/change_list.html'
 
     list_display = ('name_user', 'score', 'item_object', 'date_create')
     empty_value_display = '-пусто-'
@@ -24,7 +24,7 @@ class FeedbackModelAdmin(admin.ModelAdmin):
         return False
 
     def has_change_permission(self, request, obj=None):
-        return True
+        return False
 
     def has_delete_permission(self, request, obj=None):
         return True
@@ -43,13 +43,14 @@ class FeedbackModelAdmin(admin.ModelAdmin):
     def run_parser_view(self, request):
         """Функция, которая вызывается при нажатии на кнопку"""
         try:
-            count, count_new = create_feedbacks(self, request, None)
+            parser = AvitoFeedbackParser()
+            total, new = parser.parse_and_save()
 
             self.message_user(
                 request,
                 (
-                    f'Успешно обработано {count} отзывов. '
-                    f'Новых добавлено: {count_new}'
+                    f'Успешно обработано {total} отзывов. '
+                    f'Новых добавлено: {new}'
                 ),
                 messages.SUCCESS
             )
@@ -62,16 +63,3 @@ class FeedbackModelAdmin(admin.ModelAdmin):
             raise Exception(e)
 
         return HttpResponseRedirect("../")
-
-    def changelist_view(self, request, extra_context=None):
-        if self.model.objects.count() == 0:
-            extra_context = extra_context or {}
-            extra_context.update({
-                'show_custom_content': True,
-                'title': 'Парсинг отзывов',
-                'description': (
-                    'База отзывов пуста. Нажмите кнопку '
-                    '"Спарсить отзывы" выше.'
-                ),
-            })
-        return super().changelist_view(request, extra_context)

@@ -1,126 +1,111 @@
-from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.db.models import Prefetch
-from rest_framework.decorators import api_view
+from typing import TypeVar
+
+from django.core.paginator import Page
+from django.db.models import QuerySet
+from django.http import HttpRequest
+from django.template.loader import render_to_string
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from auto_store.models import Car, CarCategory, CarImage
-from auto_store.settings import NUMBER_ITEM_PAGINATOR_CARS
+from cars.models import Car
+from cars.services import CarService, CategoryService
 from homepage.models import Feedback
-from homepage.settings import (NUMBER_ITEM_PAGINATOR_FEEDBACKS,
-                               NUMBER_ITEM_PAGINATOR_SPECIAL_OFFERS)
+from homepage.services import IndexService
 
-from .serializer import CarWithImagesSerializer
-
-
-@api_view(['GET'])
-def get_feedbacks(request):
-    page = request.GET.get('page_feedbacks')
-    feedbacks = Feedback.objects.all().values(
-        'name_user', 'feedback', 'answer', 'score', 'item_object',
-        'date_create'
-    )
-
-    paginator = Paginator(feedbacks, NUMBER_ITEM_PAGINATOR_FEEDBACKS)
-    try:
-        page_feedbacks = paginator.get_page(page)
-    except PageNotAnInteger:
-        page_feedbacks = paginator.page(1)
-    except EmptyPage:
-        page_feedbacks = paginator.page(paginator.num_pages)
-
-    has_next = page_feedbacks.has_next()
-    has_previous = page_feedbacks.has_previous()
-
-    return Response(
-        {
-            'objects': list(page_feedbacks.object_list),
-            'has_next': has_next,
-            'has_previous': has_previous
-        }
-    )
+T = TypeVar('T')
 
 
-@api_view(['GET'])
-def get_special_offers(request):
-    page = request.GET.get('special_offers_page')
+class PaginatedPartialsAPIView(APIView):
+    """Абстрактный класс для отрисовки пагинированных данных"""
 
-    special_offers_qs = Car.objects.filter(
-        is_special_offer=True, sold=False
-    ).order_by('date_is_special_offer').prefetch_related(
-        Prefetch(
-            'car_images',
-            CarImage.objects.order_by('order_image'),
-            to_attr='ordered_images'
+    template_cards = None
+    template_pagination = None
+    need_pagination = True
+
+    def get_page_data(self, request: HttpRequest) -> Page[T]:
+        """Реализуется в дочерних классах, получает пагинированные данные
+
+        Args:
+            request (HttpRequest): Объект запроса
+
+        Raises:
+            NotImplementedError: Вызывается, если метод не был объявлен
+                в дочернем классе
+
+        Returns:
+            Page[T]: Объект с пагинированными данными
+        """
+
+        raise NotImplementedError
+
+    def get(self, request):
+        page = self.get_page_data(request)
+
+        html_cards = render_to_string(
+            self.template_cards,
+            {'page': page},
+            request=request
         )
-    )
-    serializer = CarWithImagesSerializer(special_offers_qs, many=True)
-    paginator = Paginator(
-        serializer.data, NUMBER_ITEM_PAGINATOR_SPECIAL_OFFERS
-    )
-    try:
-        page_special_offers = paginator.get_page(
-            page
-        )
-    except PageNotAnInteger:
-        page_special_offers = paginator.page(1)
-    except EmptyPage:
-        page_special_offers = paginator.page(
-            paginator.num_pages
-        )
+        response = {'html_cards': html_cards}
 
-    has_next = page_special_offers.has_next()
-    has_previous = page_special_offers.has_previous()
-
-    return Response(
-        {
-            'objects': list(page_special_offers.object_list),
-            'has_next': has_next,
-            'has_previous': has_previous
-        }
-    )
-
-
-@api_view(['GET'])
-def get_cars_in_category(request):
-    selected_category = request.GET.get('category')
-    page = request.GET.get('page')
-
-    category = CarCategory.objects.filter(
-        slug=selected_category
-    ).first()
-
-    objects = None
-    has_next = None
-    has_previous = None
-    if category:
-        cars = category.cars_in_category.all().prefetch_related(
-            Prefetch(
-                'car_images',
-                CarImage.objects.order_by('order_image'),
-                to_attr='ordered_images'
+        if self.need_pagination:
+            html_pagination = render_to_string(
+                self.template_pagination,
+                {'page': page}
             )
+            response['html_pagination'] = html_pagination
+
+        return Response(response)
+
+
+class SpecialOffersAPIView(PaginatedPartialsAPIView):
+    """Класс для обработки запросов по специальным предложениям"""
+
+    template_cards = 'homepage/partials/cards_special_offers.html'
+    template_pagination = 'homepage/partials/pagination_special_offers.html'
+
+    def get_page_data(self, request: HttpRequest) -> Page[Car]:
+        return IndexService().get_page_special_offers(request)
+
+
+class FeedbacksAPIView(PaginatedPartialsAPIView):
+    """Класс для обработки запросов по отзывам"""
+
+    template_cards = 'homepage/partials/cards_feedbacks.html'
+    template_pagination = 'homepage/partials/pagination_feedbacks.html'
+
+    def get_page_data(self, request: HttpRequest) -> Page[Feedback]:
+        return IndexService().get_page_feedbacks(request)
+
+
+class CategoryAPIView(PaginatedPartialsAPIView):
+    """Класс для обработки запросов по категориям"""
+
+    template_cards = 'cars/partials/cards_cars.html'
+    template_pagination = 'cars/partials/pagination_cars.html'
+
+    def get_page_data(self, request: HttpRequest) -> Page[Car]:
+        category_slug = request.GET.get('category')
+        page_number = request.GET.get('page')
+
+        if not category_slug or not page_number:
+            return QuerySet()
+
+        return CategoryService().get_page_cars_in_category(
+            category_slug, page_number
         )
-        serializer = CarWithImagesSerializer(cars, many=True)
-        paginator = Paginator(serializer.data, NUMBER_ITEM_PAGINATOR_CARS)
-        try:
-            page_cars = paginator.get_page(
-                page
-            )
-        except PageNotAnInteger:
-            page_cars = paginator.page(1)
-        except EmptyPage:
-            page_cars = paginator.page(
-                paginator.num_pages
-            )
-        objects = list(page_cars.object_list)
 
-        has_next = page_cars.has_next()
-        has_previous = page_cars.has_previous()
 
-    return Response(
-        {
-            'objects': objects,
-            'has_next': has_next,
-            'has_previous': has_previous
-        }
-    )
+class SearchCarAPIView(PaginatedPartialsAPIView):
+    """Класс для обработки поиска по автомобилям"""
+
+    template_cards = 'partials/search_results.html'
+    need_pagination = False
+
+    def get_page_data(self, request: HttpRequest) -> Page[Car]:
+        search_query = request.GET.get('search')
+        if not search_query:
+            return QuerySet()
+        page_number = request.GET.get('page')
+
+        return CarService().get_search_cars_page(search_query, page_number)

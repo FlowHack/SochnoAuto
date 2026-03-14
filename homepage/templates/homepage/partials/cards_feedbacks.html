@@ -1,0 +1,7 @@
+{% for feedback in page.object_list %}
+<div class="col-md-6 col-lg-4">
+{% include "homepage/includes/card_feedback.html" with feedback=feedback %}
+</div>
+{% empty %}
+<div class="col-12 text-center text-secondary py-4">Отзывы скоро появятся</div>
+{% endfor %}

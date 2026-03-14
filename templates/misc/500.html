@@ -1,0 +1,27 @@
+{% extends 'misc/base_misc.html' %}
+
+{% block misc_title %}Страница не найдена{% endblock %}
+
+{% block icon %}
+    <div class="mb-4">
+        <div class="sochno-logo-icon mx-auto" style="width: 80px; height: 80px; font-size: 2.5rem; background: linear-gradient(135deg, var(--accent-gold), #eab308);">
+            <i class="bi bi-question-lg">?</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block title_color %}color: var(--accent-gold) !important;{% endblock %}
+{% block title_text %}500 - Ошибка сервера{% endblock %}
+
+{% block message %}
+    <p class="mb-0">На сервере произошла ошибка</p>
+    <p class="small mt-2">Попробуйте обновить страницу или обратиться позже</p>
+{% endblock %}
+
+{% block buttons %}
+    <div class="d-grid gap-2">
+        <a href="/" class="btn btn-contact w-100 py-3">
+            На главную страницу
+        </a>
+    </div>
+{% endblock %}

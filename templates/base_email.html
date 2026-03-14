@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock title %} | СОЧНО АВТО</title>
+    <style>
+        /* Reset и базовые стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            color: #e0e0e0;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+        }
+        
+        /* Контейнер письма */
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Заголовок */
+        .email-header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            padding: 30px 20px;
+
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            text-align: center;
+            flex-wrap: nowrap;
+        }
+        
+        .company-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 15px;
+            object-fit: contain;
+        }
+        
+        .company-name {
+            margin: 0;
+            font-size: 24px;
+            flex-grow: 0;
+            line-height: 1.2;
+            white-space: nowrap;
+        }
+        
+        /* Основной контент */
+        .email-body {
+            padding: 30px;
+        }
+        
+        /* Центрирование текста */
+        .text-center {
+            text-align: center;
+        }
+        
+        /* Отступы сверху/снизу (замена my-4) */
+        .my-4 {
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Кнопка (замена btn btn-primary) */
+        .btn-primary {
+            display: inline-block;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.5;
+            text-align: center;
+            text-decoration: none;
+            background-color: #3498db;
+            border: 1px solid #3498db;
+            border-radius: 6px;
+            color: #ffffff;
+            transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+            margin: 20px 0;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+            color: #ffffff;
+            text-decoration: none;
+        }
+        
+        /* Текст ссылки */
+        .link-text {
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            background: #2d2d2d;
+            padding: 12px 16px;
+            border-radius: 4px;
+            display: block;
+            margin: 15px 0;
+            border-left: 4px solid #3498db;
+        }
+        
+        /* Список данных */
+        .lead-info {
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        
+        .lead-info p {
+            margin-bottom: 10px;
+        }
+        
+        /* Футер */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #2c2c2c;
+            color: #aaa;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        /* Responsive */
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                margin: 10px;
+                border-radius: 8px;
+            }
+            
+            .email-header {
+                padding: 20px 15px;
+                flex-direction: row;
+            }
+            
+            .company-name {
+                font-size: 20px;
+            }
+            
+            .email-body {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <img src="cid:{{ cid }}"
+                 alt="Логотип СОЧНО АВТО"
+                 class="company-logo">
+            <h1 class="company-name">СОЧНО АВТО</h1>
+        </div>
+
+        <div class="email-body">
+            {% block email_body %}
+            {% endblock email_body %}
+
+            <p><br>С уважением,<br>Команда СОЧНО АВТО</p>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2024–{{ now|date:"Y" }} ООО «СОЧНО АВТО». Все права защищены.</p>
+            {% block extra_footer %}{% endblock extra_footer %}
+            <p>Письмо отправлено автоматически, не отвечайте на него</p>
+        </div>
+    </div>
+</body>
+</html>

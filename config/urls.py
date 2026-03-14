@@ -1,0 +1,26 @@
+from django.conf import settings
+from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import include, path
+
+handler404 = 'homepage.views.page_not_found'  # noqa
+handler500 = 'homepage.views.server_error'  # noqa
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('homepage.urls')),
+    path('', include('cars.urls')),
+    path('contacts/', include('contacts.urls')),
+    path('api/', include('api.urls')),
+]
+
+urlpatterns += static(
+    settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
+)
+urlpatterns += static(
+    settings.STATIC_URL, document_root=settings.STATIC_ROOT
+)
+
+urlpatterns += [
+    path('ckeditor5/', include('django_ckeditor_5.urls')),
+]

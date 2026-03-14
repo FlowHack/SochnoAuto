@@ -1,0 +1,9 @@
+{% load static %}
+<a href="{% url 'cars:category' %}?category={{ category.slug }}"
+class="category-card {% if category.selected_category %}category-card-active{% endif %} text-decoration-none"
+style="padding: 8px; padding-left: 15px; padding-right: 15px;">
+    <span class="fw-semibold">
+        <image style="height: 16px" src="{{ MEDIA_URL }}{{ category.image.url }}">
+    </span>
+    <span class="fw-semibold">{{ category.name }}</span>
+</a>

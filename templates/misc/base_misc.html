@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% block misc_title %}Система уведомлений{% endblock %}{% endblock %}
+
+{% block content %}
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 70vh;">
+    <div class="card card-dark p-4 shadow-lg text-center" style="max-width: 500px; width: 100%;">
+        <div class="card-body">
+            <!-- Иконка -->
+            {% block icon %}
+                <div class="mb-4">
+                    <div class="sochno-logo-icon mx-auto" style="width: 80px; height: 80px; font-size: 2.5rem;">
+                        <i class="bi bi-info-circle">ℹ</i>
+                    </div>
+                </div>
+            {% endblock %}
+            
+            <!-- Заголовок -->
+            <h2 class="section-title mb-3" style="{% block title_color %}color: var(--text-primary) !important;{% endblock %}">
+                {% block title_text %}Информация{% endblock %}
+            </h2>
+            
+            <!-- Основной контент -->
+            <div class="text-secondary mb-4" style="font-size: 1.1rem; line-height: 1.6;">
+                {% block message %}
+                    <p class="mb-0">Информация для пользователя</p>
+                {% endblock %}
+            </div>
+
+            <!-- Кнопки -->
+            {% block buttons %}
+                <div class="d-grid gap-2">
+                    <a href="/" class="btn btn-contact w-100 py-3">
+                        На главную страницу
+                    </a>
+                </div>
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

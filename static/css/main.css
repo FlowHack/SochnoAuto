@@ -2,7 +2,7 @@
 :root {
   --bg-primary: #0f1419;
   --bg-secondary: #1a2332;
-  --bg-card: #1e2a3a;
+  --bg-card: rgb(30, 42, 58);
   --bg-hover: #253344;
   --accent: #3b82f6;
   --accent-hover: #2563eb;
@@ -37,6 +37,8 @@ main {
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border-color);
   padding: 0.75rem 0;
+  position: relative;
+  z-index: 1060;
 }
 
 .sochno-logo {
@@ -104,11 +106,12 @@ main {
 }
 
 .search-results {
-  position: absolute;
+  position: fixed !important;
   top: 100%;
-  left: 0;
+  transform: translateX(-50%);
+  left: 50%;
   right: 0;
-  background: var(--bg-card);
+  background: rgba(30, 42, 58, 0.95);
   border: 1px solid var(--border-color);
   border-radius: 10px;
   margin-top: 4px;
@@ -116,6 +119,9 @@ main {
   overflow-y: auto;
   z-index: 1050;
   box-shadow: var(--shadow);
+  width: 90vw;
+  max-width: 500px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.6);
 }
 
 .search-result-item {
@@ -379,14 +385,67 @@ main {
 
 /* Offer page */
 .offer-carousel-large {
-  height: 500px;
+  border-radius: 20px !important;
+  overflow: visible !important;
+  background-color: transparent !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0 auto;
+  position: relative;
 }
 
-.offer-carousel-large img {
-  object-fit: contain;
-  width: 100%;
-  height: 100%;
+.offer-carousel-large .carousel-inner {
+  border-radius: 20px !important;
+  overflow: hidden !important;
+  display: flex;
+  align-items: center;
+  min-height: 200px;
 }
+
+.offer-carousel-large .carousel-item {
+  border-radius: 20px !important;
+  overflow: hidden !important;
+  text-align: center;
+  background: none !important;
+}
+
+.offer-carousel-large .carousel-item img {
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+  max-height: 500px !important;
+  object-fit: contain !important;
+  border-radius: 20px !important;
+  display: inline-block !important;
+  transition: transform 0.3s ease !important;
+  vertical-align: middle;
+}
+
+/* Убираем дефолтные Bootstrap контролы */
+.offer-carousel-large .carousel-control-prev,
+.offer-carousel-large .carousel-control-next {
+  position: absolute !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 10 !important;
+  width: 50px !important;
+  height: 50px !important;
+  background: rgba(0,0,0,0.0) !important;
+  border: none !important;
+  border-radius: 50% !important;
+  opacity: 1 !important;
+  transition: all 0.3s ease !important;
+  margin: 0 !important;
+  left: 50px !important;
+  right: auto !important;
+}
+
+.offer-carousel-large .carousel-control-next {
+  left: auto !important;
+  right: 50px !important;
+}
+
+
 
 .nav-tabs-dark .nav-link {
   color: var(--text-secondary);
@@ -621,6 +680,40 @@ main {
     border-radius: 50%;
 }
 
+.card-title-car:hover {
+  color: var(--accent) !important;
+}
+
+.cursor-pointer {
+  cursor: pointer !important
+}
+
+.search-cars-navigation {
+  position: static;
+  transform: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.search-cars-navigation .carousel-control-prev,
+.search-cars-navigation .carousel-control-next {
+  position: static;
+  margin: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-cars-navigation .carousel-control-prev-icon,
+.search-cars-navigation .carousel-control-next-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+  filter: invert(0.4);
+}
+
 /* На мобильных устройствах */
 @media (max-width: 767.98px) {
     .special-offers-navigation {
@@ -648,6 +741,20 @@ main {
         height: 1.2rem;
         filter: invert(0.4);
     }
+
+    .offer-carousel-large .carousel-item img {
+      max-height: 400px !important;
+    }
+
+    .offer-carousel-large .carousel-control-prev {
+      left: 1px !important;
+      right: auto !important;
+    }
+
+    .offer-carousel-large .carousel-control-next {
+      left: auto !important;
+      right: 1px !important;
+    }
 }
 
 /* Адаптация для планшетов */
@@ -661,6 +768,8 @@ main {
     }
 }
 
-.card-title-car:hover {
-  color: var(--accent) !important;
+@media (max-width: 576px) {
+  .offer-carousel-large .carousel-item img {
+    max-height: 300px !important;
+  }
 }

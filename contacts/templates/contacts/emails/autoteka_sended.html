@@ -1,0 +1,20 @@
+{% extends 'base_email.html' %}
+{% load static %}
+
+{% block title %}Отправлена автотека {{ lead.car.brand }} {{ lead.car.model }}{% endblock title %}
+
+{% block email_body %}
+<p>Здравствуйте!</p>
+
+<p>Была автоматически отправлена автотека по автомобилю: <strong>{{ lead.car.brand }} {{ lead.car.model }}</strong></p>
+
+<p>Информация по заявке:</p>
+
+<div class="text-center my-4">
+    <p><strong>Имя клиента: </strong>{{ lead.name }}</p>
+    <p><strong>Почта клиента: </strong>{{ lead.email }}</p>
+    <p><strong>Телефон клиента: </strong>{{ lead.telephone_number }}</p>
+    <p><strong>Автомобиль: </strong>{{ lead.car.brand }} {{ lead.car.model }} (slug: {{ lead.car.slug }})</p>
+    <p><strong>Токен: </strong>{{ lead.token }}</p>
+</div>
+{% endblock email_body %}

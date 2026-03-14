@@ -1,0 +1,26 @@
+{% extends 'base_email.html' %}
+{% load static %}
+
+{% block title %}Подтверждение заявки{% endblock title %}
+
+{% block email_body %}
+<p>Здравствуйте, <strong>{{ lead.name }}</strong>!</p>
+
+<p>Нажмите на кнопку ниже для подтверждения заявки:</p>
+
+<div class="text-center my-4">
+    <a href="{{ request.scheme }}://{{ request.get_host }}{% url 'contacts:confirmation_email' lead.token %}"
+       class="btn btn-primary">
+        Подтвердить заявку
+    </a>
+</div>
+
+<p>Если кнопка не работает, скопируйте ссылку и вставьте её в браузер:</p>
+<div class="link-text">
+    {{ request.scheme }}://{{ request.get_host }}{% url 'contacts:confirmation_email' lead.token %}
+</div>
+{% endblock email_body %}
+
+{% block extra_footer %}
+<p>Если вы не подавали заявку, просто проигнорируйте это письмо.</p>
+{% endblock extra_footer %}

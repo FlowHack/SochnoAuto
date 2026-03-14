@@ -1,0 +1,24 @@
+{% extends 'misc/base_misc.html' %}
+
+{% block misc_title %}Успешное подтверждение{% endblock %}
+
+{% block icon %}
+    <div class="mb-4">
+        <div class="sochno-logo-icon mx-auto" style="width: 80px; height: 80px; font-size: 2.5rem; background: linear-gradient(135deg, #28a745, #20c997);">
+            <i class="bi bi-check-lg">✓</i>
+        </div>
+    </div>
+{% endblock %}
+
+{% block title_color %}color: #28a745 !important;{% endblock %}
+{% block title_text %}Готово!{% endblock %}
+
+{% block message %}
+    {% if messages %}
+        {% for message in messages %}
+            <p class="mb-0">{{ message }}</p>
+        {% endfor %}
+    {% else %}
+        <p>Ваша почта успешно подтверждена. Теперь вы будете получать актуальную информацию первыми.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,8 @@
+{% if page and page.has_next %}
+<li class="page-item">
+    <a class="page-link" data-page="{{ page.next_page_number }}" data-category="{{ selected_category }}"
+    onClick="addCarsInCategory(this)">
+        Показать ещё
+    </a>
+</li>
+{% endif %}

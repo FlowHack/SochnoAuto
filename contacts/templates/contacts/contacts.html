@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Контакты{% endblock %}
+
+{% block content %}
+<section class="py-5" id="contact">
+    <div class="container">
+        <h2 class="section-title mb-4">Контакты</h2>
+        <div class="row g-4">
+            <div class="col-lg-5">
+                <div class="contact-info">
+                    <p class="fs-5 mb-3">
+                        <strong>Телефон:</strong><br>
+                        <a href="tel:{% block phone %}+7 (993) 317-05-25{% endblock %}" class="text-decoration-none text-primary">
+                            {% block phone_display %}+7 (993) 317-05-25{% endblock %}
+                        </a>
+                    </p>
+                    <p class="mb-4">
+                        <strong>Адрес:</strong><br>
+                        <span class="text-secondary">{% block address %}Краснодарский край, Краснодар, Ростовское ш., 11/1{% endblock %}</span>
+                    </p>
+                    <div class="d-flex gap-3">
+                        <a href="{% block telegram_url %}https://t.me/tochno_auto23{% endblock %}" target="_blank" rel="noopener noreferrer" class="footer-link" title="Telegram" aria-label="Telegram">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-1.21-.38-1.23-1.21.25-1.79l15.57-6.08c1.01-.43 1.89.24 1.53 1.73l-2.54 12.26c-.19.96-.74 1.19-1.5.71l-4.13-3.05z"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.avito.ru/brands/i183531685" target="_blank" rel="noopener noreferrer" class="footer-link" title="Авито" aria-label="Авито">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="yandex-map" id="yandexMap"></div>
+                <p class="small text-muted mt-2">Краснодарский край, Краснодар, Ростовское ш., 11/1</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+<script type="text/javascript">
+    ymaps.ready(function () {
+        var map = new ymaps.Map("yandexMap", {
+            center: [45.077788, 38.987580],
+            zoom: 16,
+            controls: ['zoomControl', 'fullscreenControl']
+        });
+        var placemark = new ymaps.Placemark([45.077788, 38.987580], {
+            balloonContent: "СОЧНО АВТО<br>Ростовское ш., 11/1"
+        });
+        map.geoObjects.add(placemark);
+    });
+</script>
+{% endblock %}
