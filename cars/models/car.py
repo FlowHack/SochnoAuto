@@ -256,4 +256,4 @@ class Car(models.Model):
     def full_name(self):
         """Полное название для ссылок"""
 
-        return f"{self.brand} {self.model} {self.year_release.year}"
+        return f"{self.brand} {self.model} {self.year_release}"
