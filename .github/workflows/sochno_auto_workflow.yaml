@@ -34,6 +34,17 @@ jobs:
       run: |
         export DJANGO_SECRET_KEY=test_secret_key_for_github_actions
         export DEBUG=False
+        export DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
+        export DJANGO_DB_NAME=db.sqlite3
+        export AVITO_USER_ID=test
+        export EMAIL_HOST=localhost
+        export EMAIL_PORT=587
+        export EMAIL_HOST_USER=test@test.com
+        export EMAIL_HOST_PASSWORD=test
+        export EMAIL_USE_TLS=False
+        export EMAIL_USE_SSL=False
+        export EMAIL_TIMEOUT=30
+        export EMAIL_FOR=test@test.com
         python manage.py test
   
   build_and_push_to_docker_hub:
