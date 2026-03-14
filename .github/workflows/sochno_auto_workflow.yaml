@@ -32,6 +32,8 @@ jobs:
 
     - name: Run Django tests
       run: |
+        export DJANGO_SECRET_KEY=test_secret_key_for_github_actions
+        export DEBUG=False
         python manage.py test
   
   build_and_push_to_docker_hub:
