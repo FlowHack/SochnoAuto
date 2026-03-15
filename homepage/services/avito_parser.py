@@ -19,7 +19,7 @@ class AvitoFeedbackParser:
     """Класс парсера отзывов с авито"""
 
     BASE_URL = 'https://www.avito.ru'
-    API_ENDPOINT = f'/web/7/user/{settings.AVITO_USER_ID}/ratings'
+    API_ENDPOINT = f'/web/7/user/{settings.AVITO_SELLER_ID}/ratings'
     HEADERS = {
         'User-Agent': (
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
