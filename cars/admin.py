@@ -1,16 +1,20 @@
+import admin_thumbnails
 from adminsortable2.admin import (SortableAdminBase, SortableAdminMixin,
                                   SortableStackedInline)
 from django.contrib import admin
+from dragndrop_related.views import DragAndDropRelatedImageMixin
 
 from .models import Car, CarCategory, CarImage, CarParameter
 
 
+@admin_thumbnails.thumbnail('image')
 class CarImageInline(SortableStackedInline):
     """Настройка добавления изображений при создании/редактировании
     автомобиля"""
 
+    extra = 0
     model = CarImage
-    extra = 2
+    fields = ['image', 'caption', 'order_image']
 
 
 class CarParameterInline(admin.StackedInline):
@@ -22,13 +26,18 @@ class CarParameterInline(admin.StackedInline):
 
 
 @admin.register(Car)
-class CarModelAdmin(SortableAdminBase, admin.ModelAdmin):
+class CarModelAdmin(
+    DragAndDropRelatedImageMixin, SortableAdminBase, admin.ModelAdmin
+):
     """Модель Автомобиля для административной панели"""
 
+    related_manager_field_name = 'car_images'
+    related_model_field_name = 'image'
+    related_model_order_field_name = 'order_image'
     inlines = [CarImageInline, CarParameterInline]
     fields = (
-        'sold', 'brand', 'model', 'year_release', 'mileage', 'fuel_type',
-        'price', 'power_hp', 'color', 'wheel_position', 'engine_capacity',
+        'sold', 'brand', 'model', 'year_release', 'mileage', 'price', 'color',
+        'wheel_position', 'fuel_type', 'power_hp', 'engine_capacity',
         'type_transmission', 'car_body', 'category', 'description', 'autoteka'
     )
     list_display = (

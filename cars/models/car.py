@@ -217,7 +217,6 @@ class Car(models.Model):
                 )
             )
         ]
-
     )
 
     class Meta:
@@ -237,13 +236,23 @@ class Car(models.Model):
         super().save(*args, **kwargs)
 
         if created or not self.slug:
-            self.slug = (
-                slugify(
-                    f'{self.brand}-{self.model}-{self.id}',
-                    allow_unicode=True
-                )
-            )
+            base_slug = f'{self.brand}-{self.model}-{self.id}'
+            self.slug = slugify(base_slug, allow_unicode=True)
+            self.slug = self._clean_slug(self.slug)
             super().save(update_fields=['slug'], *args, **kwargs)
+
+    def _clean_slug(self, slug: str) -> str:
+        """Очистка slug от недопустимых символов для URL.
+
+        Args:
+            slug (str): Слаг для очистки.
+
+        Returns:
+            str: Очищенный слаг, содержащий только допустимые символы.
+        """
+        import re
+        cleaned = re.sub(r'[^a-zA-Z0-9_-]', '', slug)
+        return cleaned[:200]
 
     def __str__(self):
         status = "🔴 ПРОДАНО" if self.sold else "🟢 В продаже"

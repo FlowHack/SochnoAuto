@@ -5,24 +5,26 @@
 
 {% block content %}
 <!-- Карусель фото салона -->
-<div id="carouselDealership" class="carousel slide carousel-dealership" data-bs-ride="carousel" data-bs-touch="true">
-    <div class="carousel-inner">
-        {% for image in dealership_images %}
-        {% include "homepage/includes/preview_dealership.html" with image=image %}
-        {% empty %}
-        <div class="carousel-item active">
-            <img src="{% static 'images/placeholder-dealership.jpg' %}" class="d-block w-100" alt="СОЧНОАВТО" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%221200%22 height=%22600%22%3E%3Crect fill=%22%231a2332%22 width=%221200%22 height=%22600%22/%3E%3Ctext fill=%22%2394a3b8%22 x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2248%22%3EСОЧНОАВТО%3C/text%3E%3C/svg%3E'">
+<div class="container py-4">
+    <div id="carouselDealership" class="carousel slide carousel-dealership" data-bs-ride="carousel" data-bs-touch="true">
+        <div class="carousel-inner">
+            {% for image in dealership_images %}
+            {% include "homepage/includes/preview_dealership.html" with image=image %}
+            {% empty %}
+            <div class="carousel-item active">
+                <img src="{% static 'images/placeholder-dealership.jpg' %}" class="d-block w-100" alt="СОЧНОАВТО" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%221200%22 height=%22600%22%3E%3Crect fill=%22%231a2332%22 width=%221200%22 height=%22600%22/%3E%3Ctext fill=%22%2394a3b8%22 x=%2250%25%22 y=%2250%25%22 dominant-baseline=%22middle%22 text-anchor=%22middle%22 font-size=%2248%22%3EСОЧНОАВТО%3C/text%3E%3C/svg%3E'">
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselDealership" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Предыдущий</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselDealership" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Следующий</span>
+        </button>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselDealership" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Предыдущий</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselDealership" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Следующий</span>
-    </button>
 </div>
 
 <!-- Специальные предложения -->

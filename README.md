@@ -36,20 +36,25 @@ SochnoAuto — современный сайт автосалона на Django 
 
 ```
 SochnoAutoRelease/
-├── api/              # REST API endpoints
-├── cars/             # Car catalog (models, views, services)
-├── contacts/         # Contact request forms
-├── core/             # Shared utilities & context processors
-├── homepage/         # Main page
-├── config/           # Django settings, URLs, WSGI/ASGI
-├── templates/        # HTML templates
-├── static/           # CSS, JavaScript, fonts
-├── media/            # User uploads
-├── nginx/            # Nginx configuration
-├── Dockerfile        # Container definition
-├── docker-compose.yaml
-├── .env              # Environment variables
-└── requirements.txt
+├── api/                  # REST API endpoints
+├── cars/                 # Каталог автомобилей (models, views, services)
+├── contacts/             # Формы обратной связи
+├── core/                 # Утилиты и контекстные процессоры
+├── homepage/             # Главная страница
+├── config/               # Настройки Django, URLs, WSGI/ASGI
+├── templates/            # HTML шаблоны
+├── static/               # CSS, JavaScript, шрифты
+├── media/               # Загруженные пользователями файлы
+├── nginx/               # Конфигурация Nginx
+├── dumps/                # Дампы базы данных
+├── Dockerfile            # Определение контейнера
+├── docker-compose.yaml   # Оркестрация Docker
+├── entrypoint.sh        # Скрипт запуска контейнера
+├── manage.py           # Django management
+├── manage_dump.py      # Скрипт создания дампов БД
+├── .env                 # Переменные окружения
+├── requirements.txt     # Зависимости Python
+└── fixtures.tar.gz      # Тестовые данные для загрузки в БД
 ```
 
 ## Быстрый старт
@@ -87,7 +92,23 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-Приложение будет доступно по адресу `http://127.0.0.1:8000`.
+### Тестовые данные
+
+В проекте есть готовый набор тестовых данных в файле `fixtures.tar.gz`. Для загрузки:
+
+```bash
+# Локальный запуск
+python manage.py diskette_load fixtures.tar.gz --keep
+
+# В Docker
+docker-compose exec web python manage.py diskette_load fixtures.tar.gz --keep
+```
+
+После загрузки в базе появятся:
+- Категории автомобилей
+- Тестовые автомобили с изображениями
+- Отзывы
+- Изображения для главной страницы
 
 ## Тесты
 
@@ -96,7 +117,7 @@ python manage.py runserver
 ### Запуск тестов локально
 
 ```bash
-cd /mnt/p/Yandex.Disk/Projects/Programing/GitHub/SochnoAutoRelease
+# В папке с проектом
 source venv/bin/activate
 python manage.py test --verbosity=2
 ```
@@ -150,6 +171,36 @@ docker-compose up -d
 docker-compose exec web python manage.py migrate
 ```
 
+## Работа с дампами базы данных
+
+Проект использует библиотеку `diskette` для экспорта и импорта данных.
+
+### Экспорт данных (создание дампа)
+
+```bash
+# Локальный запуск (дампит в папку dumps/)
+python manage_dump.py
+
+# С указанием имени файла
+python manage_dump.py --filename my_backup
+# Результат: dumps/my_backup.tar.gz
+```
+
+По умолчанию создаёт файл `dump_15-03-2026_12-30-857.tar.gz`
+(формат: `dump_день-месяц-год_час-минута-миллисекунда.tar.gz`).
+
+### Импорт данных (загрузка дампа)
+
+```bash
+# Локальный запуск
+python manage.py diskette_load путь_к_дампу.gz --keep
+
+# В Docker
+docker-compose exec web python manage.py diskette_load путь_к_дампу.gz --keep
+```
+
+Ключ `--keep` сохраняет существующие данные в базе. Без него все данные будут удалены перед загрузкой.
+
 ### Статические и медиа‑файлы
 
 Nginx обслуживает статику и медиа из томов Docker:
@@ -170,7 +221,7 @@ Nginx обслуживает статику и медиа из томов Docker
 | `DJANGO_DEBUG`          | `False`                     | Режим отладки. Для production всегда `False`.                            |
 | `DJANGO_ALLOWED_HOSTS`  | `localhost your-domain.com` | Список доменов/хостов, с которых доступно приложение.                    |
 | `DJANGO_CSRF_TRUSTED_ORIGINS` | `https://your-domain.com` | Доверенные origin’ы для CSRF (обычно ваш домен с протоколом).     |
-| `DJANGO_DB_ENGINE`      | `django.db.backends.postgresql` | Движок базы данных (в Docker по умолчанию PostgreSQL).           |
+| `DJANGO_DB_ENGINE`      | `django.db.backends.postgresql` | Движок базы данных (в Docker по умолчанию PostgreSQL).            |
 | `DJANGO_DB_NAME`        | `postgres`                  | Имя базы данных Django.                                                  |
 | `POSTGRES_USER`         | `postgres`                  | Пользователь PostgreSQL (создаётся контейнером).                         |
 | `POSTGRES_PASSWORD`     | `postgres`                  | Пароль пользователя PostgreSQL.                                          |
@@ -184,7 +235,8 @@ Nginx обслуживает статику и медиа из томов Docker
 | `EMAIL_HOST_USER`       | `your-email@yandex.ru`      | Почта, с которой отправляются письма.                                    |
 | `EMAIL_HOST_PASSWORD`   | `your-password`             | Пароль/токен приложения для `EMAIL_HOST_USER`.                           |
 | `EMAIL_FOR`             | `admin@example.com`         | Список получателей служебных писем (через пробел).                       |
-| `AVITO_USER_ID`         | `your-avito-user-id`        | (Опционально) ID пользователя Avito для интеграции.                      |
+| `AVITO_SELLER_ID`         | `your-avito-seller-id`        | (Опционально) ID пользователя Avito для интеграции.                      |
+| `AVITO_BRAND_ID`         | `your-avito-brand-id`        | (Опционально) ID бренда Avito для интеграции.                      |
 
 ### Локальная разработка (`.env` для запуска без Docker)
 
@@ -202,7 +254,8 @@ Nginx обслуживает статику и медиа из томов Docker
 | `EMAIL_HOST_USER`       | `your-email@yandex.ru`     | Почта отправителя. Можно оставить пустой, если не тестируете почту.     |
 | `EMAIL_HOST_PASSWORD`   | `your-password`            | Пароль/токен для отправки почты.                                         |
 | `EMAIL_FOR`             | `admin@example.com`        | Кому отправлять служебные письма.                                        |
-| `AVITO_USER_ID`         | `your-avito-user-id`       | (Опционально) ID пользователя Avito.                                     |
+| `AVITO_SELLER_ID`         | `your-avito-seller-id`        | (Опционально) ID пользователя Avito для интеграции.                      |
+| `AVITO_BRAND_ID`         | `your-avito-brand-id`        | (Опционально) ID бренда Avito для интеграции.                      |
 
 ## Локальная сборка Docker‑образа
 

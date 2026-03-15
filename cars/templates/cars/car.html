@@ -205,4 +205,38 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const carousel = document.querySelector('#carouselCarMain');
+    if (!carousel) return;
+    
+    const inner = carousel.querySelector('.carousel-inner');
+    let bg = inner.querySelector('.img-background');
+    
+    if (!bg) {
+        bg = document.createElement('div');
+        bg.className = 'img-background';
+        bg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center;filter:blur(20px);transform:scale(1.1);z-index:0;border-radius:20px;pointer-events:none;';
+        inner.insertBefore(bg, inner.firstChild);
+    }
+    
+    function updateBackground() {
+        const active = inner.querySelector('.carousel-item.active img');
+        if (active && active.src) {
+            bg.style.backgroundImage = 'url(' + active.src + ')';
+            bg.style.backgroundSize = 'cover';
+            bg.style.backgroundPosition = 'center';
+            bg.style.opacity = '1';
+        }
+    }
+    
+    carousel.addEventListener('slide.bs.carousel', function() {
+        bg.style.opacity = '0';
+    });
+    
+    carousel.addEventListener('slid.bs.carousel', updateBackground);
+    updateBackground();
+});
+</script>
 {% endblock %}
