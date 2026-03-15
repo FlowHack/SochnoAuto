@@ -19,11 +19,10 @@ from pathlib import Path
 
 import django
 from django.conf import settings
+from django.core.management import call_command
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 django.setup()
-
-from django.core.management import call_command
 
 
 def main():
