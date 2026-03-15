@@ -32,7 +32,8 @@ INSTALLED_APPS = [
     'homepage.apps.HomepageConfig',
     'cars.apps.CarsConfig',
     'api.apps.ApiConfig',
-    'contacts.apps.ContactsConfig'
+    'contacts.apps.ContactsConfig',
+    'dragndrop_related',
 ]
 
 MIDDLEWARE = [
@@ -126,7 +127,8 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-AVITO_USER_ID = os.environ.get('AVITO_USER_ID')
+AVITO_SELLER_ID = os.environ.get('AVITO_SELLER_ID')
+AVITO_BRAND_ID = os.environ.get('AVITO_BRAND_ID')
 
 # Logging
 
@@ -252,7 +254,7 @@ DISKETTE_DUMP_PATH = BASE_DIR / 'dumps'
 DISKETTE_DUMP_FILENAME = 'dump.tar.gz'
 DISKETTE_DUMP_PERMISSIONS = 0o755
 DISKETTE_DOWNLOAD_ALLOWED_PROTOCOLS = ('http://', 'https://')
-DISKETTE_LOAD_STORAGES_PATH = MEDIA_ROOT
+DISKETTE_LOAD_STORAGES_PATH = BASE_DIR
 DISKETTE_LOAD_MINIMAL_FILESIZE = 6
 DISKETTE_STORAGES = [MEDIA_ROOT]
 DISKETTE_STORAGES_EXCLUDES = [
