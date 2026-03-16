@@ -80,6 +80,6 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            ✅ Release push Docker успешно выполнен!
+            ✅ Release deploy успешно выполнен!
             Коммит: ${{ github.sha }}
             Автор: ${{ github.actor }}

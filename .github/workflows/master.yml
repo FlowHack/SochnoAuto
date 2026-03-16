@@ -84,6 +84,7 @@ jobs:
           script: |
             cd ~/sochno-auto
             sudo docker-compose pull
+            sudo docker-compose rm -f web
             sudo docker-compose up -d
             sudo docker-compose exec web python manage.py migrate --noinput
             sudo docker-compose exec web python manage.py collectstatic --noinput
