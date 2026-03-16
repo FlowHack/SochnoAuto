@@ -16,3 +16,6 @@ setup.cfg
 Dockerfile
 docker-compose.yaml
 nginx/
+media/
+staticfiles/
+dumps/

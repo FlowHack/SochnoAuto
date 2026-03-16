@@ -1,10 +1,9 @@
-name: CI
+name: CI - Master
 
 on:
   push:
     branches:
       - master
-      - release
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -69,4 +68,4 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/sochno-auto:latest 
+          tags: ${{ secrets.DOCKER_USERNAME }}/sochno-auto:latest
