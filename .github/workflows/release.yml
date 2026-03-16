@@ -1,9 +1,8 @@
-name: CI
+name: CI - Release
 
 on:
   push:
     branches:
-      - master
       - release
 
 env:
@@ -69,4 +68,18 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/sochno-auto:latest 
+          tags: ${{ secrets.DOCKER_USERNAME }}/sochno-auto-release:latest
+
+  send_message:
+    runs-on: ubuntu-latest
+    needs: build_and_push_to_docker_hub
+    steps:
+      - name: send message
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ✅ Release push Docker успешно выполнен!
+            Коммит: ${{ github.sha }}
+            Автор: ${{ github.actor }}

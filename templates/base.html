@@ -39,10 +39,16 @@
                                 <input type="tel" class="form-control" id="contactTelephonNumber" name="telephone_number" required>
                                 <input type="hidden" name="type_request" value="contact_us">
                             </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="contactConsent" required>
+                                <label class="form-check-label" for="contactConsent">
+                                    Даю согласие на обработку персональных данных
+                                </label>
+                            </div>
                         </div>
                         <div class="modal-footer border-secondary">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                            <button type="submit" class="btn btn-contact">Запросить</button>
+                            <button type="submit" class="btn btn-contact" disabled>Запросить</button>
                         </div>
                     </form>
                 </div>

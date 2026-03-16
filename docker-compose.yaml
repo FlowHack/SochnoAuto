@@ -13,8 +13,9 @@ services:
     image: flowhack/sochno-auto:latest
     restart: always
     volumes:
-      - static_value:/code/static/
-      - media_value:/code/media/
+      - ./staticfiles:/code/staticfiles/
+      - ./media:/code/media/
+      - ./dumps:/code/dumps/
     depends_on:
       - db
     env_file:
@@ -25,12 +26,10 @@ services:
       - "80:80"
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - static_value:/var/html/static/
-      - media_value:/var/html/media/
+      - ./staticfiles:/var/html/static/
+      - ./media:/var/html/media/
     depends_on:
       - web
 
 volumes:
   postgres_data:
-  static_value:
-  media_value:

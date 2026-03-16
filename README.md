@@ -1,6 +1,7 @@
 # SochnoAuto
 
-![СОЧНО АВТО workflow](https://github.com/FlowHack/SochnoAuto/actions/workflows/sochno_auto_workflow.yaml/badge.svg)
+![master](https://github.com/FlowHack/SochnoAuto/actions/workflows/master.yml/badge.svg?branch=master)
+![release](https://github.com/FlowHack/SochnoAuto/actions/workflows/release.yml/badge.svg?branch=release)
 
 ![Django](https://img.shields.io/badge/Django-6.0.2-092E20?style=flat&logo=django)
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat&logo=python)
@@ -62,8 +63,15 @@ SochnoAutoRelease/
 ### Вариант 1. Docker Compose (приближён к production)
 
 ```bash
-# Start all services
+# Создать папки для статики, медиа и дампов
+mkdir -p staticfiles media dumps
+
+# Запустить контейнеры
 docker-compose up -d
+
+# Применить миграции и собрать статику
+docker-compose exec web python manage.py migrate
+docker-compose exec web python manage.py collectstatic --noinput
 
 # View logs
 docker-compose logs -f
@@ -100,8 +108,22 @@ python manage.py runserver
 # Локальный запуск
 python manage.py diskette_load fixtures.tar.gz --keep
 
-# В Docker
-docker-compose exec web python manage.py diskette_load fixtures.tar.gz --keep
+# В Docker (только данные, без картинок)
+docker-compose exec web python manage.py diskette_load fixtures.tar.gz --keep --no-storages
+```
+
+> **Примечание:** При использовании Docker с примонтированной папкой `media` может возникнуть ошибка `Device or resource busy`. В этом случае:
+
+```bash
+# Скопировать архив из контейнера на хост
+docker cp <container_name>:/code/fixtures.tar.gz ./
+
+# Распаковать и загрузить данные
+tar -xzf fixtures.tar.gz
+docker-compose exec web python manage.py diskette_load fixtures.tar.gz --keep --no-storages
+
+# Удалить временные файлы
+rm -rf fixtures.tar.gz
 ```
 
 После загрузки в базе появятся:
@@ -154,6 +176,9 @@ docker-compose logs -f web
 
 # Доступ в shell контейнера
 docker-compose exec web bash
+
+# Сбор статики после деплоя
+docker-compose exec web python manage.py collectstatic --noinput
 ```
 
 ### Управление базой данных
@@ -166,9 +191,10 @@ docker-compose exec web python manage.py migrate
 docker-compose exec web python manage.py makemigrations
 
 # Полный сброс БД (УДАЛЯЕТ все данные)
-docker-compose down -v
+docker-compose down
 docker-compose up -d
 docker-compose exec web python manage.py migrate
+docker-compose exec web python manage.py collectstatic --noinput
 ```
 
 ## Работа с дампами базы данных
@@ -180,6 +206,9 @@ docker-compose exec web python manage.py migrate
 ```bash
 # Локальный запуск (дампит в папку dumps/)
 python manage_dump.py
+
+# В Docker (дампит в папку dumps/ на хосте)
+docker-compose exec web python manage_dump.py
 
 # С указанием имени файла
 python manage_dump.py --filename my_backup
@@ -203,10 +232,11 @@ docker-compose exec web python manage.py diskette_load путь_к_дампу.gz
 
 ### Статические и медиа‑файлы
 
-Nginx обслуживает статику и медиа из томов Docker:
-- `static_value` — статические файлы (CSS, JS);
-- `media_value` — загруженные изображения автомобилей;
-- `postgres_data` — файлы базы данных.
+Nginx обслуживает статику и медиа из папок на хосте (монтируются в контейнер):
+- `staticfiles` — статические файлы (CSS, JS), собираются через `collectstatic`;
+- `media` — загруженные изображения автомобилей;
+- `dumps` — резервные копии базы данных;
+- `postgres_data` — файлы базы данных (Docker volume).
 
 ## Переменные окружения
 

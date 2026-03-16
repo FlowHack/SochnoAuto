@@ -589,6 +589,10 @@ main {
   filter: invert(1);
 }
 
+.modal {
+  z-index: 9999 !important
+}
+
 /* Section titles */
 .section-title {
   font-size: 1.75rem;
