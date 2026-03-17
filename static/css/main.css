@@ -264,6 +264,13 @@ main {
   }
 }
 
+@media (max-width: 320px) {
+  .carousel-dealership .carousel-item {
+    height: 30vh;
+    min-height: 180px;
+  }
+}
+
 .carousel-control-prev,
 .carousel-control-next {
   width: 60px;
@@ -862,5 +869,16 @@ main {
 @media (max-width: 576px) {
   .offer-carousel-large .carousel-item img {
     max-height: 300px !important;
+  }
+}
+
+@media (max-width: 320px) {
+  .section-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .feedback-card {
+    padding: 0.5rem;
   }
 }
