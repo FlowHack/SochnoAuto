@@ -2,13 +2,17 @@
 
 ![master](https://github.com/FlowHack/SochnoAuto/actions/workflows/master.yml/badge.svg?branch=master)
 ![release](https://github.com/FlowHack/SochnoAuto/actions/workflows/release.yml/badge.svg?branch=release)
+![SSL](https://img.shields.io/badge/SSL-LetsEncrypt-003545?style=flat&logo=letsencrypt)
 
 ![Django](https://img.shields.io/badge/Django-6.0.2-092E20?style=flat&logo=django)
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat&logo=python)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Docker](https://img.shields.io/badge/Docker-ready-2496ED?style=flat&logo=docker)
+[![Website Status](https://img.shields.io/website?url=https%3A%2F%2Fsochno-auto.ru%2F&label=sochno-auto.ru&logo=ubuntu&style=flat)](https://sochno-auto.ru/)
 
 SochnoAuto — современный сайт автосалона на Django с каталогом автомобилей, умным поиском, формами обратной связи и REST API.
+
+Официальный сайт: **[sochno-auto.ru](https://sochno-auto.ru/)**
 
 > Запустите контейнеры или локальное окружение, выполните миграции и создайте суперпользователя — получите готовый автосалон с формами заявок, отчётами Автотека и API.
 
@@ -299,6 +303,15 @@ Nginx обслуживает статику и медиа из папок на �
 # Затем собрать и запустить
 docker-compose up -d --build
 ```
+
+## SSL и безопасность
+
+Проект использует SSL-сертификат от [Let's Encrypt](https://letsencrypt.org/), который автоматически обновляется.
+
+### Проверка SSL
+
+- [SSL Labs](https://www.ssllabs.com/ssltest/analyze.html?d=sochno-auto.ru) — детальная проверка SSL
+- [SSL Checker](https://www.sslshopper.com/ssl-checker.html) — проверка сертификата
 
 ## Лицензия
 
