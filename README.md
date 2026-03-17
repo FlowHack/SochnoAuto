@@ -250,14 +250,13 @@ Nginx обслуживает статику и медиа из папок на �
 | `DJANGO_SECRET_KEY`     | `your-secret-key`           | Секретный ключ Django (обязателен, хранить в секрете).                  |
 | `DJANGO_DEBUG`          | `False`                     | Режим отладки. Для production всегда `False`.                            |
 | `DJANGO_ALLOWED_HOSTS`  | `localhost your-domain.com` | Список доменов/хостов, с которых доступно приложение.                    |
-| `DJANGO_CSRF_TRUSTED_ORIGINS` | `https://your-domain.com` | Доверенные origin’ы для CSRF (обычно ваш домен с протоколом).     |
+| `DJANGO_CSRF_TRUSTED_ORIGINS` | `https://your-domain.com` | Доверенные origin'ы для CSRF (обычно ваш домен с протоколом).     |
 | `DJANGO_DB_ENGINE`      | `django.db.backends.postgresql` | Движок базы данных (в Docker по умолчанию PostgreSQL).            |
-| `DJANGO_DB_NAME`        | `postgres`                  | Имя базы данных Django.                                                  |
-| `POSTGRES_USER`         | `postgres`                  | Пользователь PostgreSQL (создаётся контейнером).                         |
-| `POSTGRES_PASSWORD`     | `postgres`                  | Пароль пользователя PostgreSQL.                                          |
-| `POSTGRES_DB`           | `postgres`                  | Имя базы, создаваемой контейнером PostgreSQL.                            |
-| `DB_HOST`               | `db`                        | Хост БД внутри docker‑сети (имя сервиса в `docker-compose`).             |
-| `DB_PORT`               | `5432`                      | Порт PostgreSQL внутри docker‑сети.                                      |
+| `POSTGRES_DB`        | `postgres`                  | Имя базы данных Django.                                                  |
+| `POSTGRES_USER`        | `postgres`                  | Пользователь PostgreSQL для подключения Django.                          |
+| `POSTGRES_PASSWORD`    | `postgres`                  | Пароль пользователя PostgreSQL для подключения Django.                  |
+| `DJANGO_DB_HOST`        | `db`                        | Хост БД внутри docker‑сети (имя сервиса в `docker-compose`).             |
+| `DJANGO_DB_PORT`        | `5432`                      | Порт PostgreSQL внутри docker‑сети.                                      |
 | `EMAIL_HOST`            | `smtp.yandex.ru`            | SMTP‑сервер для отправки писем.                                          |
 | `EMAIL_PORT`            | `465`                       | Порт SMTP (обычно 465 для SSL).                                          |
 | `EMAIL_USE_TLS`         | `False`                     | Использовать TLS (обычно `True` при порте 587).                          |

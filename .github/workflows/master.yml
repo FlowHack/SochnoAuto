@@ -98,7 +98,7 @@ jobs:
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
             cd ~/sochno-auto
-            sudo docker-compose down
+            sudo docker-compose stop
             sudo docker-compose pull
             sudo docker-compose up -d
             sudo docker-compose exec -T web python manage.py migrate --noinput

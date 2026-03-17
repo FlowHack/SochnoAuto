@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   db:
-    image: postgres:12.4
+    image: postgres:14
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     expose:
