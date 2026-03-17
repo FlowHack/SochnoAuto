@@ -19,6 +19,7 @@ mccabe==0.7.0
 more-itertools==10.8.0
 packaging==26.0
 pillow==12.1.1
+psycopg2-binary==2.9.11
 pycodestyle==2.14.0
 pyflakes==3.4.0
 python-dateutil==2.9.0.post0

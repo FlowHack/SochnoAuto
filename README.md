@@ -2,13 +2,17 @@
 
 ![master](https://github.com/FlowHack/SochnoAuto/actions/workflows/master.yml/badge.svg?branch=master)
 ![release](https://github.com/FlowHack/SochnoAuto/actions/workflows/release.yml/badge.svg?branch=release)
+![SSL](https://img.shields.io/badge/SSL-LetsEncrypt-003545?style=flat&logo=letsencrypt)
 
 ![Django](https://img.shields.io/badge/Django-6.0.2-092E20?style=flat&logo=django)
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat&logo=python)
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Docker](https://img.shields.io/badge/Docker-ready-2496ED?style=flat&logo=docker)
+[![Website Status](https://img.shields.io/website?url=https%3A%2F%2Fsochno-auto.ru%2F&label=sochno-auto.ru&logo=ubuntu&style=flat)](https://sochno-auto.ru/)
 
 SochnoAuto — современный сайт автосалона на Django с каталогом автомобилей, умным поиском, формами обратной связи и REST API.
+
+Официальный сайт: **[sochno-auto.ru](https://sochno-auto.ru/)**
 
 > Запустите контейнеры или локальное окружение, выполните миграции и создайте суперпользователя — получите готовый автосалон с формами заявок, отчётами Автотека и API.
 
@@ -250,14 +254,13 @@ Nginx обслуживает статику и медиа из папок на �
 | `DJANGO_SECRET_KEY`     | `your-secret-key`           | Секретный ключ Django (обязателен, хранить в секрете).                  |
 | `DJANGO_DEBUG`          | `False`                     | Режим отладки. Для production всегда `False`.                            |
 | `DJANGO_ALLOWED_HOSTS`  | `localhost your-domain.com` | Список доменов/хостов, с которых доступно приложение.                    |
-| `DJANGO_CSRF_TRUSTED_ORIGINS` | `https://your-domain.com` | Доверенные origin’ы для CSRF (обычно ваш домен с протоколом).     |
+| `DJANGO_CSRF_TRUSTED_ORIGINS` | `https://your-domain.com` | Доверенные origin'ы для CSRF (обычно ваш домен с протоколом).     |
 | `DJANGO_DB_ENGINE`      | `django.db.backends.postgresql` | Движок базы данных (в Docker по умолчанию PostgreSQL).            |
-| `DJANGO_DB_NAME`        | `postgres`                  | Имя базы данных Django.                                                  |
-| `POSTGRES_USER`         | `postgres`                  | Пользователь PostgreSQL (создаётся контейнером).                         |
-| `POSTGRES_PASSWORD`     | `postgres`                  | Пароль пользователя PostgreSQL.                                          |
-| `POSTGRES_DB`           | `postgres`                  | Имя базы, создаваемой контейнером PostgreSQL.                            |
-| `DB_HOST`               | `db`                        | Хост БД внутри docker‑сети (имя сервиса в `docker-compose`).             |
-| `DB_PORT`               | `5432`                      | Порт PostgreSQL внутри docker‑сети.                                      |
+| `POSTGRES_DB`        | `postgres`                  | Имя базы данных Django.                                                  |
+| `POSTGRES_USER`        | `postgres`                  | Пользователь PostgreSQL для подключения Django.                          |
+| `POSTGRES_PASSWORD`    | `postgres`                  | Пароль пользователя PostgreSQL для подключения Django.                  |
+| `DJANGO_DB_HOST`        | `db`                        | Хост БД внутри docker‑сети (имя сервиса в `docker-compose`).             |
+| `DJANGO_DB_PORT`        | `5432`                      | Порт PostgreSQL внутри docker‑сети.                                      |
 | `EMAIL_HOST`            | `smtp.yandex.ru`            | SMTP‑сервер для отправки писем.                                          |
 | `EMAIL_PORT`            | `465`                       | Порт SMTP (обычно 465 для SSL).                                          |
 | `EMAIL_USE_TLS`         | `False`                     | Использовать TLS (обычно `True` при порте 587).                          |
@@ -300,6 +303,15 @@ Nginx обслуживает статику и медиа из папок на �
 # Затем собрать и запустить
 docker-compose up -d --build
 ```
+
+## SSL и безопасность
+
+Проект использует SSL-сертификат от [Let's Encrypt](https://letsencrypt.org/), который автоматически обновляется.
+
+### Проверка SSL
+
+- [SSL Labs](https://www.ssllabs.com/ssltest/analyze.html?d=sochno-auto.ru) — детальная проверка SSL
+- [SSL Checker](https://www.sslshopper.com/ssl-checker.html) — проверка сертификата
 
 ## Лицензия
 
