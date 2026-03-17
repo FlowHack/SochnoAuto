@@ -46,7 +46,7 @@ class ConfirmEmailView(View):
         contact_service = ContactService()
 
         try:
-            request_contact = contact_service.confirm_email(token)
+            result = contact_service.confirm_email(token)
         except ContactService.ExpiresAtOverdue as e:
             logger.warning(f'У токена {token} истек срок действия: {e}')
 
@@ -59,10 +59,17 @@ class ConfirmEmailView(View):
             )
             return redirect('contacts:confirm_error')
 
-        if not request_contact:
-            messages.error(request, 'Заявка не найдена!')
-            return redirect('contacts:contacts')
+        if result == 'already_confirmed':
+            logger.info(f'Токен {token} уже был подтверждён ранее')
+            messages.info(request, 'Ваш email уже был подтверждён ранее!')
+            return redirect('contacts:confirm_success')
 
+        if not result:
+            logger.warning(f'Заявка с токеном {token} не найдена')
+            messages.error(request, 'Заявка не найдена!')
+            return redirect('contacts:confirm_error')
+
+        request_contact = result
         email_service = EmailContactService()
         email_service.send_confirmed_email(request_contact, request)
 
