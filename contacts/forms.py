@@ -54,10 +54,15 @@ class RequestContactForm(forms.ModelForm):
             type_request, name, email, car
         )
 
-        if has_duplicate:
+        if has_duplicate == 'confirmed':
             raise forms.ValidationError(
-                'Вы уже делали такой запрос, он обрабатывается. Пожалуйста, '
-                'дождитесь ответа или проверьте свою почту.'
+                'Ваша заявка уже в работе! Мы обязательно ответим Вам.'
+            )
+
+        if has_duplicate == 'unconfirmed':
+            raise forms.ValidationError(
+                'Вы уже создавали такую заявку. Проверьте почту и '
+                'подтвердите email для обработки заявки.'
             )
 
         cleaned_data['car'] = car

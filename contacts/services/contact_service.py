@@ -26,7 +26,7 @@ class ContactService:
         name: str,
         email: str,
         car: Car | None = None
-    ) -> bool:
+    ) -> bool | str:
         """Проверяет существует ли такая же заявка в БД
 
         Args:
@@ -37,7 +37,9 @@ class ContactService:
                 в заявке. Defaults to None.
 
         Returns:
-            bool: Существует ли такая заявка в БД
+            bool | str: False - нет дубликата,
+                'unconfirmed' - дубликат без подтверждения email,
+                'confirmed' - дубликат с подтвержденным email
         """
 
         filters = Q(
@@ -52,9 +54,17 @@ class ContactService:
         else:
             filters &= Q(car__isnull=True)
 
-        return RequestContact.objects.filter(filters).exclude(
+        existing = RequestContact.objects.filter(filters).exclude(
             status=RequestContact.Status.COMPLETE
-        ).exists()
+        ).first()
+
+        if not existing:
+            return False
+
+        if existing.status == RequestContact.Status.WAIT_EMAIL_CONFIRMATION:
+            return 'unconfirmed'
+
+        return 'confirmed'
 
     @staticmethod
     def get_car_by_slug(car_slug: str) -> Car | None:
@@ -94,7 +104,7 @@ class ContactService:
         )
 
     @staticmethod
-    def confirm_email(token) -> RequestContact | None:
+    def confirm_email(token) -> RequestContact | None | str:
         """Подтверждает почту для заявки
 
         Args:
@@ -114,9 +124,16 @@ class ContactService:
                 token=token,
                 status=RequestContact.Status.WAIT_EMAIL_CONFIRMATION,
             )
-        except RequestContact.DoesNotExist as e:
-            logger.error(f'Записи с токеном {token} не существует: {e}')
-            return None
+        except RequestContact.DoesNotExist:
+            try:
+                request_contact = RequestContact.objects.get(
+                    token=token,
+                    status=RequestContact.Status.EMAIL_CONFIRMED,
+                )
+                return 'already_confirmed'
+            except RequestContact.DoesNotExist:
+                logger.error(f'Записи с токеном {token} не существует')
+                return None
 
         if request_contact.expires_at < timezone.now():
             raise ContactService.ExpiresAtOverdue('Истек срок действия токена')

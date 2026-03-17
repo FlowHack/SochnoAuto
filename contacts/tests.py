@@ -475,3 +475,246 @@ class ContactServiceTest(TestCase):
             self.request_contact.status, RequestContact.Status.COMPLETE
         )
         self.assertIsNotNone(self.request_contact.complete_at)
+
+
+@override_settings(DEFAULT_AUTO_FIELD='django.db.models.BigAutoField')
+class ConfirmEmailViewTest(TestCase):
+    """Тесты для представления подтверждения email"""
+
+    def setUp(self):
+        """Создание тестовых данных."""
+
+        from django.utils import timezone
+
+        from contacts.models import RequestContact
+
+        image = SimpleUploadedFile(
+            'test.jpg', b'file_content', content_type='image/jpeg'
+        )
+        self.category = CarCategory.objects.create(
+            name='Легковые', image=image, order_category=1
+        )
+        self.car = create_car('Toyota', 'Camry', 2023, 10000, self.category)
+
+        self.request_contact = RequestContact.objects.create(
+            name='Test User',
+            email='test@example.com',
+            telephone_number='+79000000000',
+            type_request=RequestContact.TypeRequest.CONTACT_US,
+            status=RequestContact.Status.WAIT_EMAIL_CONFIRMATION,
+            car=None,
+        )
+        self.request_contact.expires_at = timezone.now() + timedelta(hours=1)
+        self.request_contact.save()
+
+        self.confirm_url = reverse(
+            'contacts:confirmation_email',
+            kwargs={'token': self.request_contact.token}
+        )
+        self.success_url = reverse('contacts:confirm_success')
+        self.error_url = reverse('contacts:confirm_error')
+
+    def test_confirm_email_success_redirects_to_success(self):
+        """Тест успешного подтверждения email - редирект на success."""
+        from contacts.models import RequestContact
+
+        response = self.client.get(self.confirm_url)
+
+        self.request_contact.refresh_from_db()
+        self.assertEqual(
+            self.request_contact.status, RequestContact.Status.EMAIL_CONFIRMED
+        )
+        self.assertRedirects(response, self.success_url)
+
+    def test_confirm_email_invalid_token_redirects_to_error(self):
+        """Тест несуществующего токена - редирект на error."""
+
+        invalid_token = uuid.uuid4()
+        url = reverse(
+            'contacts:confirmation_email',
+            kwargs={'token': invalid_token}
+        )
+        response = self.client.get(url)
+
+        self.assertRedirects(response, self.error_url)
+
+    def test_confirm_email_already_confirmed_redirects_to_success(self):
+        """Тест повторного подтверждения уже подтвержденного email."""
+        from contacts.models import RequestContact
+
+        self.request_contact.status = RequestContact.Status.EMAIL_CONFIRMED
+        self.request_contact.save()
+
+        response = self.client.get(self.confirm_url)
+
+        self.assertRedirects(response, self.success_url)
+
+    def test_confirm_email_expired_redirects_to_error(self):
+        """Тест истекшего токена - редирект на error и отправка
+        новой ссылки."""
+
+        from django.utils import timezone
+
+        self.request_contact.expires_at = timezone.now() - timedelta(hours=1)
+        self.request_contact.save()
+
+        with patch(
+            'contacts.services.ContactService.refresh_token'
+        ) as mocked_refresh:
+            mocked_refresh.return_value = None
+            response = self.client.get(self.confirm_url)
+
+        self.assertRedirects(response, self.error_url)
+        mocked_refresh.assert_called_once()
+
+
+@override_settings(DEFAULT_AUTO_FIELD='django.db.models.BigAutoField')
+class RequestContactFormEdgeCasesTest(TestCase):
+    """Тесты для крайних случаев формы RequestContactForm"""
+
+    def setUp(self):
+        """Создание тестовых данных."""
+
+        image = SimpleUploadedFile(
+            'test.jpg', b'file_content', content_type='image/jpeg'
+        )
+        self.category = CarCategory.objects.create(
+            name='Легковые', image=image, order_category=1
+        )
+        self.car = create_car('Toyota', 'Camry', 2023, 10000, self.category)
+
+    def test_form_valid_phone_minimum_length(self):
+        """Тест минимальной длины номера телефона (модель ограничивает
+        15 символами)."""
+
+        from contacts.forms import RequestContactForm
+        from contacts.models import RequestContact
+
+        form_data = {
+            'name': 'Test User',
+            'email': 'test@example.com',
+            'telephone_number': '123456789012',
+            'type_request': RequestContact.TypeRequest.CONTACT_US
+        }
+        form = RequestContactForm(data=form_data)
+        self.assertTrue(form.is_valid())
+
+    def test_form_valid_with_car(self):
+        """Тест валидной формы с автомобилем."""
+
+        from contacts.forms import RequestContactForm
+        from contacts.models import RequestContact
+
+        form_data = {
+            'name': 'Test User',
+            'email': 'test@example.com',
+            'telephone_number': '+79000000000',
+            'type_request': RequestContact.TypeRequest.CONTACT_CAR,
+            'car_slug': self.car.slug,
+        }
+        form = RequestContactForm(data=form_data)
+        self.assertTrue(form.is_valid())
+
+    def test_form_empty_email(self):
+        """Тест формы с пустым email."""
+
+        from contacts.forms import RequestContactForm
+        from contacts.models import RequestContact
+
+        form_data = {
+            'name': 'Test User',
+            'email': '',
+            'telephone_number': '+79000000000',
+            'type_request': RequestContact.TypeRequest.CONTACT_US
+        }
+        form = RequestContactForm(data=form_data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('email', form.errors)
+
+    def test_form_empty_phone(self):
+        """Тест формы с пустым телефоном."""
+
+        from contacts.forms import RequestContactForm
+        from contacts.models import RequestContact
+
+        form_data = {
+            'name': 'Test User',
+            'email': 'test@example.com',
+            'telephone_number': '',
+            'type_request': RequestContact.TypeRequest.CONTACT_US
+        }
+        form = RequestContactForm(data=form_data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('telephone_number', form.errors)
+
+    def test_form_name_too_long(self):
+        """Тест слишком длинного имени."""
+
+        from contacts.forms import RequestContactForm
+        from contacts.models import RequestContact
+
+        form_data = {
+            'name': 'A' * 256,
+            'email': 'test@example.com',
+            'telephone_number': '+79000000000',
+            'type_request': RequestContact.TypeRequest.CONTACT_US
+        }
+        form = RequestContactForm(data=form_data)
+        self.assertFalse(form.is_valid())
+        self.assertIn('name', form.errors)
+
+
+@override_settings(DEFAULT_AUTO_FIELD='django.db.models.BigAutoField')
+class RequestContactCreateViewTest(TestCase):
+    """Тесты для API создания заявки"""
+
+    def setUp(self):
+        """Создание тестовых данных."""
+
+        image = SimpleUploadedFile(
+            'test.jpg', b'file_content', content_type='image/jpeg'
+        )
+        self.category = CarCategory.objects.create(
+            name='Легковые', image=image, order_category=1
+        )
+        self.car = create_car('Toyota', 'Camry', 2023, 10000, self.category)
+        self.create_url = reverse('contacts:create')
+
+    def test_create_request_valid_returns_success(self):
+        """Тест успешного создания заявки."""
+
+        from contacts.models import RequestContact
+
+        data = {
+            'name': 'Test User',
+            'email': 'test@example.com',
+            'telephone_number': '+79000000000',
+            'type_request': RequestContact.TypeRequest.CONTACT_US,
+        }
+
+        with patch(
+            'contacts.services.email_service.EmailContactService.'
+            'send_confirmation_message'
+        ) as mocked_send:
+            response = self.client.post(self.create_url, data=data)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'success', response.content)
+        mocked_send.assert_called_once()
+
+    def test_create_request_invalid_returns_error(self):
+        """Тест создания заявки с невалидными данными."""
+
+        data = {
+            'name': '',
+            'email': 'invalid-email',
+            'telephone_number': '',
+            'type_request': 'invalid_type',
+        }
+
+        response = self.client.post(self.create_url, data=data)
+
+        self.assertEqual(response.status_code, 400)
+        response_data = response.json()
+        self.assertFalse(response_data['success'])
+        self.assertIn('errors', response_data)

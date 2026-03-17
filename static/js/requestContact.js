@@ -1,13 +1,32 @@
 document.addEventListener('DOMContentLoaded', function() {
+    function showErrorAlert(form, message) {
+        var alert = document.createElement('div');
+        alert.className = 'alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3';
+        alert.style.zIndex = '9999';
+        alert.innerHTML = `${message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+        document.body.appendChild(alert);
+        setTimeout(function() { alert.remove(); }, 5000);
+    }
+
     document.querySelectorAll('form[id$="Form"]').forEach(form => {
         const consentCheckbox = form.querySelector('input[type="checkbox"][id$="Consent"]');
         const submitBtn = form.querySelector('button[type="submit"]');
 
-        if (consentCheckbox && submitBtn) {
-            consentCheckbox.addEventListener('change', function() {
-                submitBtn.disabled = !this.checked;
-            });
+        function updateButtonState() {
+            if (consentCheckbox && submitBtn) {
+                submitBtn.disabled = !consentCheckbox.checked;
+            }
         }
+
+        if (consentCheckbox && submitBtn) {
+            consentCheckbox.addEventListener('change', updateButtonState);
+            updateButtonState();
+        }
+
+        form.closest('.modal').addEventListener('shown.bs.modal', function() {
+            form.reset();
+            updateButtonState();
+        });
 
         form.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -21,7 +40,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
                 }
             })
-            .then(r => r.json())
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.errors?.__all__?.[0] || 'Ошибка при отправке формы');
+                    });
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
                     const modal = bootstrap.Modal.getInstance(form.closest('.modal'));
@@ -34,8 +60,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     document.body.appendChild(alert);
                     setTimeout(function() { alert.remove(); }, 5000);
                 } else {
-                    alert("Ошибка: " + data.errors.__all__[0]);
+                    showErrorAlert(form, data.errors?.__all__?.[0] || 'Ошибка при отправке формы');
                 }
+            })
+            .catch(error => {
+                showErrorAlert(form, error.message);
             })
             .finally(() => { submitBtn.disabled = false; });
         });
