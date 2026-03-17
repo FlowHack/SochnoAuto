@@ -252,6 +252,18 @@ main {
   z-index: 1;
 }
 
+@media (max-width: 768px) {
+  .carousel-dealership .carousel-item {
+    height: 40vh;
+    min-height: 250px;
+  }
+
+  .carousel-dealership .carousel-item > .img-background {
+    filter: blur(10px);
+    transform: scale(1.05);
+  }
+}
+
 .carousel-control-prev,
 .carousel-control-next {
   width: 60px;
