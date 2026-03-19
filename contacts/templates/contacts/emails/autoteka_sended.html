@@ -4,17 +4,37 @@
 {% block title %}Отправлена автотека {{ lead.car.brand }} {{ lead.car.model }}{% endblock title %}
 
 {% block email_body %}
-<p>Здравствуйте!</p>
+<p style="margin: 0 0 15px 0;">Здравствуйте!</p>
 
-<p>Была автоматически отправлена автотека по автомобилю: <strong>{{ lead.car.brand }} {{ lead.car.model }}</strong></p>
+<p style="margin: 0 0 15px 0;">Была автоматически отправлена автотека по автомобилю: <strong style="color: #ffffff;">{{ lead.car.brand }} {{ lead.car.model }}</strong></p>
 
-<p>Информация по заявке:</p>
+<p style="margin: 0 0 15px 0;">Информация по заявке:</p>
 
-<div class="text-center my-4">
-    <p><strong>Имя клиента: </strong>{{ lead.name }}</p>
-    <p><strong>Почта клиента: </strong>{{ lead.email }}</p>
-    <p><strong>Телефон клиента: </strong>{{ lead.telephone_number }}</p>
-    <p><strong>Автомобиль: </strong>{{ lead.car.brand }} {{ lead.car.model }} (slug: {{ lead.car.slug }})</p>
-    <p><strong>Токен: </strong>{{ lead.token }}</p>
-</div>
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" style="max-width: 400px; margin: 20px auto; text-align: left; background-color: #252525; border-radius: 8px; overflow: hidden;" class="lead-info">
+    <tr>
+        <td style="padding: 12px 15px; border-bottom: 1px solid #3a3a3a;">
+            <strong style="color: #ffffff;">Имя клиента: </strong> {{ lead.name }}
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 12px 15px; border-bottom: 1px solid #3a3a3a;">
+            <strong style="color: #ffffff;">Почта клиента: </strong> {{ lead.email }}
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 12px 15px; border-bottom: 1px solid #3a3a3a;">
+            <strong style="color: #ffffff;">Телефон клиента: </strong> {{ lead.telephone_number }}
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 12px 15px; border-bottom: 1px solid #3a3a3a;">
+            <strong style="color: #ffffff;">Автомобиль: </strong> {{ lead.car.brand }} {{ lead.car.model }}
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 12px 15px;">
+            <strong style="color: #ffffff;">Токен: </strong> {{ lead.token }}
+        </td>
+    </tr>
+</table>
 {% endblock email_body %}

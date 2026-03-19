@@ -4,19 +4,39 @@
 {% block title %}Подтвержденная заявка {{ lead.get_type_lead_display }}{% endblock title %}
 
 {% block email_body %}
-<p>Здравствуйте!</p>
+<p style="margin: 0 0 15px 0;">Здравствуйте!</p>
 
-<p>Следующая заявка #{{ lead.id }} была подтверждена:</p>
+<p style="margin: 0 0 15px 0;">Следующая заявка #{{ lead.id }} была подтверждена:</p>
 
-<div class="text-center my-4">
-    <p><strong>Имя клиента: </strong>{{ lead.name }}</p>
-    <p><strong>Почта клиента: </strong>{{ lead.email }}</p>
-    <p><strong>Телефон клиента: </strong>{{ lead.telephone_number }}</p>
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" style="max-width: 400px; margin: 20px auto; text-align: left; background-color: #252525; border-radius: 8px; overflow: hidden;" class="lead-info">
+    <tr>
+        <td style="padding: 12px 15px; border-bottom: 1px solid #3a3a3a;">
+            <strong style="color: #ffffff;">Имя клиента: </strong> {{ lead.name }}
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 12px 15px; border-bottom: 1px solid #3a3a3a;">
+            <strong style="color: #ffffff;">Почта клиента: </strong> {{ lead.email }}
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 12px 15px; border-bottom: 1px solid #3a3a3a;">
+            <strong style="color: #ffffff;">Телефон клиента: </strong> {{ lead.telephone_number }}
+        </td>
+    </tr>
     {% if lead.type_lead == 'contact_car' or lead.type_lead == 'autoteka' %}
-    <p><strong>Автомобиль: </strong>{{ lead.car.brand }} {{ lead.car.model }} (slug: {{ lead.car.slug }})</p>
+    <tr>
+        <td style="padding: 12px 15px; border-bottom: 1px solid #3a3a3a;">
+            <strong style="color: #ffffff;">Автомобиль: </strong> {{ lead.car.brand }} {{ lead.car.model }}
+        </td>
+    </tr>
     {% endif %}
-    <p><strong>Токен: </strong>{{ lead.token }}</p>
-</div>
+    <tr>
+        <td style="padding: 12px 15px;">
+            <strong style="color: #ffffff;">Токен: </strong> {{ lead.token }}
+        </td>
+    </tr>
+</table>
 
-<p>Обработайте как можно скорее =)</p>
+<p style="margin: 20px 0 0 0;">Обработайте как можно скорее =)</p>
 {% endblock email_body %}
