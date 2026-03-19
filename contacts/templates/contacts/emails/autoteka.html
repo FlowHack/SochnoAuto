@@ -4,7 +4,7 @@
 {% block title %}Автотека {{ lead.car.brand }} {{ lead.car.model }}{% endblock title %}
 
 {% block email_body %}
-<p>Здравствуйте, <strong>{{ lead.name }}</strong>!</p><br>
+<p style="margin: 0 0 15px 0;">Здравствуйте, <strong style="color: #ffffff;">{{ lead.name }}</strong>!</p>
 
-<p>К письму прикреплена запрошенная Вами автотека по автомобилю: <strong>{{ lead.car.brand }} {{ lead.car.model }}</strong></p>
+<p style="margin: 0 0 15px 0;">К письму прикреплена запрошенная Вами автотека по автомобилю: <strong style="color: #ffffff;">{{ lead.car.brand }} {{ lead.car.model }}</strong></p>
 {% endblock email_body %}

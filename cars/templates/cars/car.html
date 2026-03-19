@@ -41,9 +41,9 @@
                 </div>
                 <div class="mt-4 p-3 rounded" style="background: var(--bg-card); border: 1px solid var(--border-color);">
                     {% if car.engine_capacity %}
-                    <p class="mb-2"><strong>Конфигурация: </strong>{{ car.engine_capacity }} {{ car.type_transmission|upper }}</p>
+                    <p class="mb-2" style="word-break: break-word;"><strong>Конфигурация: </strong>{{ car.engine_capacity }} {{ car.type_transmission|upper }}</p>
                     {% else %}
-                    <p class="mb-2"><strong>Коробка: </strong>{{ car.type_transmission|upper }}</p>
+                    <p class="mb-2" style="word-break: break-word;"><strong>Коробка: </strong>{{ car.type_transmission|upper }}</p>
                     {% endif %}
                     <p class="mb-2"><strong>Мощность: </strong>{{ car.power_hp }} л.с.</p>
                     <p class="mb-2"><strong>Руль: </strong>{{ car.get_wheel_position_display }}</p>
@@ -58,7 +58,7 @@
         </div>
 
         <div class="mt-5">
-            <ul class="nav nav-tabs nav-tabs-dark justify-content-center" role="tablist" style="margin-top: 70px">
+            <ul class="nav nav-tabs nav-tabs-dark justify-content-center" role="tablist" style="margin-top: 70px; flex-wrap: wrap;">
                 <li class="nav-item">
                     <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tabDescription" type="button">Описание</button>
                 </li>
@@ -74,7 +74,7 @@
             </ul>
             <div class="tab-content mt-3">
                 <div class="tab-pane fade show active" id="tabDescription">
-                    <div class="p-3 rounded" style="background: var(--bg-card); border: 1px solid var(--border-color);">
+                    <div class="p-3 rounded-4" style="background: var(--bg-card); border: 1px solid var(--border-color);">
                         {% if car.description %}
                         <div class="offer-description">{{ car.description|safe }}</div>
                         {% else %}
@@ -83,7 +83,7 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="tabSpecs">
-                    <div class="p-3 rounded" style="background: var(--bg-card); border: 1px solid var(--border-color);">
+                    <div class="p-3 rounded-4" style="background: var(--bg-card); border: 1px solid var(--border-color);">
                         <table class="table table-dark table-borderless mb-0">
                             {% for spec in car.technical_parameters %}
                             <tr>
@@ -97,7 +97,7 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="tabComfort">
-                    <div class="p-3 rounded" style="background: var(--bg-card); border: 1px solid var(--border-color);">
+                    <div class="p-3 rounded-4" style="background: var(--bg-card); border: 1px solid var(--border-color);">
                         <table class="table table-dark table-borderless mb-0">
                             {% for spec in car.comfort_parameters %}
                             <tr>
@@ -111,7 +111,7 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="tabSafety">
-                    <div class="p-3 rounded" style="background: var(--bg-card); border: 1px solid var(--border-color);">
+                    <div class="p-3 rounded-4" style="background: var(--bg-card); border: 1px solid var(--border-color);">
                         <table class="table table-dark table-borderless mb-0">
                             {% for spec in car.safety_parameters %}
                             <tr>
@@ -229,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!bg) {
         bg = document.createElement('div');
         bg.className = 'img-background';
-        bg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center;filter:blur(20px);transform:scale(1.1);z-index:0;border-radius:20px;pointer-events:none;';
+        bg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0;border-radius:20px;pointer-events:none;';
         inner.insertBefore(bg, inner.firstChild);
     }
     
@@ -239,16 +239,31 @@ document.addEventListener('DOMContentLoaded', function() {
             bg.style.backgroundImage = 'url(' + active.src + ')';
             bg.style.backgroundSize = 'cover';
             bg.style.backgroundPosition = 'center';
-            bg.style.opacity = '1';
         }
     }
-    
-    carousel.addEventListener('slide.bs.carousel', function() {
-        bg.style.opacity = '0';
-    });
     
     carousel.addEventListener('slid.bs.carousel', updateBackground);
     updateBackground();
 });
 </script>
+<style>
+@media (max-width: 400px) {
+    .tab-content .table {
+        font-size: 14px;
+        table-layout: fixed;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .tab-content .table td {
+        padding: 6px 4px;
+        word-break: break-word;
+        hyphens: auto;
+    }
+    .tab-content .table td:last-child {
+        text-align: left;
+    }
+.carousel-item img {
+    border-radius: 20px;
+}
+</style>
 {% endblock %}
