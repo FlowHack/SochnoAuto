@@ -1,13 +1,11 @@
 from typing import TypeVar
 
 from django.core.paginator import Page
-from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from cars.models import Car
 from cars.services import CarService, CategoryService
 from homepage.services import IndexService
 
@@ -60,21 +58,21 @@ class PaginatedPartialsAPIView(APIView):
 class SpecialOffersAPIView(APIView):
     """Класс для обработки запросов по специальным предложениям"""
 
-    def get(self, request: HttpRequest):
+    def get(self, request: HttpRequest) -> Response:
         return Response(IndexService().get_page_special_offers(request, False))
 
 
 class FeedbacksAPIView(APIView):
     """Класс для обработки запросов по отзывам"""
 
-    def get(self, request: HttpRequest):
+    def get(self, request: HttpRequest) -> Response:
         return Response(IndexService().get_page_feedbacks(request, False))
 
 
 class CategoryAPIView(APIView):
     """Класс для обработки запросов по категориям"""
 
-    def get(self, request: HttpRequest):
+    def get(self, request: HttpRequest) -> Response:
         return Response(
             CategoryService().get_page_cars_in_category(
                 request, None, False
@@ -82,16 +80,8 @@ class CategoryAPIView(APIView):
         )
 
 
-class SearchCarAPIView(PaginatedPartialsAPIView):
+class SearchCarAPIView(APIView):
     """Класс для обработки поиска по автомобилям"""
 
-    template_cards = 'partials/search_results.html'
-    need_pagination = False
-
-    def get_page_data(self, request: HttpRequest) -> Page[Car]:
-        search_query = request.GET.get('search')
-        if not search_query:
-            return QuerySet()
-        page_number = request.GET.get('page')
-
-        return CarService().get_search_cars_page(search_query, page_number)
+    def get(self, request: HttpRequest) -> Response:
+        return Response(CarService().get_search_cars_page(request))

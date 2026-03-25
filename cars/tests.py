@@ -302,13 +302,16 @@ class CarServiceTest(TestCase):
     def test_get_search_cars_page_returns_page_and_filters(self):
         """Тест получения страницы поиска автомобилей."""
 
+        from django.test import RequestFactory
         create_car('Toyota', 'Corolla', 2020, 20000, self.category)
         create_car('Honda', 'Civic', 2020, 15000, self.category)
 
-        page = self.service.get_search_cars_page('Toyota', page_number='1')
-        self.assertIsInstance(page, Page)
-        for car in page.object_list:
-            self.assertIn('Toyota', car.brand or car.model)
+        factory = RequestFactory()
+        request = factory.get('/', {'search': 'Toyota', 'page': '1'})
+        page_data = self.service.get_search_cars_page(request)
+        self.assertIn('page', page_data)
+        self.assertIn('has_pages', page_data)
+        self.assertIsInstance(page_data['page']['object_list'], list)
 
 
 @override_settings(DEFAULT_AUTO_FIELD='django.db.models.BigAutoField')

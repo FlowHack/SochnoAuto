@@ -19,7 +19,7 @@ urlpatterns = [
         name='category'
     ),
     path(
-        'web1/search-car/', SearchCarAPIView.as_view(),
+        'v1/search-car/', SearchCarAPIView.as_view(),
         name='search_car'
     )
 ]
