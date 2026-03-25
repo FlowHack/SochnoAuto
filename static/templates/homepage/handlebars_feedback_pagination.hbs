@@ -1,0 +1,10 @@
+{{#if has_pages.has_previous}}
+<li class="page-item cursor-pointer">
+    <a class="page-link" data-page="{{ prev_page }}" onClick="replaceFeedbacks(this)">Назад</a>
+</li>
+{{/if}}
+{{#if has_pages.has_next}}
+<li class="page-item cursor-pointer">
+    <a class="page-link" data-page="{{ next_page }}" onClick="replaceFeedbacks(this)">Далее</a>
+</li>
+{{/if}}

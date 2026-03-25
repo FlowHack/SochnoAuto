@@ -9,7 +9,6 @@ from rest_framework.views import APIView
 
 from cars.models import Car
 from cars.services import CarService, CategoryService
-from homepage.models import Feedback
 from homepage.services import IndexService
 
 T = TypeVar('T')
@@ -58,21 +57,18 @@ class PaginatedPartialsAPIView(APIView):
         return Response(response)
 
 
-class SpecialOffersAPIView(PaginatedPartialsAPIView):
+class SpecialOffersAPIView(APIView):
     """Класс для обработки запросов по специальным предложениям"""
 
     def get(self, request: HttpRequest):
         return Response(IndexService().get_page_special_offers(request, False))
 
 
-class FeedbacksAPIView(PaginatedPartialsAPIView):
+class FeedbacksAPIView(APIView):
     """Класс для обработки запросов по отзывам"""
 
-    template_cards = 'homepage/partials/cards_feedbacks.html'
-    template_pagination = 'homepage/partials/pagination_feedbacks.html'
-
-    def get_page_data(self, request: HttpRequest) -> Page[Feedback]:
-        return IndexService().get_page_feedbacks(request)
+    def get(self, request: HttpRequest):
+        return Response(IndexService().get_page_feedbacks(request, False))
 
 
 class CategoryAPIView(PaginatedPartialsAPIView):

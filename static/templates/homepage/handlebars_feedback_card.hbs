@@ -1,0 +1,41 @@
+{{#each this}}
+<div class="col-md-6 col-lg-4">
+    <div class="card feedback-card h-100">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    {{#if avatar_url}}
+                    <img class="sochno-logo-icon" style="width: 32px; height: 32px; font-size: 0.9rem;" src="{{ avatar_url }}">
+                    {{else}}
+                    <div class="sochno-logo-icon">
+                        <span>👤</span>
+                    </div>
+                    {{/if}}
+                    <strong style="color: #f1f5f9">{{ name_user }}</strong>
+                </div>
+            </div>
+            <div class="stars-rating" style="padding-bottom: 5px;">
+                {{#each stars}}
+                <span>{{ this }}</span>
+                {{/each}}
+            </div>
+            <p class="card-text text-secondary small">
+                {{#if feedback}}
+                {{ feedback }}
+                {{else}}
+                Отзыв без текста
+                {{/if}}
+            </p>
+            {{#if answer}}
+            <div class="company-response">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <img class="sochno-logo-icon" style="width: 32px; height: 32px; font-size: 0.9rem;" src="/static/favicon.png">
+                    <strong style="color: #f1f5f9">СОЧНО АВТО</strong>
+                </div>
+                <p class="mb-0 small text-secondary">{{ answer }}</p>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+</div>
+{{/each}}

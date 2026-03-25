@@ -11,7 +11,7 @@ urlpatterns = [
         name='special_offers'
     ),
     path(
-        'web1/feedbacks/', FeedbacksAPIView.as_view(),
+        'v1/feedbacks/', FeedbacksAPIView.as_view(),
         name='feedbacks'
     ),
     path(
