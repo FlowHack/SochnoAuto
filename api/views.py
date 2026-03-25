@@ -71,21 +71,14 @@ class FeedbacksAPIView(APIView):
         return Response(IndexService().get_page_feedbacks(request, False))
 
 
-class CategoryAPIView(PaginatedPartialsAPIView):
+class CategoryAPIView(APIView):
     """Класс для обработки запросов по категориям"""
 
-    template_cards = 'cars/partials/cards_cars.html'
-    template_pagination = 'cars/partials/pagination_cars.html'
-
-    def get_page_data(self, request: HttpRequest) -> Page[Car]:
-        category_slug = request.GET.get('category')
-        page_number = request.GET.get('page')
-
-        if not category_slug or not page_number:
-            return QuerySet()
-
-        return CategoryService().get_page_cars_in_category(
-            category_slug, page_number
+    def get(self, request: HttpRequest):
+        return Response(
+            CategoryService().get_page_cars_in_category(
+                request, None, False
+            )
         )
 
 

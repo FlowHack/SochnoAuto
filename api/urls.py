@@ -15,7 +15,7 @@ urlpatterns = [
         name='feedbacks'
     ),
     path(
-        'web1/category/', CategoryAPIView.as_view(),
+        'v1/category/', CategoryAPIView.as_view(),
         name='category'
     ),
     path(

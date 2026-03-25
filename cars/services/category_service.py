@@ -2,9 +2,12 @@ from typing import TypedDict
 
 from django.core.paginator import Page
 from django.db.models import BooleanField, Case, QuerySet, Value, When
+from django.http import HttpRequest
+from rest_framework.utils.serializer_helpers import ReturnList
 
+from api.serializers import CarWithImagesSerializer
 from cars.models import Car, CarCategory
-from core.services import PaginationMixin
+from core.services import PageData, PaginationMixin
 
 
 class CategoryData(TypedDict):
@@ -20,22 +23,22 @@ class CategoryService(PaginationMixin):
     NUMBER_ITEM_PAGINATION_CATEGORY = 6
 
     def get_context(
-        self, category_slug: str, page_number: str
+        self, request: HttpRequest
     ) -> CategoryData:
         """Собирает контекст для страницы категорий
 
         Args:
-            category_slug (str): slug выбранной категории
-            page_number (str): Номер страницы пагинированных автомобилей
+            request (HttpRequest): Объект запроса
 
         Returns:
             CategoryData: Словарь с категориями и пагинированными автомобилями
         """
+        category_slug = request.GET.get('category')
 
         return {
             'categories': self._get_queryset_categories(category_slug),
             'page_cars': self.get_page_cars_in_category(
-                category_slug, page_number
+                request, category_slug, is_object=True
             ),
             'selected_category': category_slug
         }
@@ -60,37 +63,58 @@ class CategoryService(PaginationMixin):
         )
 
     def get_page_cars_in_category(
-        self, category_slug: str, page_number: str
-    ) -> Page[Car]:
+        self, request: HttpRequest, category_slug: str = None,
+        is_object: bool = True
+    ) -> Page[Car] | PageData:
         """Получает пагинированные автомобили из категории
 
         Args:
-            category_slug (str): slug категории из которой нужны автомобили
-            page_number (str): Номер страницы пагинированных автомобилей
+            request (HttpRequest): Объект запроса
+            category_slug (str): slug категории, из которой нужны автомобили.
+                Defaults to None.
+            is_object (bool, optional): Указывает, нужно ли вернуть объект
+                пагинации или словарь с информацией о пагинации.
+                Defaults to True.
 
         Returns:
-            Page[Car]: Объект пагинированных автомобилей
+            Page[Car] | PageData: Объект пагинированных автомобилей или
+                словарь с информацией о пагинации вместе с пагинированными
+                данными
         """
+        category_slug = category_slug or request.GET.get('category')
+        page_number = request.GET.get('page')
 
-        queryset = self._get_queryset_cars_in_category(category_slug)
+        queryset = self._get_queryset_cars_in_category(
+            category_slug, is_object
+        )
         return self.get_page_object(
-            queryset, page_number, self.NUMBER_ITEM_PAGINATION_CATEGORY
+            queryset, page_number, self.NUMBER_ITEM_PAGINATION_CATEGORY,
+            is_object
         )
 
     @staticmethod
-    def _get_queryset_cars_in_category(category_slug: str) -> QuerySet[Car]:
+    def _get_queryset_cars_in_category(
+        category_slug: str, is_object: bool
+    ) -> QuerySet[Car] | ReturnList[CarWithImagesSerializer]:
         """Получает QuerySet автомобилей в определенной категории
 
         Args:
             category_slug (str): slug категории, из которой ннужны автомобили
+            is_object (bool): Указывает, нужно ли вернуть QuerySet или словарь
+                с информацией о пагинации
 
         Returns:
-            QuerySet[Car]: QuerySet искомых автомобилей
+            QuerySet[Car]: QuerySet искомых автомобилей или сериализованные
+                данные автомобилей в категории
         """
 
         if category_slug is None:
             return Car.objects.none()
 
-        return Car.objects.filter(
+        queryset = Car.objects.filter(
             category__slug=category_slug
         ).prefetch_related('car_images')
+
+        if is_object:
+            return queryset
+        return CarWithImagesSerializer(queryset, many=True).data
