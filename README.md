@@ -37,6 +37,10 @@ SochnoAuto — современный сайт автосалона на Django 
 | Сервер | Gunicorn, Nginx |
 | Деплой | Docker, Docker Compose |
 
+### API документация
+
+Полная документация API доступна по адресу `/api/swagger/` (Swagger UI) или `/api/redoc/` (ReDoc).
+
 ## Структура проекта
 
 ```

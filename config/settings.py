@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'drf_spectacular',
     'adminsortable2',
     'django_ckeditor_5',
     'django_cleanup.apps.CleanupConfig',
@@ -104,6 +105,24 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+# REST Framework
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+
+# API Documentation
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'SochnoAuto API',
+    'DESCRIPTION': 'API для автосалона SochnoAuto',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
+}
 
 
 # Internationalization
