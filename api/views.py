@@ -61,11 +61,8 @@ class PaginatedPartialsAPIView(APIView):
 class SpecialOffersAPIView(PaginatedPartialsAPIView):
     """Класс для обработки запросов по специальным предложениям"""
 
-    template_cards = 'homepage/partials/cards_special_offers.html'
-    template_pagination = 'homepage/partials/pagination_special_offers.html'
-
-    def get_page_data(self, request: HttpRequest) -> Page[Car]:
-        return IndexService().get_page_special_offers(request)
+    def get(self, request: HttpRequest):
+        return Response(IndexService().get_page_special_offers(request, False))
 
 
 class FeedbacksAPIView(PaginatedPartialsAPIView):

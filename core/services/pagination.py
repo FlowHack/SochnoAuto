@@ -80,7 +80,11 @@ class PaginationMixin:
         Return: Словарь со значениями есть ли страница до и после и object_list
         """
         return {
-            'page': page,
+            'page': {
+                'object_list': page.object_list,
+                'number': page.number,
+                'num_pages': page.paginator.num_pages
+            },
             'has_pages': {
                 'has_next': page.has_next(),
                 'has_previous': page.has_previous()

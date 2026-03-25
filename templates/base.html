@@ -58,6 +58,8 @@
 
     {% include 'main/footer.html' %}
 
+    {% block templates %}{% endblock templates %}
+    <script src="{% static 'js/handlebars.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/constants.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>

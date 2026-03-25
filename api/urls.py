@@ -7,7 +7,7 @@ app_name = 'api'
 
 urlpatterns = [
     path(
-        'web1/special-offers/', SpecialOffersAPIView.as_view(),
+        'v1/special-offers/', SpecialOffersAPIView.as_view(),
         name='special_offers'
     ),
     path(

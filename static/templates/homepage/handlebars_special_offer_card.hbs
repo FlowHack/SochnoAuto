@@ -1,0 +1,58 @@
+{{#each this}}
+<div class="col-md-6 col-lg-4">
+    <div class="card card-dark h-100">
+        <div id="carouselOffer{{ slug }}" class="carousel slide card-carousel" data-bs-interval="false" data-bs-touch="true">
+            <div class="carousel-inner">
+                {{#if ordered_images.length}}
+                    {{#each ordered_images}}
+                    <div class="carousel-item{{#if @first}} active{{/if}}">
+                        <a href="/car/{{ ../slug }}/" class="d-block h-100">
+                            <img src="{{ image_url }}" class="img-background" alt="">
+                            <img src="{{ image_url }}" class="d-block mx-auto h-100" style="object-fit: contain;" alt="{{ ../brand }} {{ ../model }}" loading="lazy">
+                        </a>
+                    </div>
+                    {{/each}}
+                {{else}}
+                    <div class="carousel-item active">
+                        <a href="/car/{{ slug }}/" class="d-block h-100">
+                            <img src="/static/images/placeholder-car.jpg" class="img-background" alt="">
+                            <img src="/static/images/placeholder-car.jpg" class="d-block mx-auto h-100" style="object-fit: contain;" alt="Нет фото">
+                        </a>
+                    </div>
+                {{/if}}
+            </div>
+            {{#if ordered_images}}
+            {{#gt ordered_images.length 1}}
+            <div class="card-carousel-controls-wrap">
+                <button class="carousel-control-prev card-carousel-control" type="button" data-bs-target="#carouselOffer{{ slug }}" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Предыдущее фото</span>
+                </button>
+                <button class="carousel-control-next card-carousel-control" type="button" data-bs-target="#carouselOffer{{ slug }}" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Следующее фото</span>
+                </button>
+            </div>
+            <div class="carousel-indicators">
+                {{#each ordered_images}}
+                <button type="button" data-bs-target="#carouselOffer{{ ../slug }}" data-bs-slide-to="{{ @index }}" {{#if @first}}class="active"{{/if}}></button>
+                {{/each}}
+            </div>
+            {{/gt}}
+            {{/if}}
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">
+                <a href="/car/{{ slug }}/" class="card-title-car text-decoration-none text-reset stretched-link-custom">
+                    {{ brand }} {{ model }}
+                </a>
+            </h5>
+            <p class="card-text text-secondary small mb-2">
+                {{#if engine_capacity}}{{ engine_capacity }} {{/if}}{{ type_transmission_display }}
+            </p>
+            <p class="card-text text-secondary small mb-2">{{ year_release }} | {{ mileage_formatted }} км</p>
+            <p class="card-text fw-bold text-end mb-0">{{ price_formatted }} ₽</p>
+        </div>
+    </div>
+</div>
+{{/each}}
