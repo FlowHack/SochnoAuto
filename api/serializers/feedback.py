@@ -8,8 +8,13 @@ class FeedbackSerializer(serializers.ModelSerializer):
     пользователе, тексте отзыва и дате создания.
     """
 
-    avatar_url = serializers.CharField(source='avatar.url', allow_null=True)
+    avatar_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Feedback
         fields = ['avatar_url', 'name_user', 'score', 'feedback', 'answer']
+
+    def get_avatar_url(self, obj):
+        if obj.avatar and hasattr(obj.avatar, 'url'):
+            return obj.avatar.url
+        return None

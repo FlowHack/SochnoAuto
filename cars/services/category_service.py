@@ -113,7 +113,7 @@ class CategoryService(PaginationMixin):
 
         queryset = Car.objects.filter(
             category__slug=category_slug
-        ).prefetch_related('car_images')
+        ).order_by('-pub_date').prefetch_related('car_images')
 
         if is_object:
             return queryset

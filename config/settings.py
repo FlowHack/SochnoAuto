@@ -1,4 +1,5 @@
 import os
+import sys
 from datetime import timedelta
 from pathlib import Path
 
@@ -184,6 +185,9 @@ LOGGING = {
             'backupCount': 10,
             'formatter': 'verbose',
         },
+        'null': {
+            'class': 'logging.NullHandler',
+        },
     },
     'loggers': {
         'homepage': {
@@ -218,6 +222,12 @@ LOGGING = {
         },
     },
 }
+
+if 'test' in sys.argv or 'pytest' in sys.argv:
+    LOGGING['handlers']['console']['level'] = 'CRITICAL'
+    LOGGING['handlers']['file']['level'] = 'CRITICAL'
+    LOGGING['handlers']['errors_file']['level'] = 'CRITICAL'
+    LOGGING['loggers']['django.db.backends']['level'] = 'CRITICAL'
 
 # EMAIL BACKEND
 

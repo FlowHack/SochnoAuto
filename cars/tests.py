@@ -2,7 +2,7 @@ from datetime import date
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.paginator import Page
-from django.test import TestCase, override_settings
+from django.test import RequestFactory, TestCase, override_settings
 from django.urls import reverse
 from django.utils.text import slugify
 
@@ -318,6 +318,7 @@ class CategoryServiceTest(TestCase):
     def setUp(self):
         """Создание тестовых данных для CategoryService."""
 
+        self.factory = RequestFactory()
         self.image = SimpleUploadedFile(
             'test.jpg', b'file_content', content_type='image/jpeg'
         )
@@ -334,9 +335,11 @@ class CategoryServiceTest(TestCase):
     def test_get_context_returns_selected_category_and_page_cars(self):
         """Тест получения контекста с выбранной категорией."""
 
-        context = self.service.get_context(
-            self.category1.slug, page_number='1'
-        )
+        request = self.factory.get('/', {
+            'category': self.category1.slug,
+            'page': '1'
+        })
+        context = self.service.get_context(request)
 
         self.assertIn('categories', context)
         self.assertIn('page_cars', context)
@@ -353,5 +356,5 @@ class CategoryServiceTest(TestCase):
     def test_get_queryset_cars_in_category_none_returns_empty(self):
         """Тест получения пустого QuerySet при отсутствии категории."""
 
-        empty_qs = CategoryService._get_queryset_cars_in_category(None)
+        empty_qs = CategoryService._get_queryset_cars_in_category(None, is_object=True)
         self.assertEqual(empty_qs.count(), 0)
