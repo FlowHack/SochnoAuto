@@ -1,0 +1,13 @@
+<a href="/car/{{ slug }}/" class="search-result-item">
+    <div class="d-flex gap-2">
+        <img style="border-radius: 15px; height: 64px" src="{{ first_image }}">
+        <div>
+            <div class="search-result-title">
+                {{ brand }} {{ model }}{{#if engine_capacity}} {{ engine_capacity }}{{/if}} {{ type_transmission_display }}
+            </div>
+            <div class="search-result-meta">
+                {{ year_release }} | {{ mileage_formatted }}
+            </div>
+        </div>
+    </div>
+</a>

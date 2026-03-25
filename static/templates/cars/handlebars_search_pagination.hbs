@@ -1,0 +1,15 @@
+<div class="search-cars-navigation {{#unless has_pages.has_next}}{{#unless has_pages.has_previous}}d-none{{/unless}}{{/unless}}" id="divPaginationSearchCars">
+    <button class="carousel-control-prev {{#unless has_pages.has_previous}}d-none{{/unless}}"
+        onclick="replaceSearchCars(this)"
+        data-page="{{ prev_page }}">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Предыдущий</span>
+    </button>
+
+    <button class="carousel-control-next {{#unless has_pages.has_next}}d-none{{/unless}}"
+        onclick="replaceSearchCars(this)"
+        data-page="{{ next_page }}">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Следующий</span>
+    </button>
+</div>

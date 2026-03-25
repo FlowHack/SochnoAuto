@@ -1,111 +1,211 @@
 from typing import TypeVar
 
-from django.core.paginator import Page
-from django.db.models import QuerySet
 from django.http import HttpRequest
-from django.template.loader import render_to_string
+from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from cars.models import Car
 from cars.services import CarService, CategoryService
-from homepage.models import Feedback
 from homepage.services import IndexService
 
 T = TypeVar('T')
 
 
-class PaginatedPartialsAPIView(APIView):
-    """Абстрактный класс для отрисовки пагинированных данных"""
+class SpecialOffersAPIView(APIView):
+    """Получение списка специальных предложений (автомобилей со скидкой)"""
 
-    template_cards = None
-    template_pagination = None
-    need_pagination = True
+    @extend_schema(
+        summary='Специальные предложения',
+        description=(
+            'Возвращает список автомобилей со статусом специального'
+            'предложения'
+        ),
+        parameters=[
+            OpenApiParameter(
+                name='special_offers_page',
+                description='Номер страницы для пагинации',
+                required=False,
+                type=int
+            ),
+        ],
+        responses={
+            200: {
+                'type': 'object',
+                'properties': {
+                    'page': {
+                        'type': 'object',
+                        'properties': {
+                            'object_list': {
+                                'type': 'array',
+                                'items': {'type': 'object'}
+                            },
+                            'number': {'type': 'integer'},
+                            'num_pages': {'type': 'integer'}
+                        }
+                    },
+                    'has_pages': {
+                        'type': 'object',
+                        'properties': {
+                            'has_next': {'type': 'boolean'},
+                            'has_previous': {'type': 'boolean'}
+                        }
+                    }
+                }
+            }
+        }
+    )
+    def get(self, request: HttpRequest) -> Response:
+        return Response(IndexService().get_page_special_offers(request, False))
 
-    def get_page_data(self, request: HttpRequest) -> Page[T]:
-        """Реализуется в дочерних классах, получает пагинированные данные
 
-        Args:
-            request (HttpRequest): Объект запроса
+class FeedbacksAPIView(APIView):
+    """Получение списка отзывов"""
 
-        Raises:
-            NotImplementedError: Вызывается, если метод не был объявлен
-                в дочернем классе
+    @extend_schema(
+        summary="Отзывы",
+        description="Возвращает список отзывов с пагинацией",
+        parameters=[
+            OpenApiParameter(
+                name='feedbacks_page',
+                description='Номер страницы для пагинации',
+                required=False,
+                type=int
+            ),
+        ],
+        responses={
+            200: {
+                'type': 'object',
+                'properties': {
+                    'page': {
+                        'type': 'object',
+                        'properties': {
+                            'object_list': {
+                                'type': 'array',
+                                'items': {'type': 'object'}
+                            },
+                            'number': {'type': 'integer'},
+                            'num_pages': {'type': 'integer'}
+                        }
+                    },
+                    'has_pages': {
+                        'type': 'object',
+                        'properties': {
+                            'has_next': {'type': 'boolean'},
+                            'has_previous': {'type': 'boolean'}
+                        }
+                    }
+                }
+            }
+        }
+    )
+    def get(self, request: HttpRequest) -> Response:
+        return Response(IndexService().get_page_feedbacks(request, False))
 
-        Returns:
-            Page[T]: Объект с пагинированными данными
-        """
 
-        raise NotImplementedError
+class CategoryAPIView(APIView):
+    """Получение списка автомобилей в категории"""
 
-    def get(self, request):
-        page = self.get_page_data(request)
-
-        html_cards = render_to_string(
-            self.template_cards,
-            {'page': page},
-            request=request
-        )
-        response = {'html_cards': html_cards}
-
-        if self.need_pagination:
-            html_pagination = render_to_string(
-                self.template_pagination,
-                {'page': page}
+    @extend_schema(
+        summary='Автомобили в категории',
+        description=(
+            'Возвращает список автомобилей выбранной категории с'
+            'пагинацией'
+        ),
+        parameters=[
+            OpenApiParameter(
+                name='category',
+                description='Slug категории автомобилей',
+                required=True,
+                type=str
+            ),
+            OpenApiParameter(
+                name='page',
+                description='Номер страницы для пагинации',
+                required=False,
+                type=int
+            ),
+        ],
+        responses={
+            200: {
+                'type': 'object',
+                'properties': {
+                    'page': {
+                        'type': 'object',
+                        'properties': {
+                            'object_list': {
+                                'type': 'array',
+                                'items': {'type': 'object'}
+                            },
+                            'number': {'type': 'integer'},
+                            'num_pages': {'type': 'integer'}
+                        }
+                    },
+                    'has_pages': {
+                        'type': 'object',
+                        'properties': {
+                            'has_next': {'type': 'boolean'},
+                            'has_previous': {'type': 'boolean'}
+                        }
+                    }
+                }
+            }
+        }
+    )
+    def get(self, request: HttpRequest) -> Response:
+        return Response(
+            CategoryService().get_page_cars_in_category(
+                request, None, False
             )
-            response['html_pagination'] = html_pagination
-
-        return Response(response)
-
-
-class SpecialOffersAPIView(PaginatedPartialsAPIView):
-    """Класс для обработки запросов по специальным предложениям"""
-
-    template_cards = 'homepage/partials/cards_special_offers.html'
-    template_pagination = 'homepage/partials/pagination_special_offers.html'
-
-    def get_page_data(self, request: HttpRequest) -> Page[Car]:
-        return IndexService().get_page_special_offers(request)
-
-
-class FeedbacksAPIView(PaginatedPartialsAPIView):
-    """Класс для обработки запросов по отзывам"""
-
-    template_cards = 'homepage/partials/cards_feedbacks.html'
-    template_pagination = 'homepage/partials/pagination_feedbacks.html'
-
-    def get_page_data(self, request: HttpRequest) -> Page[Feedback]:
-        return IndexService().get_page_feedbacks(request)
-
-
-class CategoryAPIView(PaginatedPartialsAPIView):
-    """Класс для обработки запросов по категориям"""
-
-    template_cards = 'cars/partials/cards_cars.html'
-    template_pagination = 'cars/partials/pagination_cars.html'
-
-    def get_page_data(self, request: HttpRequest) -> Page[Car]:
-        category_slug = request.GET.get('category')
-        page_number = request.GET.get('page')
-
-        if not category_slug or not page_number:
-            return QuerySet()
-
-        return CategoryService().get_page_cars_in_category(
-            category_slug, page_number
         )
 
 
-class SearchCarAPIView(PaginatedPartialsAPIView):
-    """Класс для обработки поиска по автомобилям"""
+class SearchCarAPIView(APIView):
+    """Поиск автомобилей по марке, модели или году выпуска"""
 
-    template_cards = 'partials/search_results.html'
-    need_pagination = False
-
-    def get_page_data(self, request: HttpRequest) -> Page[Car]:
-        search_query = request.GET.get('search')
-        if not search_query:
-            return QuerySet()
-        page_number = request.GET.get('page')
-
-        return CarService().get_search_cars_page(search_query, page_number)
+    @extend_schema(
+        summary='Поиск автомобилей',
+        description=(
+            'Поиск автомобилей по названию (марка, модель) или году выпуска'
+        ),
+        parameters=[
+            OpenApiParameter(
+                name='search',
+                description='Поисковый запрос (марка, модель или год выпуска)',
+                required=True,
+                type=str
+            ),
+            OpenApiParameter(
+                name='page',
+                description='Номер страницы для пагинации',
+                required=False,
+                type=int
+            ),
+        ],
+        responses={
+            200: {
+                'type': 'object',
+                'properties': {
+                    'page': {
+                        'type': 'object',
+                        'properties': {
+                            'object_list': {
+                                'type': 'array',
+                                'items': {'type': 'object'}
+                            },
+                            'number': {'type': 'integer'},
+                            'num_pages': {'type': 'integer'}
+                        }
+                    },
+                    'has_pages': {
+                        'type': 'object',
+                        'properties': {
+                            'has_next': {'type': 'boolean'},
+                            'has_previous': {'type': 'boolean'}
+                        }
+                    }
+                }
+            }
+        }
+    )
+    def get(self, request: HttpRequest) -> Response:
+        return Response(CarService().get_search_cars_page(request))

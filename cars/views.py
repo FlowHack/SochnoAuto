@@ -8,10 +8,7 @@ class CategoryView(View):
     """Класс для работы со страницей категорий"""
 
     def get(self, request):
-        category_slug = request.GET.get('category')
-        page_number = request.GET.get('page')
-
-        context = CategoryService().get_context(category_slug, page_number)
+        context = CategoryService().get_context(request)
 
         return render(request, 'cars/categories.html', context)
 

@@ -1,4 +1,5 @@
 import os
+import sys
 from datetime import timedelta
 from pathlib import Path
 
@@ -25,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'drf_spectacular',
     'adminsortable2',
     'django_ckeditor_5',
     'django_cleanup.apps.CleanupConfig',
@@ -103,6 +105,24 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+# REST Framework
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+
+# API Documentation
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'SochnoAuto API',
+    'DESCRIPTION': 'API для автосалона SochnoAuto',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'COMPONENT_SPLIT_REQUEST': True,
+}
 
 
 # Internationalization
@@ -184,6 +204,9 @@ LOGGING = {
             'backupCount': 10,
             'formatter': 'verbose',
         },
+        'null': {
+            'class': 'logging.NullHandler',
+        },
     },
     'loggers': {
         'homepage': {
@@ -218,6 +241,12 @@ LOGGING = {
         },
     },
 }
+
+if 'test' in sys.argv or 'pytest' in sys.argv:
+    LOGGING['handlers']['console']['level'] = 'CRITICAL'
+    LOGGING['handlers']['file']['level'] = 'CRITICAL'
+    LOGGING['handlers']['errors_file']['level'] = 'CRITICAL'
+    LOGGING['loggers']['django.db.backends']['level'] = 'CRITICAL'
 
 # EMAIL BACKEND
 
