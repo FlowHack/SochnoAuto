@@ -25,6 +25,12 @@ urlpatterns = [
         name='search_car'
     ),
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('swagger/', SpectacularSwaggerView.as_view(url_name='api:schema'), name='swagger'),
-    path('redoc/', SpectacularRedocView.as_view(url_name='api:schema'), name='redoc'),
+    path(
+        'swagger/', SpectacularSwaggerView.as_view(url_name='api:schema'),
+        name='swagger'
+    ),
+    path(
+        'redoc/', SpectacularRedocView.as_view(url_name='api:schema'),
+        name='redoc'
+    ),
 ]
