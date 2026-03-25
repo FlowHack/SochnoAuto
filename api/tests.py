@@ -271,7 +271,9 @@ class CategoryAPITest(TestCase):
 
         from cars.models import Car
         Car.objects.filter(category=self.category).delete()
-        url = reverse('api:category') + f'?category={self.category.slug}&page=1'
+        url = (
+            reverse('api:category') + f'?category={self.category.slug}&page=1'
+        )
         response = self.client.get(url)
         data = response.json()
         self.assertEqual(len(data['page']['object_list']), 0)

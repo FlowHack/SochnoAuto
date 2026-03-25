@@ -1,7 +1,6 @@
 from datetime import date
 
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.paginator import Page
 from django.test import RequestFactory, TestCase, override_settings
 from django.urls import reverse
 from django.utils.text import slugify
@@ -359,5 +358,7 @@ class CategoryServiceTest(TestCase):
     def test_get_queryset_cars_in_category_none_returns_empty(self):
         """Тест получения пустого QuerySet при отсутствии категории."""
 
-        empty_qs = CategoryService._get_queryset_cars_in_category(None, is_object=True)
+        empty_qs = CategoryService._get_queryset_cars_in_category(
+            None, is_object=True
+        )
         self.assertEqual(empty_qs.count(), 0)
