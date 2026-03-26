@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from cars.services import CarService, CategoryService
+from core.cache import (CACHE_CATEGORY_CARS, CACHE_FEEDBACKS,
+                        CACHE_SPECIAL_OFFERS, method_cache_page_if_not_debug)
 from homepage.services import IndexService
 
 T = TypeVar('T')
@@ -54,6 +56,7 @@ class SpecialOffersAPIView(APIView):
             }
         }
     )
+    @method_cache_page_if_not_debug(CACHE_SPECIAL_OFFERS)
     def get(self, request: HttpRequest) -> Response:
         return Response(IndexService().get_page_special_offers(request, False))
 
@@ -98,6 +101,7 @@ class FeedbacksAPIView(APIView):
             }
         }
     )
+    @method_cache_page_if_not_debug(CACHE_FEEDBACKS)
     def get(self, request: HttpRequest) -> Response:
         return Response(IndexService().get_page_feedbacks(request, False))
 
@@ -151,6 +155,7 @@ class CategoryAPIView(APIView):
             }
         }
     )
+    @method_cache_page_if_not_debug(CACHE_CATEGORY_CARS)
     def get(self, request: HttpRequest) -> Response:
         return Response(
             CategoryService().get_page_cars_in_category(

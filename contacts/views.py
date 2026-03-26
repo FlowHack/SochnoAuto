@@ -6,6 +6,8 @@ from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic import FormView
 
+from core.cache import CACHE_CONTACTS, cache_page_if_not_debug
+
 from .forms import RequestContactForm
 from .models import RequestContact
 from .services import ContactService, EmailContactService
@@ -89,6 +91,7 @@ class ConfirmEmailView(View):
         return redirect('contacts:confirm_success')
 
 
+@cache_page_if_not_debug(CACHE_CONTACTS)
 def contacts(request):
     """Страница контактов."""
     return render(request, 'contacts/contacts.html')

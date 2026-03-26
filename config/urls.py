@@ -1,3 +1,4 @@
+from debug_toolbar.toolbar import debug_toolbar_urls
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -8,11 +9,12 @@ handler500 = 'homepage.views.server_error'  # noqa
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('cache/', include('dj_cache_panel.urls')),
     path('', include('homepage.urls')),
     path('', include('cars.urls')),
     path('contacts/', include('contacts.urls')),
     path('api/', include('api.urls')),
-]
+] + debug_toolbar_urls()
 
 urlpatterns += static(
     settings.MEDIA_URL, document_root=settings.MEDIA_ROOT

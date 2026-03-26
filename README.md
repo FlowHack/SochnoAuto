@@ -32,6 +32,7 @@ SochnoAuto — современный сайт автосалона на Django 
 |----------|------------|
 | Backend | Django 6.0.2, Django REST Framework |
 | База данных | PostgreSQL (Docker), SQLite (локальная разработка) |
+| Кэширование | Redis, django-cachalot |
 | Frontend | Vanilla JavaScript, Bootstrap 5 |
 | Админка | django-admin-sortable2, CKEditor 5 |
 | Сервер | Gunicorn, Nginx |
@@ -164,7 +165,8 @@ python manage.py test --verbosity=2
 | Сервис | Образ | Описание | Порт |
 |--------|-------|----------|------|
 | `web`  | flowhack/sochno-auto:latest | Django + Gunicorn | 8000 (внутренний)  |
-| `db`   | postgres:12.4              | PostgreSQL         | 5432 (внутренний)  |
+| `db`   | postgres:14                | PostgreSQL         | 5432 (внутренний)  |
+| `redis`| redis:7-alpine              | Redis (кэширование) | 6379 (внутренний) |
 | `nginx`| nginx:1.19.3               | Reverse proxy      | 80 (внешний)       |
 
 ### Управление контейнерами
@@ -265,6 +267,7 @@ Nginx обслуживает статику и медиа из папок на �
 | `POSTGRES_PASSWORD`    | `postgres`                  | Пароль пользователя PostgreSQL для подключения Django.                  |
 | `DJANGO_DB_HOST`        | `db`                        | Хост БД внутри docker‑сети (имя сервиса в `docker-compose`).             |
 | `DJANGO_DB_PORT`        | `5432`                      | Порт PostgreSQL внутри docker‑сети.                                      |
+| `REDIS_URL`             | `redis://redis:6379/0`       | URL Redis для кэширования.                                              |
 | `EMAIL_HOST`            | `smtp.yandex.ru`            | SMTP‑сервер для отправки писем.                                          |
 | `EMAIL_PORT`            | `465`                       | Порт SMTP (обычно 465 для SSL).                                          |
 | `EMAIL_USE_TLS`         | `False`                     | Использовать TLS (обычно `True` при порте 587).                          |
