@@ -153,4 +153,7 @@ media/
 dumps/
 
 staticfiles/
+logs/
+data/
+manifest.json
 

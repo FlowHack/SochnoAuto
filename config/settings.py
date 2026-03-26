@@ -25,12 +25,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cachalot',
     'rest_framework',
     'drf_spectacular',
     'adminsortable2',
     'django_ckeditor_5',
     'django_cleanup.apps.CleanupConfig',
     'diskette',
+    'dj_cache_panel',
     'homepage.apps.HomepageConfig',
     'cars.apps.CarsConfig',
     'api.apps.ApiConfig',
@@ -47,6 +49,55 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+if DEBUG:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'unique-snowflake',
+        }
+    }
+    INSTALLED_APPS = [
+        *INSTALLED_APPS,
+        'debug_toolbar',
+    ]
+    MIDDLEWARE = [
+        'debug_toolbar.middleware.DebugToolbarMiddleware',
+        *MIDDLEWARE,
+    ]
+    INTERNAL_IPS = [
+        '127.0.0.1',
+        'localhost',
+    ]
+    DEBUG_TOOLBAR_PANELS = [
+        'debug_toolbar.panels.history.HistoryPanel',
+        'debug_toolbar.panels.versions.VersionsPanel',
+        'debug_toolbar.panels.timer.TimerPanel',
+        'debug_toolbar.panels.settings.SettingsPanel',
+        'debug_toolbar.panels.headers.HeadersPanel',
+        'debug_toolbar.panels.request.RequestPanel',
+        'debug_toolbar.panels.sql.SQLPanel',
+        'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+        'debug_toolbar.panels.templates.TemplatesPanel',
+        'debug_toolbar.panels.cache.CachePanel',
+        'debug_toolbar.panels.signals.SignalsPanel',
+        'debug_toolbar.panels.logging.LoggingPanel',
+        'cachalot.panels.CachalotPanel',
+    ]
+    DEBUG_TOOLBAR_CONFIG = {
+        'SHOW_COLLAPSED': False,
+    }
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': os.environ.get('REDIS_URL', 'redis://redis:6379/0'),
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            },
+            'KEY_PREFIX': 'sochnoauto',
+        }
+    }
 
 ROOT_URLCONF = 'config.urls'
 
@@ -123,6 +174,30 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,
     'COMPONENT_SPLIT_REQUEST': True,
 }
+
+
+# Caching (django-cachalot)
+# Настройки времени кэширования в core/cache.py
+
+from core.cache import (CACHE_CAR_DETAIL, CACHE_CATEGORIES,
+                        CACHE_CATEGORY_CARS, CACHE_FEEDBACKS,
+                        CACHE_SPECIAL_OFFERS)
+
+CACHALOT_ENABLED = not DEBUG
+CACHALOT_TIMEOUT = CACHE_CATEGORY_CARS
+
+CACHALOT_MODEL_PRESET_TIMEOUTS = {
+    'homepage.Feedback': CACHE_FEEDBACKS,
+    'homepage.HomepageImage': CACHE_SPECIAL_OFFERS,
+    'cars.Car': CACHE_CAR_DETAIL,
+    'cars.CarImage': CACHE_CAR_DETAIL,
+    'cars.CarParameter': CACHE_CAR_DETAIL,
+    'cars.CarCategory': CACHE_CATEGORIES,
+}
+
+if 'test' in sys.argv:
+    CACHALOT_ENABLED = False
+    CACHES['default']['BACKEND'] = 'django.core.cache.backends.dummy.DummyCache'
 
 
 # Internationalization
