@@ -1,4 +1,3 @@
-from debug_toolbar.toolbar import debug_toolbar_urls
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -14,7 +13,11 @@ urlpatterns = [
     path('', include('cars.urls')),
     path('contacts/', include('contacts.urls')),
     path('api/', include('api.urls')),
-] + debug_toolbar_urls()
+]
+
+if settings.DEBUG:
+    from debug_toolbar.toolbar import debug_toolbar_urls
+    urlpatterns += debug_toolbar_urls()
 
 urlpatterns += static(
     settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
